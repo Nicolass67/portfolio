@@ -17,14 +17,16 @@ Observation navigateur réel (`390×844`, mode démo, état case study restauré
 | Sujet | Choix |
 | ----- | ----- |
 | Breakpoint | `max-width: 52.99rem` (aligné sur le shell existant) ; tablette portrait 768 px dans ce mode |
-| Overview | Une colonne : média → titre → synthèse → meta → CTA ; index projets en **bandeau sticky** sous le header (chips, scroll-x, fade) |
-| Case study | **Barre sticky** : Retour · chapitre courant · Projets ; **feuilles** (`<dialog>`) pour chapitres et projets — pas de grille permanente |
+| Overview | Une colonne : média (bandeau « Lire l’étude ») → titre → synthèse → meta → **CTA étude fort** → blocs ; chips = aperçu seulement |
+| Case study | **Barre sticky** : Retour · chapitre courant · Projets ; **feuilles** (`<dialog>`) chapitres/projets avec slide-up ; focus sur la feuille (pas Fermer) ; clic backdrop → fermer |
 | Projet → projet | Une action dans la feuille Projets (`data-project-switch`) → étude de cas du projet cible (D-033) |
 | Chapitre | Sélection dans la feuille → ferme la feuille → contenu seul → **scroll document en haut** |
 | Fin de chapitre | CTA « Chapitre suivant » en bas du contenu (mobile) ; dernier chapitre → **projet suivant** (étude de cas) |
+| Lightbox | Pinch-to-zoom + pan + double-tap ; swipe entre images seulement à zoom 1× |
 | Scroll | Scroll de page uniquement sous le breakpoint ; pas de scroll interne workspace |
 | Scrollbars | Toujours masquées (contrainte projet) |
 | Desktop | Aucun changement de layout hors media query ; rail / grille / panneaux inchangés ≥ 53 rem |
+| Header mobile | Titre plus grand ; langues en rangée pleine largeur (≥ ~3.25 rem), drapeaux SVG FR/EN (pas d’emoji) |
 
 ## Niveaux UX
 

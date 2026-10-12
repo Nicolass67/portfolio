@@ -24,7 +24,7 @@ Contraintes : projet 1 par défaut, pas de collapse, pas de modale de navigation
 
 ## Lightbox image
 
-Les images inspectables (média featured, galeries, annotations, splits, expand before/after) ouvrissent un `<dialog>` plein viewport relatif, avec légende, fermeture Escape / bouton / backdrop, restauration du focus. Quand plusieurs images appartiennent au même groupe, des flèches gauche/droite, les touches ←/→ et un swipe horizontal permettent de parcourir le set avec une transition directionnelle (fondu + léger glissement) et un compteur ; le mouvement est réduit si `prefers-reduced-motion`. Vidéo et YouTube restent hors lightbox.
+Les images inspectables (média featured, galeries, annotations, splits, expand before/after) ouvrissent un `<dialog>` plein viewport relatif, avec légende, fermeture Escape / bouton / backdrop, restauration du focus. Quand plusieurs images appartiennent au même groupe, des flèches gauche/droite, les touches ←/→ et un swipe horizontal permettent de parcourir le set avec une transition directionnelle (fondu + léger glissement) et un compteur ; le mouvement est réduit si `prefers-reduced-motion`. Sur tactile : pinch-to-zoom, pan et double-tap ; le swipe entre images reste actif à zoom 1×. Vidéo et YouTube restent hors lightbox.
 
 ## Contenu dense (démo)
 
@@ -34,6 +34,7 @@ Toujours fictif ; un chapitre à la fois ; divulgation progressive.
 
 L’expérience étroite n’est **pas** une transposition du rail desktop. Voir `docs/MOBILE_UX.md`. En bas de chaque chapitre, un CTA ouvre le **chapitre suivant** ; au dernier chapitre, le **projet suivant** (étude de cas).
 
-- Overview : chips projets sticky + lecture verticale (média → synthèse → CTA).
+- Overview : chips projets sticky + lecture verticale ; entrée étude explicite (bandeau média + CTA « Lire l’étude technique », D-035).
 - Case study : barre basse (Aperçu / Chapitre / Projets) + feuilles `<dialog>` ; scroll document.
-- Desktop ≥ 53rem : inchangé (D-030 / D-033).
+- Feuille Projets : libellé « Ouvrir l’étude » sur chaque item.
+- Desktop ≥ 53rem : CTA étude renforcé aussi ; layout rail inchangé (D-030 / D-033).

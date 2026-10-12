@@ -1,4 +1,4 @@
-import AxeBuilder from "@axe-core/playwright";
+﻿import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 import { appPath } from "./paths";
 
@@ -100,7 +100,7 @@ test.describe("fullscreen portfolio workspace", () => {
 
     await page
       .locator(
-        '[data-project-card][data-project-id="demo-combat-systems"] [data-open-case-study]',
+        '[data-project-card][data-project-id="demo-combat-systems"] [data-open-case-study="copy"]',
       )
       .click();
 
@@ -160,7 +160,7 @@ test.describe("fullscreen portfolio workspace", () => {
       .click();
     await page
       .locator(
-        '[data-project-card][data-project-id="demo-coop-arena"] [data-open-case-study]',
+        '[data-project-card][data-project-id="demo-coop-arena"] [data-open-case-study="copy"]',
       )
       .click();
 
@@ -194,7 +194,7 @@ test.describe("fullscreen portfolio workspace", () => {
     await page.goto(appPath("/"));
     await page
       .locator(
-        '[data-project-card][data-project-id="demo-combat-systems"] [data-open-case-study]',
+        '[data-project-card][data-project-id="demo-combat-systems"] [data-open-case-study="copy"]',
       )
       .click();
     await expect(page.locator("[data-workspace]")).toHaveAttribute(
@@ -262,11 +262,11 @@ test.describe("fullscreen portfolio workspace", () => {
       .click();
     await page
       .locator(
-        '[data-project-card][data-project-id="demo-ai-sandbox"] [data-open-case-study]',
+        '[data-project-card][data-project-id="demo-ai-sandbox"] [data-open-case-study="copy"]',
       )
       .click();
 
-    await page.getByRole("link", { name: "EN", exact: true }).click();
+    await page.getByRole("link", { name: /English/i }).click();
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
     await expect(
       page.locator(
@@ -379,7 +379,7 @@ test.describe("fullscreen portfolio workspace", () => {
       });
 
       await page
-        .locator("[data-project-card].is-active [data-open-case-study]")
+        .locator('[data-project-card].is-active [data-open-case-study="copy"]')
         .click();
       overflow = await documentOverflow(page);
       expect(overflow, `case ${size.width}x${size.height}`).toEqual({
@@ -414,7 +414,7 @@ test.describe("fullscreen portfolio workspace", () => {
   test("keyboard can open case study from active project", async ({ page }) => {
     await page.goto(appPath("/"));
     const action = page.locator(
-      "[data-project-card].is-active [data-open-case-study]",
+      '[data-project-card].is-active [data-open-case-study="copy"]',
     );
     await action.focus();
     await page.keyboard.press("Enter");
@@ -422,6 +422,18 @@ test.describe("fullscreen portfolio workspace", () => {
       "data-project-mode",
       "case-study",
     );
+  });
+
+  test("media study CTA opens the case study", async ({ page }) => {
+    await page.goto(appPath("/"));
+    await page
+      .locator('[data-project-card].is-active [data-open-case-study="media"]')
+      .click();
+    await expect(page.locator("[data-workspace]")).toHaveAttribute(
+      "data-project-mode",
+      "case-study",
+    );
+    await expect(page.locator("[data-chapter-panel].is-open")).toHaveCount(1);
   });
 
   test("has no critical accessibility violations on main states", async ({
@@ -489,7 +501,7 @@ test.describe("fullscreen portfolio workspace", () => {
     expect(accent.toLowerCase()).toBe("#dc2626");
 
     await page
-      .locator("[data-project-card].is-active [data-open-case-study]")
+      .locator('[data-project-card].is-active [data-open-case-study="copy"]')
       .click();
     const accentAfter = await page.evaluate(() =>
       getComputedStyle(document.documentElement)
@@ -527,7 +539,7 @@ test.describe("fullscreen portfolio workspace", () => {
     expect(bg.toLowerCase()).toBe("#f4f6fa");
 
     await page
-      .locator("[data-project-card].is-active [data-open-case-study]")
+      .locator('[data-project-card].is-active [data-open-case-study="copy"]')
       .click();
     const bgAfter = await page.evaluate(() =>
       getComputedStyle(document.documentElement)
@@ -543,7 +555,7 @@ test.describe("fullscreen portfolio workspace", () => {
     test.skip(!testInfo.project.name.includes("mobile"), "mobile only");
     await page.goto(appPath("/"));
     await page
-      .locator("[data-project-card].is-active [data-open-case-study]")
+      .locator('[data-project-card].is-active [data-open-case-study="copy"]')
       .click();
     const openPanel = page.locator("[data-chapter-panel].is-open");
     await expect(openPanel).toHaveCount(1);
@@ -575,7 +587,7 @@ test.describe("fullscreen portfolio workspace", () => {
     test.skip(!testInfo.project.name.includes("mobile"), "mobile only");
     await page.goto(appPath("/"));
     await page
-      .locator("[data-project-card].is-active [data-open-case-study]")
+      .locator('[data-project-card].is-active [data-open-case-study="copy"]')
       .click();
     await page.locator('[data-mobile-sheet-open="chapters"]').click();
     const lastChapter = page
@@ -611,11 +623,31 @@ test.describe("fullscreen portfolio workspace", () => {
     ).toHaveCount(1);
   });
 
+  test("mobile sheet closes when tapping the dimmed backdrop", async ({
+    page,
+  }, testInfo) => {
+    test.skip(!testInfo.project.name.includes("mobile"), "mobile only");
+    await page.goto(appPath("/"));
+    await page
+      .locator('[data-project-card].is-active [data-open-case-study="copy"]')
+      .click();
+    await page.locator('[data-mobile-sheet-open="chapters"]').click();
+    const sheet = page.locator('dialog[data-mobile-sheet="chapters"]');
+    await expect(sheet).toBeVisible();
+    // Wait past the opening guard that ignores backdrop taps briefly.
+    await page.waitForTimeout(350);
+    const box = await sheet.boundingBox();
+    expect(box).toBeTruthy();
+    // Tap in the dimmed area above the bottom sheet, not on the panel itself.
+    await page.mouse.click(box!.x + box!.width / 2, Math.max(12, box!.y - 48));
+    await expect(sheet).toBeHidden();
+  });
+
   test("case study swaps left rail to chapter navigation", async ({ page }) => {
     await page.goto(appPath("/"));
     await expect(page.locator('[data-rail-panel="overview"]')).toBeVisible();
     await page
-      .locator("[data-project-card].is-active [data-open-case-study]")
+      .locator('[data-project-card].is-active [data-open-case-study="copy"]')
       .click();
     await expect(page.locator("[data-projects-layout]")).toHaveClass(
       /is-case-mode/,
@@ -727,6 +759,7 @@ test.describe("fullscreen portfolio workspace", () => {
     const dialog = page.locator("[data-lightbox]");
     await expect(dialog).toBeVisible();
     await expect(dialog).toHaveClass(/lightbox--multi/);
+    await expect(page.locator("[data-lightbox-zoom]")).toBeVisible();
     await expect(page.locator("[data-lightbox-prev]")).toBeVisible();
     await expect(page.locator("[data-lightbox-next]")).toBeVisible();
     await expect(page.locator("[data-lightbox-counter]")).toHaveText("1 / 3");
@@ -772,7 +805,7 @@ test.describe("fullscreen portfolio workspace", () => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto(appPath("/"));
     await page
-      .locator("[data-project-card].is-active [data-open-case-study]")
+      .locator('[data-project-card].is-active [data-open-case-study="copy"]')
       .click();
     const metrics = await page.evaluate(() => {
       const chapter = document.querySelector<HTMLElement>(
@@ -808,7 +841,7 @@ test.describe("fullscreen portfolio workspace", () => {
     ).toBeVisible();
 
     await page
-      .locator("[data-project-card].is-active [data-open-case-study]")
+      .locator('[data-project-card].is-active [data-open-case-study="copy"]')
       .click();
     await expect(page.locator("[data-chapter-panel].is-open")).toHaveCount(1);
     await expect(

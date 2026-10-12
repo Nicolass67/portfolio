@@ -104,6 +104,12 @@ export interface SiteContent {
     otherProjectsLabel: string;
     projectIndexLabel: string;
     caseStudyAction: string;
+    /** Short line under the primary study CTA (chapter count filled in UI). */
+    caseStudyHint: string;
+    /** Overlay / media entry label. */
+    caseStudyMediaAction: string;
+    /** Affordance in the mobile projects sheet. */
+    openStudyAction: string;
     backToProject: string;
     chapterOverviewHint: string;
   };
@@ -397,7 +403,10 @@ const authenticShell = {
       activeLabel: "Projet actif",
       otherProjectsLabel: "Autres projets",
       projectIndexLabel: "Projets",
-      caseStudyAction: "Étude de cas",
+      caseStudyAction: "Lire l’étude technique",
+      caseStudyHint: "sujets techniques",
+      caseStudyMediaAction: "Lire l’étude",
+      openStudyAction: "Ouvrir l’étude",
       backToProject: "Tous les projets",
       chapterOverviewHint: "Choisissez un sujet technique pour l’afficher ici.",
     },
@@ -443,7 +452,10 @@ const authenticShell = {
       activeLabel: "Active project",
       otherProjectsLabel: "Other projects",
       projectIndexLabel: "Projects",
-      caseStudyAction: "Case study",
+      caseStudyAction: "Read the technical study",
+      caseStudyHint: "technical topics",
+      caseStudyMediaAction: "Read the study",
+      openStudyAction: "Open study",
       backToProject: "All projects",
       chapterOverviewHint: "Choose a technical topic to display it here.",
     },
@@ -487,11 +499,14 @@ function demoExplorer(locale: Locale): SiteContent["explorer"] {
         eyebrow: "Démonstration",
         title: "Projets",
         description:
-          "Six concepts fictifs. Le premier est actif. Changez de projet pour remplacer l’espace de travail, puis ouvrez l’étude de cas.",
+          "Six concepts fictifs. Le premier est actif. Changez de projet pour remplacer l’espace de travail, puis ouvrez l’étude technique.",
         activeLabel: "Projet actif",
         otherProjectsLabel: "Autres projets",
         projectIndexLabel: "Index des projets",
-        caseStudyAction: "Étude de cas",
+        caseStudyAction: "Lire l’étude technique",
+        caseStudyHint: "sujets techniques",
+        caseStudyMediaAction: "Lire l’étude",
+        openStudyAction: "Ouvrir l’étude",
         backToProject: "Tous les projets",
         chapterOverviewHint:
           "Choisissez un sujet technique pour l’afficher ici.",
@@ -500,11 +515,14 @@ function demoExplorer(locale: Locale): SiteContent["explorer"] {
         eyebrow: "Demonstration",
         title: "Projects",
         description:
-          "Six fictional concepts. The first is active. Switch projects to replace the workspace, then open the case study.",
+          "Six fictional concepts. The first is active. Switch projects to replace the workspace, then open the technical study.",
         activeLabel: "Active project",
         otherProjectsLabel: "Other projects",
         projectIndexLabel: "Project index",
-        caseStudyAction: "Case study",
+        caseStudyAction: "Read the technical study",
+        caseStudyHint: "technical topics",
+        caseStudyMediaAction: "Read the study",
+        openStudyAction: "Open study",
         backToProject: "All projects",
         chapterOverviewHint: "Choose a technical topic to display it here.",
       };

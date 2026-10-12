@@ -14,9 +14,10 @@ const isFrench = content.locale === "fr";
 const firstId = projects[0]?.id ?? "";
 const isDemo = mode === "demo";
 const chaptersLabel = isFrench ? "Chapitres" : "Chapters";
-const jumpLabel = isFrench ? "Autres projets" : "Other projects";
+const projectsSwitchLabel = isFrench ? "Projets" : "Projects";
+const jumpLabel = projectsSwitchLabel;
 const mobileOverviewLabel = isFrench ? "Aperçu" : "Overview";
-const mobileProjectsLabel = isFrench ? "Projets" : "Projects";
+const mobileProjectsLabel = projectsSwitchLabel;
 const mobileCloseLabel = isFrench ? "Fermer" : "Close";
 const mobileChapterPick = isFrench ? "Choisir un chapitre" : "Choose a chapter";
 const mobileProjectPick = isFrench ? "Changer de projet" : "Switch project";
@@ -96,31 +97,34 @@ const nextProjectLabel = isFrench ? "Projet suivant" : "Next project";
               data-project-id={project.id}
               hidden={index !== 0}
             >
+              <div class="case-rail__projects">
+                <p class="case-rail__projects-label">{projectsSwitchLabel}</p>
+                <nav class="case-project-jump" aria-label={jumpLabel}>
+                  {projects.map((jumpProject) => (
+                    <button
+                      type="button"
+                      class:list={[
+                        "case-project-jump__item",
+                        { "is-active": jumpProject.id === project.id },
+                      ]}
+                      data-project-switch
+                      data-project-id={jumpProject.id}
+                      aria-pressed={
+                        jumpProject.id === project.id ? "true" : "false"
+                      }
+                      aria-label={jumpProject.navLabel ?? jumpProject.title}
+                      title={jumpProject.navLabel ?? jumpProject.title}
+                    >
+                      <span aria-hidden="true">{jumpProject.index}</span>
+                    </button>
+                  ))}
+                </nav>
+              </div>
+
               <div class="case-identity">
                 <p class="eyebrow">{project.caseStudy.eyebrow}</p>
                 <p class="case-identity__title">{project.title}</p>
               </div>
-
-              <nav class="case-project-jump" aria-label={jumpLabel}>
-                {projects.map((jumpProject) => (
-                  <button
-                    type="button"
-                    class:list={[
-                      "case-project-jump__item",
-                      { "is-active": jumpProject.id === project.id },
-                    ]}
-                    data-project-switch
-                    data-project-id={jumpProject.id}
-                    aria-pressed={
-                      jumpProject.id === project.id ? "true" : "false"
-                    }
-                    aria-label={jumpProject.navLabel ?? jumpProject.title}
-                    title={jumpProject.navLabel ?? jumpProject.title}
-                  >
-                    <span aria-hidden="true">{jumpProject.index}</span>
-                  </button>
-                ))}
-              </nav>
 
               <p class="case-rail__chapters-label">{chaptersLabel}</p>
               <nav
@@ -158,6 +162,10 @@ const nextProjectLabel = isFrench ? "Projet suivant" : "Next project";
             ? overviewBlocksFor(project.id, content.locale)
             : [];
           const nextProject = projects[(index + 1) % projects.length] ?? null;
+          const chapterCount = project.caseStudy.chapters.length;
+          const studyHint = isFrench
+            ? `${chapterCount} chapitres · ${explorer.caseStudyHint}`
+            : `${chapterCount} chapters · ${explorer.caseStudyHint}`;
           return (
             <article
               class:list={["project-hero", { "is-active": index === 0 }]}
@@ -180,6 +188,25 @@ const nextProjectLabel = isFrench ? "Projet suivant" : "Next project";
                     emptyHint={project.mediaEmptyHint}
                     class="project-hero__media"
                   />
+                  <button
+                    type="button"
+                    class="project-hero__media-cta"
+                    data-open-case-study="media"
+                    data-project-id={project.id}
+                  >
+                    <span class="project-hero__media-cta-label">
+                      {explorer.caseStudyMediaAction}
+                    </span>
+                    <span class="project-hero__media-cta-meta">
+                      {studyHint}
+                    </span>
+                    <span
+                      class="project-hero__media-cta-arrow"
+                      aria-hidden="true"
+                    >
+                      →
+                    </span>
+                  </button>
                 </div>
 
                 <div class="project-hero__copy" data-hero-copy>
@@ -202,22 +229,27 @@ const nextProjectLabel = isFrench ? "Projet suivant" : "Next project";
                     <span>{project.kit.join(" · ")}</span>
                   </p>
 
+                  <button
+                    type="button"
+                    class="project-hero__study-cta"
+                    data-open-case-study="copy"
+                    data-project-id={project.id}
+                  >
+                    <span class="project-hero__study-cta-main">
+                      <span>{explorer.caseStudyAction}</span>
+                      <span aria-hidden="true">→</span>
+                    </span>
+                    <span class="project-hero__study-cta-hint">
+                      {studyHint}
+                    </span>
+                  </button>
+
                   {overviewBlocks.length > 0 ? (
                     <DemoBlocks
                       blocks={overviewBlocks}
                       class="demo-blocks--overview"
                     />
                   ) : null}
-
-                  <button
-                    type="button"
-                    class="text-action"
-                    data-open-case-study
-                    data-project-id={project.id}
-                  >
-                    <span>{explorer.caseStudyAction}</span>
-                    <span aria-hidden="true">→</span>
-                  </button>
                 </div>
               </div>
 
@@ -371,6 +403,7 @@ const nextProjectLabel = isFrench ? "Projet suivant" : "Next project";
     class="mobile-sheet"
     data-mobile-sheet="chapters"
     aria-labelledby="mobile-sheet-chapters-title"
+    tabindex="-1"
   >
     <div class="mobile-sheet__frame">
       <div class="mobile-sheet__grab" aria-hidden="true"></div>
@@ -414,6 +447,7 @@ const nextProjectLabel = isFrench ? "Projet suivant" : "Next project";
     class="mobile-sheet"
     data-mobile-sheet="projects"
     aria-labelledby="mobile-sheet-projects-title"
+    tabindex="-1"
   >
     <div class="mobile-sheet__frame">
       <div class="mobile-sheet__grab" aria-hidden="true"></div>
@@ -443,6 +477,9 @@ const nextProjectLabel = isFrench ? "Projet suivant" : "Next project";
             <span class="mobile-sheet__item-eyebrow">{project.index}</span>
             <span class="mobile-sheet__item-title">
               {project.navLabel ?? project.title}
+            </span>
+            <span class="mobile-sheet__item-action">
+              {explorer.openStudyAction}
             </span>
           </button>
         ))}

@@ -21,7 +21,8 @@ Persistance : `sessionStorage`. Pas de `pushState` / hash.
 ### Navigation (Mission 13)
 
 - Overview : `[data-project-select]` (titres seuls).
-- Case study : `[data-project-switch]` sur `.case-project-jump__item` (un clic → étude de cas du projet cible, premier chapitre).
+- Case study (desktop) : libellé « Projets » + pastilles `[data-project-switch]` **au-dessus** du titre du projet actif, puis index chapitres.
+- Pastilles : un clic → étude de cas du projet cible (premier chapitre).
 - Retour « Tous les projets » : `[data-close-case-study]` dans `.workspace-toolbar` (haut droite, même rangée que le bandeau démo) → overview.
 - Chapitres : `[data-chapter-select]` (index distinct).
 
@@ -29,8 +30,9 @@ Persistance : `sessionStorage`. Pas de `pushState` / hash.
 
 - Triggers : `[data-lightbox-open]` + `data-lightbox-src` / `alt` / `caption`.
 - Source plein format : `MediaItem.fullSrc` si présent, sinon `src`.
-- Dialog créé au runtime ; `showModal()` ; classe `html.is-lightbox-open`.
+- Dialog créé au runtime ; `showModal()` ; focus sur le `<dialog>` (pas la croix — évite la sélection iOS) ; classe `html.is-lightbox-open`.
 - Groupes multi-images : `[data-lightbox-group]`, `.media-frame__gallery`, ou thumbs `[data-gallery-select]` — flèches, clavier (←/→), swipe, compteur, crossfade directionnel (respect `prefers-reduced-motion`).
+- Zoom tactile : pinch + pan + double-tap sur `[data-lightbox-zoom]` ; swipe/flèches désactivés tant que zoomé ; reset au changement d’image / fermeture.
 - Exclusions : YouTube, slots vidéo, thumbs galerie (changent le featured).
 
 ## Scripts client

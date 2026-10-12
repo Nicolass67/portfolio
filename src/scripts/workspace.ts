@@ -115,6 +115,34 @@ function initWorkspace(root: HTMLElement) {
       });
   }
 
+  function openMobileSheet(sheet: HTMLDialogElement) {
+    sheet.tabIndex = -1;
+    sheet.classList.add("is-opening");
+    if (!sheet.open) {
+      sheet.showModal();
+    }
+    // Focus the sheet itself — never the close control (iOS selection / ghost tap).
+    sheet.focus({ preventScroll: true });
+    window.setTimeout(() => {
+      sheet.classList.remove("is-opening");
+    }, 320);
+  }
+
+  root
+    .querySelectorAll<HTMLDialogElement>("dialog[data-mobile-sheet]")
+    .forEach((sheet) => {
+      sheet.addEventListener("click", (event) => {
+        // Native modal: click on ::backdrop has the dialog as event.target.
+        if (
+          event.target === sheet &&
+          sheet.open &&
+          !sheet.classList.contains("is-opening")
+        ) {
+          sheet.close();
+        }
+      });
+    });
+
   function applyChapter(projectId: string, chapterId: string | null) {
     const card = cards.find((item) => item.dataset.projectId === projectId);
     const idle = card?.querySelector<HTMLElement>("[data-chapter-idle]");
@@ -436,6 +464,17 @@ function initWorkspace(root: HTMLElement) {
     const target = event.target;
     if (!(target instanceof Element)) return;
 
+    // Backdrop click on a mobile sheet (greyed area above the panel).
+    if (
+      target instanceof HTMLDialogElement &&
+      target.matches("dialog[data-mobile-sheet]") &&
+      target.open &&
+      !target.classList.contains("is-opening")
+    ) {
+      target.close();
+      return;
+    }
+
     const sheetClose = target.closest<HTMLButtonElement>(
       "[data-mobile-sheet-close]",
     );
@@ -451,7 +490,7 @@ function initWorkspace(root: HTMLElement) {
       const sheet = root.querySelector<HTMLDialogElement>(
         `dialog[data-mobile-sheet="${sheetOpen.dataset.mobileSheetOpen}"]`,
       );
-      sheet?.showModal();
+      if (sheet) openMobileSheet(sheet);
       return;
     }
 

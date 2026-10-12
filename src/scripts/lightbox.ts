@@ -3,6 +3,7 @@
  * Triggers: [data-lightbox-open] with data-lightbox-src / alt / caption.
  * Multi-image groups: siblings in [data-lightbox-group], .media-frame__gallery,
  * or [data-gallery-select] thumbs — prev/next with directional crossfade.
+ * Touch: pinch-to-zoom, pan, double-tap; swipe between images at 1× only.
  */
 
 type LightboxItem = {
@@ -41,12 +42,17 @@ function clearSelection() {
 
 function ensureDialog(t: Labels): HTMLDialogElement {
   let dialog = document.querySelector<HTMLDialogElement>("[data-lightbox]");
+  if (dialog && !dialog.querySelector("[data-lightbox-zoom]")) {
+    dialog.remove();
+    dialog = null;
+  }
   if (dialog) return dialog;
 
   dialog = document.createElement("dialog");
   dialog.className = "lightbox";
   dialog.setAttribute("data-lightbox", "");
   dialog.setAttribute("aria-label", t.dialog);
+  dialog.tabIndex = -1;
   dialog.innerHTML = `
     <div class="lightbox__panel" data-lightbox-panel>
       <button type="button" class="lightbox__close" data-lightbox-close aria-label="${t.close}">
@@ -68,8 +74,10 @@ function ensureDialog(t: Labels): HTMLDialogElement {
       </button>
       <figure class="lightbox__figure">
         <div class="lightbox__stage" data-lightbox-stage>
-          <img class="lightbox__image is-active" data-lightbox-image data-layer="a" alt="" draggable="false" hidden />
-          <img class="lightbox__image" data-lightbox-image data-layer="b" alt="" draggable="false" hidden />
+          <div class="lightbox__zoom" data-lightbox-zoom>
+            <img class="lightbox__image is-active" data-lightbox-image data-layer="a" alt="" draggable="false" hidden />
+            <img class="lightbox__image" data-lightbox-image data-layer="b" alt="" draggable="false" hidden />
+          </div>
           <div class="lightbox__fallback" data-lightbox-fallback hidden>
             <p class="lightbox__fallback-mark" aria-hidden="true">◇</p>
             <p class="lightbox__fallback-label">${t.failed}</p>
@@ -84,13 +92,37 @@ function ensureDialog(t: Labels): HTMLDialogElement {
   return dialog;
 }
 
+const MIN_ZOOM = 1;
+const MAX_ZOOM = 4;
+const DOUBLE_TAP_ZOOM = 2.5;
+const DOUBLE_TAP_MS = 280;
+
 let lastTrigger: HTMLElement | null = null;
 let items: LightboxItem[] = [];
 let currentIndex = 0;
 let activeLayer: "a" | "b" = "a";
 let isAnimating = false;
-let touchStartX: number | null = null;
-let touchStartY: number | null = null;
+
+/** Pinch / pan / swipe state */
+let zoomScale = 1;
+let zoomX = 0;
+let zoomY = 0;
+let gesture: "none" | "swipe" | "pan" | "pinch" = "none";
+let swipeStartX = 0;
+let swipeStartY = 0;
+let panStartX = 0;
+let panStartY = 0;
+let panOriginX = 0;
+let panOriginY = 0;
+let pinchStartDist = 0;
+let pinchStartScale = 1;
+let pinchOriginX = 0;
+let pinchOriginY = 0;
+let pinchFocalX = 0;
+let pinchFocalY = 0;
+let lastTapAt = 0;
+let lastTapX = 0;
+let lastTapY = 0;
 
 function getLayers(dialog: HTMLDialogElement) {
   const a = dialog.querySelector<HTMLImageElement>(
@@ -115,7 +147,87 @@ function getLayers(dialog: HTMLDialogElement) {
     "[data-lightbox-next]",
   );
   const stage = dialog.querySelector<HTMLElement>("[data-lightbox-stage]");
-  return { a, b, fallback, captionEl, counterEl, prevBtn, nextBtn, stage };
+  const zoom = dialog.querySelector<HTMLElement>("[data-lightbox-zoom]");
+  return {
+    a,
+    b,
+    fallback,
+    captionEl,
+    counterEl,
+    prevBtn,
+    nextBtn,
+    stage,
+    zoom,
+  };
+}
+
+function clamp(value: number, min: number, max: number) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function touchDistance(a: Touch, b: Touch) {
+  return Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+}
+
+function clampPan(stage: HTMLElement) {
+  if (zoomScale <= 1.01) {
+    zoomX = 0;
+    zoomY = 0;
+    return;
+  }
+  const rect = stage.getBoundingClientRect();
+  const maxX = (rect.width * (zoomScale - 1)) / 2;
+  const maxY = (rect.height * (zoomScale - 1)) / 2;
+  zoomX = clamp(zoomX, -maxX, maxX);
+  zoomY = clamp(zoomY, -maxY, maxY);
+}
+
+function applyZoom(dialog: HTMLDialogElement) {
+  const { zoom, stage } = getLayers(dialog);
+  if (!zoom || !stage) return;
+  clampPan(stage);
+  const zoomed = zoomScale > 1.01;
+  if (!zoomed) {
+    zoom.style.transform = "";
+  } else {
+    zoom.style.transform = `translate3d(${zoomX}px, ${zoomY}px, 0) scale(${zoomScale})`;
+  }
+  zoom.classList.toggle("is-zoomed", zoomed);
+  dialog.classList.toggle("lightbox--zoomed", zoomed);
+}
+
+function resetZoom(dialog: HTMLDialogElement) {
+  zoomScale = 1;
+  zoomX = 0;
+  zoomY = 0;
+  gesture = "none";
+  applyZoom(dialog);
+}
+
+function setZoomAtPoint(
+  dialog: HTMLDialogElement,
+  nextScale: number,
+  clientX: number,
+  clientY: number,
+) {
+  const { stage } = getLayers(dialog);
+  if (!stage) return;
+  const rect = stage.getBoundingClientRect();
+  const focalX = clientX - rect.left - rect.width / 2;
+  const focalY = clientY - rect.top - rect.height / 2;
+  const prev = zoomScale;
+  const scale = clamp(nextScale, MIN_ZOOM, MAX_ZOOM);
+  if (scale <= 1.01) {
+    zoomScale = 1;
+    zoomX = 0;
+    zoomY = 0;
+  } else {
+    const ratio = scale / prev;
+    zoomX = focalX - (focalX - zoomX) * ratio;
+    zoomY = focalY - (focalY - zoomY) * ratio;
+    zoomScale = scale;
+  }
+  applyZoom(dialog);
 }
 
 function activeImage(dialog: HTMLDialogElement): HTMLImageElement | null {
@@ -338,6 +450,11 @@ async function navigate(
   t: Labels,
 ) {
   if (items.length < 2 || isAnimating) return;
+  // While zoomed, first nav intent unzooms instead of changing image.
+  if (zoomScale > 1.01) {
+    resetZoom(dialog);
+    return;
+  }
 
   const nextIndex = (currentIndex + direction + items.length) % items.length;
   const item = items[nextIndex];
@@ -415,6 +532,7 @@ async function navigate(
 
 function closeLightbox(dialog: HTMLDialogElement) {
   if (!dialog.open) return;
+  resetZoom(dialog);
   dialog.close();
   document.documentElement.classList.remove("is-lightbox-open");
   items = [];
@@ -448,6 +566,7 @@ function openLightbox(
   b.removeAttribute("src");
   a.classList.add("is-active");
 
+  resetZoom(dialog);
   showItemInstant(dialog, items[currentIndex]!);
   updateChrome(dialog, t);
   preloadNeighbors();
@@ -456,7 +575,13 @@ function openLightbox(
   if (!dialog.open) {
     dialog.showModal();
   }
-  dialog.querySelector<HTMLButtonElement>("[data-lightbox-close]")?.focus();
+  // Focus the dialog itself — never the close control.
+  // On iPhone, autofocusing × looks selected and can catch the opening tap.
+  dialog.classList.add("is-opening");
+  dialog.focus({ preventScroll: true });
+  window.setTimeout(() => {
+    dialog.classList.remove("is-opening");
+  }, 350);
 }
 
 export function initLightbox() {
@@ -545,42 +670,170 @@ export function initLightbox() {
     stage.addEventListener(
       "touchstart",
       (event) => {
-        if (!dialog.open || items.length < 2 || event.touches.length !== 1) {
+        if (!dialog.open || isAnimating) return;
+
+        if (event.touches.length === 2) {
+          const a = event.touches[0];
+          const b = event.touches[1];
+          if (!a || !b) return;
+          gesture = "pinch";
+          pinchStartDist = touchDistance(a, b) || 1;
+          pinchStartScale = zoomScale;
+          pinchOriginX = zoomX;
+          pinchOriginY = zoomY;
+          const rect = stage.getBoundingClientRect();
+          pinchFocalX =
+            (a.clientX + b.clientX) / 2 - rect.left - rect.width / 2;
+          pinchFocalY =
+            (a.clientY + b.clientY) / 2 - rect.top - rect.height / 2;
           return;
         }
+
+        if (event.touches.length !== 1) return;
         const touch = event.touches[0];
         if (!touch) return;
-        touchStartX = touch.clientX;
-        touchStartY = touch.clientY;
+
+        if (zoomScale > 1.01) {
+          gesture = "pan";
+          panStartX = touch.clientX;
+          panStartY = touch.clientY;
+          panOriginX = zoomX;
+          panOriginY = zoomY;
+          return;
+        }
+
+        gesture = "swipe";
+        swipeStartX = touch.clientX;
+        swipeStartY = touch.clientY;
       },
       { passive: true },
     );
 
     stage.addEventListener(
+      "touchmove",
+      (event) => {
+        if (!dialog.open || isAnimating) return;
+
+        if (gesture === "pinch" && event.touches.length >= 2) {
+          event.preventDefault();
+          const a = event.touches[0];
+          const b = event.touches[1];
+          if (!a || !b || pinchStartDist <= 0) return;
+          const dist = touchDistance(a, b);
+          const next = clamp(
+            pinchStartScale * (dist / pinchStartDist),
+            MIN_ZOOM,
+            MAX_ZOOM,
+          );
+          const ratio = next / pinchStartScale;
+          zoomScale = next;
+          zoomX = pinchFocalX - (pinchFocalX - pinchOriginX) * ratio;
+          zoomY = pinchFocalY - (pinchFocalY - pinchOriginY) * ratio;
+          if (zoomScale <= 1.01) {
+            zoomScale = 1;
+            zoomX = 0;
+            zoomY = 0;
+          }
+          applyZoom(dialog);
+          return;
+        }
+
+        if (gesture === "pan" && event.touches.length === 1) {
+          event.preventDefault();
+          const touch = event.touches[0];
+          if (!touch) return;
+          zoomX = panOriginX + (touch.clientX - panStartX);
+          zoomY = panOriginY + (touch.clientY - panStartY);
+          applyZoom(dialog);
+        }
+      },
+      { passive: false },
+    );
+
+    stage.addEventListener(
       "touchend",
       (event) => {
-        if (
-          touchStartX === null ||
-          touchStartY === null ||
-          !dialog.open ||
-          items.length < 2
-        ) {
-          touchStartX = null;
-          touchStartY = null;
+        if (!dialog.open) {
+          gesture = "none";
           return;
         }
+
+        if (gesture === "pinch") {
+          if (event.touches.length >= 2) return;
+          if (event.touches.length === 1) {
+            const touch = event.touches[0];
+            if (touch && zoomScale > 1.01) {
+              gesture = "pan";
+              panStartX = touch.clientX;
+              panStartY = touch.clientY;
+              panOriginX = zoomX;
+              panOriginY = zoomY;
+            } else {
+              gesture = "none";
+            }
+          } else {
+            if (zoomScale < 1.05) resetZoom(dialog);
+            else applyZoom(dialog);
+            gesture = "none";
+          }
+          return;
+        }
+
+        if (gesture === "pan") {
+          if (event.touches.length > 0) return;
+          applyZoom(dialog);
+          gesture = "none";
+          return;
+        }
+
+        if (gesture !== "swipe") {
+          gesture = "none";
+          return;
+        }
+
         const touch = event.changedTouches[0];
-        if (!touch) {
-          touchStartX = null;
-          touchStartY = null;
+        gesture = "none";
+        if (!touch || zoomScale > 1.01) return;
+
+        const dx = touch.clientX - swipeStartX;
+        const dy = touch.clientY - swipeStartY;
+        const moved = Math.hypot(dx, dy);
+
+        // Double-tap to zoom in/out (mobile).
+        if (moved < 12) {
+          const now = performance.now();
+          const quick =
+            now - lastTapAt < DOUBLE_TAP_MS &&
+            Math.hypot(touch.clientX - lastTapX, touch.clientY - lastTapY) < 36;
+          lastTapAt = now;
+          lastTapX = touch.clientX;
+          lastTapY = touch.clientY;
+          if (quick) {
+            lastTapAt = 0;
+            if (zoomScale > 1.01) resetZoom(dialog);
+            else
+              setZoomAtPoint(
+                dialog,
+                DOUBLE_TAP_ZOOM,
+                touch.clientX,
+                touch.clientY,
+              );
+          }
           return;
         }
-        const dx = touch.clientX - touchStartX;
-        const dy = touch.clientY - touchStartY;
-        touchStartX = null;
-        touchStartY = null;
+
+        if (items.length < 2) return;
         if (Math.abs(dx) < 48 || Math.abs(dx) < Math.abs(dy)) return;
         void navigate(dialog, dx < 0 ? 1 : -1, t);
+      },
+      { passive: true },
+    );
+
+    stage.addEventListener(
+      "touchcancel",
+      () => {
+        gesture = "none";
+        applyZoom(dialog);
       },
       { passive: true },
     );
@@ -595,6 +848,7 @@ export function initLightbox() {
   });
 
   dialog.addEventListener("close", () => {
+    resetZoom(dialog);
     document.documentElement.classList.remove("is-lightbox-open");
     items = [];
     currentIndex = 0;

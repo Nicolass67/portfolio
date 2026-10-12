@@ -285,6 +285,16 @@
 - Remplace partiellement D-030 pour le comportement du saut pastilles.
 - Statut : **validé par l’utilisateur**.
 
+## D-035 — Entrée explicite vers l’étude technique
+
+- Contexte : le CTA « Étude de cas » était trop implicite (lien bas de page, jargon, après blocs démo).
+- Décision **validée par l’utilisateur** (2026-10-12) :
+  - CTA principal fort sous le résumé, **avant** les blocs overview ; libellé « Lire l’étude technique » + compteur de chapitres.
+  - Seconde entrée : bandeau sur le média overview (« Lire l’étude ») ; lightbox conserve l’inspect image hors bandeau.
+  - Feuille Projets mobile : affordance « Ouvrir l’étude » (comportement `data-project-switch` inchangé).
+  - Chips projets = changer d’aperçu uniquement (pas d’ouverture auto de l’étude).
+- Statut : **validé / implémenté**.
+
 ## D-034 — Refonte UX mobile dédiée
 
 - Contexte : mobile = desktop compressé (rail empilé, grille chapitres trop haute, charge cognitive).
@@ -295,6 +305,7 @@
   - Changement de projet : une action (`data-project-switch`) ; scroll haut sur changement de vue/chapitre.
   - Bas de chapitre (mobile) : CTA « Chapitre suivant » ; dernier chapitre → projet suivant (`data-project-switch`).
   - Desktop ≥ 53rem : aucune modification de layout intentionnelle.
+  - Raffinement (utilisateur) : sur mobile, FR/EN reste **en haut à droite** du header (compact), pas empilé sous le brand.
 - Statut : **implémenté** (validation visuelle navigateur + contrôles projet).
 
 ## D-032 — Déploiement GitHub Pages + Actions

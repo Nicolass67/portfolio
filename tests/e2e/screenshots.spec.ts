@@ -39,7 +39,7 @@ test.describe("reference screenshots", () => {
     });
 
     await page
-      .locator("[data-project-card].is-active [data-open-case-study]")
+      .locator('[data-project-card].is-active [data-open-case-study="copy"]')
       .click();
     await page.screenshot({
       path: `${shotDir}/case-overview-fr-${suffix}.png`,
@@ -166,7 +166,7 @@ test.describe("reference screenshots", () => {
         )
         .click();
       await page
-        .locator("[data-project-card].is-active [data-open-case-study]")
+        .locator('[data-project-card].is-active [data-open-case-study="copy"]')
         .click();
       await page
         .locator(
@@ -189,7 +189,7 @@ test.describe("reference screenshots", () => {
       });
 
       await page
-        .locator("[data-project-card].is-active [data-open-case-study]")
+        .locator('[data-project-card].is-active [data-open-case-study="copy"]')
         .click();
       await page.screenshot({
         path: `${shotDir}/case-overview-en-desktop.png`,
