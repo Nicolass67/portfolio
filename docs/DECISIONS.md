@@ -255,8 +255,9 @@
 
 - Décision : conserver la DA light réussie ; ajouter explorateur d’accent **démo-only** ; blocs interactifs démo réutilisables ; transitions CSS reconstructives sans grosse lib.
 - Navigation case study : **partiellement remplacé** par D-030 (le rail projets compact concurrent a été rejeté).
-- Défauts provisoires (utilisateur 2026-10-12) : fond **Craie** (`chalk` / `#fbfbf9`), accent **Ardoise** (`slate` / `#334155`) ; explorateurs **conservés**.
-- Statut : **implémenté** (accent / interactifs / fond) ; validation définitive encore ouverte (Q-18 / Q-19).
+- Défauts (utilisateur 2026-10-12) : fond **Craie** (`chalk` / `#fbfbf9`), accent **Ardoise** (`slate` / `#334155`).
+- Explorateurs Accent/Fond : **locaux uniquement** (`import.meta.env.DEV`) — omis du site Pages (accord 2026-10-12).
+- Statut : **implémenté** ; Q-18 / Q-19 peuvent rester ouverts pour arbitrage final vs retrait complet du code explorateur.
 
 ## D-030 — Navigation contextuelle & playground dense (Mission 12)
 

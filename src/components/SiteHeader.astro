@@ -14,6 +14,8 @@ const isFrench = content.locale === "fr";
 const navLabel = isFrench ? "Navigation principale" : "Primary navigation";
 const homeHref = withBase("/");
 const enHref = withBase("/en/");
+/** Color explorers stay local-only; Pages ships fixed Craie / Ardoise. */
+const showColorExplorers = demoMode && import.meta.env.DEV;
 ---
 
 <header class="site-header" id="top">
@@ -49,7 +51,7 @@ const enHref = withBase("/en/");
     </nav>
 
     <div class="site-header__tools">
-      {demoMode ? (
+      {showColorExplorers ? (
         <>
           <BackgroundExplorer locale={content.locale} />
           <AccentExplorer locale={content.locale} />

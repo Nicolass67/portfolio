@@ -25,7 +25,7 @@ Dans `astro.config.mjs` :
 
 Les chemins publics passent par `withBase()` (`src/lib/paths.ts`).
 
-Build Pages (temporaire) : `PUBLIC_PORTFOLIO_MODE=demo` — même catalogue / explorateurs que le localhost de revue. Repasser à `authentic` avant une vraie mise en ligne portfolio.
+Build Pages (temporaire) : `PUBLIC_PORTFOLIO_MODE=demo` — catalogue démo en ligne ; sélecteurs Accent/Fond **absents** du build prod (couleurs figées Craie / Ardoise). Explorateurs uniquement en `npm run dev`.
 
 ## Contrôles CI (obligatoires)
 

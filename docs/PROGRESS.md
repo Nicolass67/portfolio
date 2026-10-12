@@ -10,10 +10,10 @@
 - Astro : `site` + `base: /portfolio/` ; chemins via `withBase()`.
 - Phase UI précédente (M13) : sidebar titres, jump 1 clic, lightbox, scrollbars masquées.
 - Direction visuelle light **conservée**.
-- Outils revue démo : explorateurs **Accent** + **Fond** (header, sessionStorage, absents du build public).
+- Outils revue : explorateurs **Accent** + **Fond** uniquement en local ; site en ligne = Craie / Ardoise figés.
 - Rail projets : **titres (+ n°) uniquement** — métadonnées réservées au workspace principal.
 - Case Study : titre du projet actif + bandeau compact de saut projet (n°) + index chapitres ; pastilles → page projet (étude de cas) ; « Tous les projets » en haut à droite (niveau bandeau démo) → overview.
-- Lightbox image accessible (`<dialog>`) pour images inspectables ; navigation multi-images (flèches, clavier, swipe, crossfade) ; vidéo/YouTube séparés.
+- Lightbox image accessible (`<dialog>`) pour images inspectables ; navigation multi-images (flèches, clavier, swipe, crossfade) ; pinch-zoom / pan / double-tap mobile ; vidéo/YouTube séparés.
 - Scrollbars visuellement masquées (Firefox + WebKit) ; le défilement reste possible.
 - Captures : `artifacts/screenshots/`.
 - Git local : initialisé, remote `origin` → `Nicolass67/portfolio`.

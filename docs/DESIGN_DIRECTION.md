@@ -3,7 +3,7 @@
 ## Statut
 
 - Direction light Mission 10 **conservée** comme fondation (typo Syne/Outfit/Fraunces selon variante, titres forts, média large).
-- Accent / fond publics : **défauts provisoires** Craie + Ardoise (Q-18 / Q-19) ; explorateurs démo conservés.
+- Accent / fond publics : **Craie + Ardoise** figés en production ; explorateurs uniquement en local (`astro dev`).
 - Baseline sombre/verte/dashboard : **rejetée**.
 
 ## Candidats de composition (revue)
