@@ -129,6 +129,11 @@ const nextProjectLabel = isFrench ? "Projet suivant" : "Next project";
                 aria-label={project.caseStudy.contentsLabel}
                 data-chapter-nav
               >
+                <span
+                  class="chapter-index__indicator"
+                  data-chapter-indicator
+                  aria-hidden="true"
+                ></span>
                 {project.caseStudy.chapters.map((chapter, chapterIndex) => (
                   <button
                     type="button"

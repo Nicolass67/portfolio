@@ -506,6 +506,7 @@ h3 {
 }
 
 .chapter-index {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
@@ -514,7 +515,33 @@ h3 {
   padding-right: 0.15rem;
 }
 
+.chapter-index__indicator {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 0;
+  width: 0;
+  height: 0;
+  border-radius: 0.4rem;
+  background: color-mix(in srgb, var(--accent-soft) 70%, transparent);
+  pointer-events: none;
+  opacity: 0;
+  transform: translate3d(0, 0, 0);
+  transition:
+    transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    width 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    height 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 180ms ease;
+  will-change: transform, width, height;
+}
+
+.chapter-index__indicator.is-ready {
+  opacity: 1;
+}
+
 .chapter-index__item {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: 0.55rem minmax(0, 1fr);
   gap: 0.55rem;
@@ -525,12 +552,13 @@ h3 {
   text-align: left;
   color: var(--ink-soft);
   border-radius: 0.4rem;
+  background: transparent;
+  transition: color 200ms ease;
 }
 
 .chapter-index__item.is-active,
 .chapter-index__item[aria-pressed="true"] {
   color: var(--ink);
-  background: color-mix(in srgb, var(--accent-soft) 70%, transparent);
 }
 
 .chapter-index__mark {
@@ -538,11 +566,16 @@ h3 {
   height: 0.35rem;
   border-radius: 50%;
   background: var(--line);
+  transition:
+    background-color 200ms ease,
+    box-shadow 200ms ease,
+    transform 200ms ease;
 }
 
 .chapter-index__item.is-active .chapter-index__mark {
   background: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-soft);
+  transform: scale(1.12);
 }
 
 .chapter-index__text {
@@ -2513,7 +2546,8 @@ h3 {
   }
 
   .site-nav__indicator,
-  .language-switcher__indicator {
+  .language-switcher__indicator,
+  .chapter-index__indicator {
     transition: none !important;
     will-change: auto;
   }

@@ -191,12 +191,53 @@ function initWorkspace(root: HTMLElement) {
       });
     });
 
+  function syncChapterIndicator(
+    projectId: string,
+    chapterId: string,
+    animate = true,
+  ) {
+    const nav = root.querySelector<HTMLElement>(
+      `[data-case-rail][data-project-id="${projectId}"] [data-chapter-nav]`,
+    );
+    const indicator = nav?.querySelector<HTMLElement>(
+      "[data-chapter-indicator]",
+    );
+    const active = nav?.querySelector<HTMLButtonElement>(
+      `[data-chapter-select][data-chapter-id="${chapterId}"]`,
+    );
+    if (!nav || !indicator || !active) return;
+
+    const navRect = nav.getBoundingClientRect();
+    const btnRect = active.getBoundingClientRect();
+    const left = btnRect.left - navRect.left + nav.scrollLeft;
+    const top = btnRect.top - navRect.top + nav.scrollTop;
+    const canAnimate = animate && indicator.classList.contains("is-ready");
+
+    if (!canAnimate) {
+      indicator.style.transition = "none";
+    }
+    indicator.style.width = `${btnRect.width}px`;
+    indicator.style.height = `${btnRect.height}px`;
+    indicator.style.transform = `translate3d(${left}px, ${top}px, 0)`;
+    if (!canAnimate) {
+      void indicator.offsetWidth;
+      indicator.style.transition = "";
+      indicator.classList.add("is-ready");
+    }
+  }
+
   function applyChapter(projectId: string, chapterId: string) {
     const card = cards.find((item) => item.dataset.projectId === projectId);
     const buttons = root.querySelectorAll<HTMLButtonElement>(
       `[data-chapter-select][data-project-id="${projectId}"]`,
     );
     const panels = card?.querySelectorAll<HTMLElement>("[data-chapter-panel]");
+    const previousChapter =
+      root
+        .querySelector<HTMLButtonElement>(
+          `[data-case-rail][data-project-id="${projectId}"] [data-chapter-select].is-active`,
+        )
+        ?.dataset.chapterId ?? "";
 
     buttons.forEach((button) => {
       const active = button.dataset.chapterId === chapterId;
@@ -210,6 +251,12 @@ function initWorkspace(root: HTMLElement) {
       panel.setAttribute("aria-hidden", active ? "false" : "true");
       setInert(panel, !active);
     });
+
+    syncChapterIndicator(
+      projectId,
+      chapterId,
+      previousChapter !== "" && previousChapter !== chapterId,
+    );
 
     const chapterLabel = root.querySelector<HTMLElement>(
       "[data-mobile-chapter-label]",
@@ -738,6 +785,13 @@ function initWorkspace(root: HTMLElement) {
     "resize",
     () => {
       syncNavIndicator(false);
+      if (
+        state.view === "projects" &&
+        state.projectMode === "case-study" &&
+        state.chapterId
+      ) {
+        syncChapterIndicator(state.projectId, state.chapterId, false);
+      }
       syncMobileHeaderStack();
       syncAllProjectIndexFades();
       syncOpenChapterScrollFades();
