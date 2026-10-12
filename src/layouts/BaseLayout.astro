@@ -1,0 +1,83 @@
+---
+import "@fontsource/syne/600.css";
+import "@fontsource/syne/700.css";
+import "@fontsource/syne/800.css";
+import "@fontsource/outfit/400.css";
+import "@fontsource/outfit/500.css";
+import "@fontsource/outfit/600.css";
+import "@fontsource/fraunces/600.css";
+import "@fontsource/fraunces/700.css";
+import "../styles/global.css";
+import "../styles/themes.css";
+
+import type { Locale } from "../content/site";
+import { DEFAULT_VISUAL_DIRECTION } from "../content/portfolio-mode";
+import { withBase } from "../lib/paths";
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description: string;
+  demoMode?: boolean;
+}
+
+const { locale, title, description, demoMode = false } = Astro.props;
+const homePath = withBase("/");
+const enPath = withBase("/en/");
+const canonicalPath = locale === "fr" ? homePath : enPath;
+const canonical = Astro.site
+  ? new URL(canonicalPath, Astro.site).href
+  : canonicalPath;
+const frHref = Astro.site ? new URL(homePath, Astro.site).href : homePath;
+const enHref = Astro.site ? new URL(enPath, Astro.site).href : enPath;
+const faviconHref = withBase("/favicon.svg");
+---
+
+<!doctype html>
+<html
+  lang={locale}
+  data-theme={DEFAULT_VISUAL_DIRECTION}
+  data-portfolio-mode={demoMode ? "demo" : "authentic"}
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#f7f3ec" />
+    {demoMode ? <meta name="robots" content="noindex, nofollow" /> : null}
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content={locale === "fr" ? "fr_FR" : "en_US"} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="fr" href={frHref} />
+    <link rel="alternate" hreflang="en" href={enHref} />
+    <link rel="alternate" hreflang="x-default" href={frHref} />
+    <link rel="icon" href={faviconHref} type="image/svg+xml" />
+    <title>{title}</title>
+    <script is:inline define:vars={{ demoMode, DEFAULT_VISUAL_DIRECTION }}>
+      (() => {
+        try {
+          const params = new URLSearchParams(window.location.search);
+          const visual = params.get("visual");
+          const allowed =
+            demoMode &&
+            (visual === "precision" ||
+              visual === "immersive" ||
+              visual === "studio")
+              ? visual
+              : DEFAULT_VISUAL_DIRECTION;
+          document.documentElement.dataset.theme = allowed;
+          document.documentElement.style.colorScheme = "light";
+        } catch {
+          /* ignore */
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

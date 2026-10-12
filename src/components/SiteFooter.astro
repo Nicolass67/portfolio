@@ -1,0 +1,16 @@
+---
+import type { SiteContent } from "../content/site";
+
+interface Props {
+  content: SiteContent;
+}
+
+const { content } = Astro.props;
+---
+
+<footer class="site-footer">
+  <div class="page-shell site-footer__inner">
+    <p>{content.footer.note}</p>
+    <a href="#top">{content.navigation.top}</a>
+  </div>
+</footer>

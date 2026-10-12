@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img">
+  <rect width="640" height="360" fill="#F7F3EC"/>
+  <path d="M70 270 C150 110, 250 110, 320 210 S470 300, 570 150" fill="none" stroke="#2F5BFF" stroke-width="3"/>
+  <text x="48" y="40" fill="#5A6478" font-family="Georgia,serif" font-size="16">Demo gallery 02</text>
+</svg>

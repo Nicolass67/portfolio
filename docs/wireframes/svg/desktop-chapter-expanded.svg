@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="720" viewBox="0 0 960 720" role="img" aria-labelledby="title desc">
+  <title id="title">Wireframe chapitre deplie</title>
+  <desc id="desc">Proposition de conception non validee - chapitre systemes ouvert</desc>
+  <rect width="960" height="720" fill="#F2F3F1"/>
+  <text x="24" y="28" font-family="Georgia, serif" font-size="11" fill="#0F5C4C">Proposition de conception - non validee | chapitre deplie</text>
+  <line x1="24" y1="48" x2="936" y2="48" stroke="#C8CDC6"/>
+  <text x="40" y="100" font-family="Georgia, serif" font-size="20" fill="#171916">&gt;  01  Concept et objectifs</text>
+  <line x1="24" y1="120" x2="936" y2="120" stroke="#C8CDC6"/>
+  <rect x="24" y="130" width="6" height="320" fill="#0F5C4C"/>
+  <text x="48" y="165" font-family="Georgia, serif" font-size="22" fill="#0F5C4C">v  02  Systemes de gameplay</text>
+  <text x="48" y="190" font-family="Consolas, monospace" font-size="11" fill="#4A524C">aria-expanded=true | ancre #systems | Fermer</text>
+  <text x="48" y="230" font-family="Segoe UI, sans-serif" font-size="14" fill="#171916">Presentation generale des systemes observes dans le prototype</text>
+  <text x="48" y="255" font-family="Segoe UI, sans-serif" font-size="14" fill="#171916">(faits inventaire - pas de preuve de finition implicite) :</text>
+  <text x="48" y="295" font-family="Consolas, monospace" font-size="13" fill="#171916">- GAS joueur - melee, bow, parry, dash, focus</text>
+  <text x="48" y="320" font-family="Consolas, monospace" font-size="13" fill="#171916">- GAS ennemi / boss - abilities dediees</text>
+  <text x="48" y="345" font-family="Consolas, monospace" font-size="13" fill="#171916">- IA State Tree - chase, kite, orbit, combat</text>
+  <text x="48" y="370" font-family="Consolas, monospace" font-size="13" fill="#171916">- Encounter / run data-driven</text>
+  <text x="48" y="395" font-family="Consolas, monospace" font-size="13" fill="#171916">- Feedback combat (camera, hit-stop, etc.)</text>
+  <rect x="48" y="420" width="400" height="28" fill="none" stroke="#C8CDC6" stroke-dasharray="4 3"/>
+  <text x="60" y="439" font-family="Segoe UI, sans-serif" font-size="11" fill="#4A524C">Pas d'extrait de code | pas de metrique inventee</text>
+  <line x1="24" y1="470" x2="936" y2="470" stroke="#C8CDC6"/>
+  <text x="40" y="510" font-family="Georgia, serif" font-size="20" fill="#171916">&gt;  03  Architecture et choix techniques</text>
+  <line x1="24" y1="530" x2="936" y2="530" stroke="#C8CDC6"/>
+  <text x="40" y="570" font-family="Georgia, serif" font-size="20" fill="#171916">&gt;  04  Problemes rencontres et solutions</text>
+  <line x1="24" y1="590" x2="936" y2="590" stroke="#C8CDC6"/>
+  <text x="24" y="640" font-family="Segoe UI, sans-serif" font-size="12" fill="#4A524C">Signal ouvert = filet accent + chevron | multi-ouverts autorises (propose)</text>
+  <text x="24" y="665" font-family="Segoe UI, sans-serif" font-size="12" fill="#4A524C">Motion d'expand &lt;= 200 ms | desactivee si prefers-reduced-motion</text>
+  <text x="24" y="690" font-family="Segoe UI, sans-serif" font-size="12" fill="#4A524C">Focus clavier visible sur le controle du chapitre</text>
+</svg>

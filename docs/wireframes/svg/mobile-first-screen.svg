@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="390" height="780" viewBox="0 0 390 780" role="img" aria-labelledby="title desc">
+  <title id="title">Wireframe mobile premier ecran A+B</title>
+  <desc id="desc">Proposition de conception non validee - pile verticale identite puis projet</desc>
+  <rect width="390" height="780" fill="#F2F3F1"/>
+  <rect x="8" y="8" width="374" height="764" rx="12" fill="none" stroke="#C8CDC6"/>
+  <text x="24" y="36" font-family="Georgia, serif" font-size="9" fill="#0F5C4C">Proposition de conception - non validee</text>
+  <line x1="24" y1="48" x2="366" y2="48" stroke="#C8CDC6"/>
+  <text x="24" y="72" font-family="Segoe UI, sans-serif" font-size="13" fill="#171916" font-weight="600">[Nom] | GP</text>
+  <text x="280" y="72" font-family="Consolas, monospace" font-size="11" fill="#4A524C">FR</text>
+  <text x="308" y="72" font-family="Consolas, monospace" font-size="11" fill="#0F5C4C" font-weight="700">EN</text>
+  <text x="348" y="72" font-family="Segoe UI, sans-serif" font-size="16" fill="#171916">=</text>
+  <line x1="24" y1="88" x2="366" y2="88" stroke="#C8CDC6"/>
+  <text x="24" y="120" font-family="Georgia, serif" font-size="20" fill="#171916">[Nom]</text>
+  <text x="24" y="148" font-family="Segoe UI, sans-serif" font-size="13" fill="#0F5C4C">Gameplay Programmer</text>
+  <text x="24" y="175" font-family="Segoe UI, sans-serif" font-size="12" fill="#4A524C">[Positionnement une ligne]</text>
+  <line x1="24" y1="195" x2="366" y2="195" stroke="#C8CDC6"/>
+  <text x="24" y="225" font-family="Consolas, monospace" font-size="11" fill="#4A524C">01</text>
+  <text x="24" y="260" font-family="Georgia, serif" font-size="24" fill="#171916">Tactical</text>
+  <text x="24" y="290" font-family="Georgia, serif" font-size="24" fill="#171916">Encounter Lab</text>
+  <text x="24" y="320" font-family="Segoe UI, sans-serif" font-size="12" fill="#4A524C">Slice de combat tactique</text>
+  <text x="24" y="338" font-family="Segoe UI, sans-serif" font-size="12" fill="#4A524C">Presentation generale</text>
+  <rect x="24" y="358" width="342" height="100" fill="#FFFFFF" stroke="#C8CDC6"/>
+  <text x="36" y="385" font-family="Consolas, monospace" font-size="11" fill="#171916">UE 5.6 | C++ | GAS | State Tree</text>
+  <text x="36" y="408" font-family="Consolas, monospace" font-size="11" fill="#171916">Projet personnel | seul</text>
+  <text x="36" y="431" font-family="Consolas, monospace" font-size="11" fill="#171916">Kit : epee | arc | parry | dash | focus</text>
+  <rect x="24" y="480" width="220" height="40" fill="#0F5C4C"/>
+  <text x="48" y="505" font-family="Segoe UI, sans-serif" font-size="13" fill="#F2F3F1">Examiner le dossier</text>
+  <text x="24" y="555" font-family="Segoe UI, sans-serif" font-size="13" fill="#171916" font-weight="600">Sommaire</text>
+  <text x="24" y="585" font-family="Consolas, monospace" font-size="12" fill="#4A524C">- Concept</text>
+  <text x="24" y="610" font-family="Consolas, monospace" font-size="12" fill="#4A524C">- Systemes</text>
+  <text x="24" y="635" font-family="Consolas, monospace" font-size="12" fill="#4A524C">- Architecture</text>
+  <text x="24" y="660" font-family="Consolas, monospace" font-size="12" fill="#4A524C">- Defis | Apprentissages | Etat</text>
+  <text x="24" y="720" font-family="Segoe UI, sans-serif" font-size="10" fill="#4A524C">Zones tactiles &gt;= 44px | pas de sidebar</text>
+</svg>

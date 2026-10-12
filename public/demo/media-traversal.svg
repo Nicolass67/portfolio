@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img">
+  <rect width="960" height="540" fill="#F3F0E8"/>
+  <path d="M80 400 L230 280 L360 320 L520 160 L700 240 L880 110" fill="none" stroke="#2F5BFF" stroke-width="4"/>
+  <circle cx="230" cy="280" r="8" fill="#1A1F2C"/>
+  <circle cx="520" cy="160" r="8" fill="#2F5BFF"/>
+  <circle cx="880" cy="110" r="8" fill="#1A1F2C"/>
+  <text x="80" y="470" fill="#5A6478" font-family="Georgia,serif" font-size="22">Demo visual · traversal</text>
+</svg>

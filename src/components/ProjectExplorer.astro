@@ -1,0 +1,228 @@
+---
+import type { SiteContent } from "../content/site";
+import MediaFrame from "./MediaFrame.astro";
+
+interface Props {
+  content: SiteContent;
+}
+
+const { content } = Astro.props;
+const { explorer, projects, demoNotice, mode } = content;
+const isFrench = content.locale === "fr";
+---
+
+<section
+  class="project-explorer page-shell"
+  id="projects"
+  data-project-explorer
+  data-portfolio-mode={mode}
+  aria-labelledby="projects-title"
+>
+  {demoNotice ? (
+    <aside class="demo-banner" data-demo-banner role="status">
+      <p class="demo-banner__title">{demoNotice.title}</p>
+      <p class="demo-banner__body">{demoNotice.body}</p>
+    </aside>
+  ) : null}
+
+  <header class="explorer-intro">
+    <div>
+      <p class="eyebrow">{explorer.eyebrow}</p>
+      <h1 id="projects-title">{explorer.title}</h1>
+    </div>
+    <p class="explorer-intro__description">{explorer.description}</p>
+  </header>
+
+  <div class="explorer-stage" data-explorer-stage>
+    {projects.map((project) => {
+      const panelId = `project-panel-${project.id}`;
+      const caseStudyId = `case-study-${project.id}`;
+
+      return (
+        <article
+          class:list={[
+            "project-entry",
+            { "project-entry--demo": project.demonstrationOnly },
+            { "project-entry--featured": project.featured },
+            {
+              [`project-entry--media-${project.featuredMedia?.kind ?? "none"}`]: true,
+            },
+          ]}
+          data-project-entry
+          data-project-id={project.id}
+          data-demonstration-only={project.demonstrationOnly ? "true" : "false"}
+          aria-labelledby={`project-title-${project.id}`}
+        >
+          <div class="project-entry__summary">
+            <div class="project-entry__meta">
+              <span class="project-entry__index">{project.index}</span>
+              <span>{project.featuredLabel}</span>
+              {project.demonstrationOnly ? (
+                <span class="project-entry__demo-tag">
+                  {isFrench ? "Fictif" : "Fictional"}
+                </span>
+              ) : null}
+            </div>
+
+            <h2 id={`project-title-${project.id}`}>{project.title}</h2>
+            <p class="project-entry__kind">{project.kind}</p>
+            <p class="project-entry__summary-text">{project.summary}</p>
+
+            <dl class="project-facts project-facts--compact">
+              <div>
+                <dt>{project.technologiesLabel}</dt>
+                <dd>{project.technologies.join(" · ")}</dd>
+              </div>
+              <div>
+                <dt>{project.kitLabel}</dt>
+                <dd>{project.kit.join(" · ")}</dd>
+              </div>
+              <div>
+                <dt>{isFrench ? "Contribution" : "Contribution"}</dt>
+                <dd>{project.contribution}</dd>
+              </div>
+            </dl>
+
+            <button
+              type="button"
+              class="primary-action project-entry__toggle"
+              data-project-toggle
+              aria-expanded="false"
+              aria-controls={panelId}
+            >
+              <span data-expand-label>{project.expandLabel}</span>
+              <span data-collapse-label hidden>
+                {project.collapseLabel}
+              </span>
+            </button>
+          </div>
+
+          <div
+            class="project-entry__panel"
+            id={panelId}
+            data-project-panel
+            aria-hidden="true"
+          >
+            <div class="project-entry__panel-inner">
+              <div class="project-entry__expanded">
+                <MediaFrame
+                  media={project.featuredMedia}
+                  emptyLabel={project.mediaEmptyLabel}
+                  emptyHint={project.mediaEmptyHint}
+                  class="project-entry__media"
+                />
+
+                <div class="project-entry__detail">
+                  <p class="eyebrow" data-active-label>
+                    {explorer.activeLabel}
+                  </p>
+                  <p class="project-entry__systems">
+                    <span class="project-entry__systems-label">
+                      {project.systemsLabel}
+                    </span>
+                    {project.systems.join(" · ")}
+                  </p>
+
+                  <section
+                    class="case-panel"
+                    id={caseStudyId}
+                    aria-labelledby={`case-title-${project.id}`}
+                  >
+                    <header class="case-panel__header">
+                      <p class="eyebrow">{project.caseStudy.eyebrow}</p>
+                      <h3 id={`case-title-${project.id}`}>
+                        {project.caseStudy.title}
+                      </h3>
+                      <p>{project.caseStudy.description}</p>
+                    </header>
+
+                    <div class="case-panel__body">
+                      <nav
+                        class="chapter-nav"
+                        aria-label={project.caseStudy.contentsLabel}
+                        data-chapter-nav
+                      >
+                        <p class="chapter-nav__label">
+                          {project.caseStudy.contentsLabel}
+                        </p>
+                        <ul>
+                          {project.caseStudy.chapters.map((chapter, index) => (
+                            <li>
+                              <button
+                                type="button"
+                                class="chapter-nav__button"
+                                data-chapter-toggle
+                                data-chapter-id={chapter.id}
+                                aria-expanded="false"
+                                aria-controls={`chapter-panel-${project.id}-${chapter.id}`}
+                              >
+                                <span class="chapter-nav__index">
+                                  {String(index + 1).padStart(2, "0")}
+                                </span>
+                                <span class="chapter-nav__title">
+                                  {chapter.title}
+                                </span>
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      </nav>
+
+                      <div class="chapter-stage" data-chapter-stage>
+                        <p class="chapter-stage__idle" data-chapter-idle>
+                          {project.caseStudy.idleHint}
+                        </p>
+
+                        {project.caseStudy.chapters.map((chapter) => (
+                          <article
+                            class="chapter-panel"
+                            id={`chapter-panel-${project.id}-${chapter.id}`}
+                            data-chapter-panel
+                            data-chapter-id={chapter.id}
+                            aria-hidden="true"
+                            aria-labelledby={`chapter-heading-${project.id}-${chapter.id}`}
+                          >
+                            <div class="chapter-panel__inner">
+                              <header class="chapter-panel__header">
+                                <p class="eyebrow">{chapter.eyebrow}</p>
+                                <h4
+                                  id={`chapter-heading-${project.id}-${chapter.id}`}
+                                >
+                                  {chapter.title}
+                                </h4>
+                              </header>
+                              <p class="chapter-panel__lead">{chapter.intro}</p>
+                              {chapter.paragraphs.map((paragraph) => (
+                                <p>{paragraph}</p>
+                              ))}
+                              {chapter.points && (
+                                <ul>
+                                  {chapter.points.map((point) => (
+                                    <li>{point}</li>
+                                  ))}
+                                </ul>
+                              )}
+                              {chapter.media &&
+                              chapter.media.kind !== "none" ? (
+                                <MediaFrame
+                                  media={chapter.media}
+                                  emptyLabel={project.mediaEmptyLabel}
+                                  emptyHint={project.mediaEmptyHint}
+                                  class="chapter-panel__media"
+                                />
+                              ) : null}
+                            </div>
+                          </article>
+                        ))}
+                      </div>
+                    </div>
+                  </section>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      );
+    })}
+  </div>
+</section>

@@ -1,0 +1,484 @@
+---
+import type { DemoBlock } from "../content/demo-blocks";
+import { withBase } from "../lib/paths";
+
+interface Props {
+  blocks: DemoBlock[];
+  class?: string;
+}
+
+const { blocks, class: className = "" } = Astro.props;
+---
+
+{blocks.length > 0 ? (
+  <div class:list={["demo-blocks", className]} data-demo-blocks>
+    {blocks.map((block) => (
+      <section
+        class={`demo-block demo-block--${block.kind}`}
+        data-demo-block
+        data-block-kind={block.kind}
+        data-block-id={block.id}
+        aria-labelledby={`block-title-${block.id}`}
+      >
+        {block.eyebrow ? <p class="eyebrow">{block.eyebrow}</p> : null}
+        <h4 id={`block-title-${block.id}`} class="demo-block__title">
+          {block.title}
+        </h4>
+
+        {block.kind === "expand-note" ? (
+          <div class="demo-expand" data-expand>
+            <p class="demo-expand__summary">{block.summary}</p>
+            <button
+              type="button"
+              class="text-action text-action--ghost"
+              data-expand-toggle
+              aria-expanded="false"
+            >
+              <span data-expand-open-label>{block.openLabel}</span>
+              <span data-expand-close-label hidden>
+                {block.closeLabel}
+              </span>
+            </button>
+            <div class="demo-expand__detail" data-expand-panel hidden>
+              <p>{block.detail}</p>
+            </div>
+          </div>
+        ) : null}
+
+        {block.kind === "step-sequence" ? (
+          <div class="demo-steps" data-step-sequence>
+            <div class="demo-steps__nav" role="tablist">
+              {block.steps.map((step, index) => (
+                <button
+                  type="button"
+                  class:list={["demo-steps__tab", { "is-active": index === 0 }]}
+                  role="tab"
+                  data-step-select
+                  data-step-id={step.id}
+                  aria-selected={index === 0 ? "true" : "false"}
+                >
+                  {step.label}
+                </button>
+              ))}
+            </div>
+            <div class="demo-steps__panels">
+              {block.steps.map((step, index) => (
+                <p
+                  class:list={[
+                    "demo-steps__panel",
+                    { "is-active": index === 0 },
+                  ]}
+                  data-step-panel
+                  data-step-id={step.id}
+                  role="tabpanel"
+                  hidden={index !== 0}
+                >
+                  {step.body}
+                </p>
+              ))}
+            </div>
+          </div>
+        ) : null}
+
+        {block.kind === "approach-compare" ? (
+          <div class="demo-compare" data-compare>
+            <div class="demo-compare__toggle" role="group">
+              <button
+                type="button"
+                class="demo-compare__option is-active"
+                data-compare-side="left"
+                aria-pressed="true"
+              >
+                {block.leftLabel}
+              </button>
+              <button
+                type="button"
+                class="demo-compare__option"
+                data-compare-side="right"
+                aria-pressed="false"
+              >
+                {block.rightLabel}
+              </button>
+            </div>
+            <p class="demo-compare__body is-active" data-compare-panel="left">
+              {block.leftBody}
+            </p>
+            <p class="demo-compare__body" data-compare-panel="right" hidden>
+              {block.rightBody}
+            </p>
+          </div>
+        ) : null}
+
+        {block.kind === "gallery-select" ? (
+          <div class="demo-gallery" data-gallery-select>
+            <figure class="demo-gallery__stage">
+              <button
+                type="button"
+                class="media-frame__inspect demo-gallery__inspect"
+                data-lightbox-open
+                data-lightbox-src={withBase(block.items[0]?.src ?? "")}
+                data-lightbox-alt={block.items[0]?.alt ?? ""}
+                data-lightbox-caption={block.items[0]?.caption ?? ""}
+                data-gallery-inspect
+              >
+                <img
+                  src={withBase(block.items[0]?.src ?? "")}
+                  alt={block.items[0]?.alt ?? ""}
+                  data-gallery-main
+                  data-media-asset
+                />
+                <span class="media-frame__inspect-hint" aria-hidden="true" />
+              </button>
+              <figcaption data-gallery-caption>
+                {block.items[0]?.caption}
+              </figcaption>
+            </figure>
+            <div class="demo-gallery__thumbs" role="list">
+              {block.items.map((item, index) => (
+                <button
+                  type="button"
+                  class:list={[
+                    "demo-gallery__thumb",
+                    { "is-active": index === 0 },
+                  ]}
+                  role="listitem"
+                  data-gallery-thumb
+                  data-src={withBase(item.src)}
+                  data-alt={item.alt}
+                  data-caption={item.caption}
+                  aria-pressed={index === 0 ? "true" : "false"}
+                >
+                  <img src={withBase(item.src)} alt="" loading="lazy" />
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : null}
+
+        {block.kind === "before-after" ? (
+          <div class="demo-ba" data-before-after>
+            <div class="demo-ba__toggle" role="group">
+              <button
+                type="button"
+                class="demo-compare__option is-active"
+                data-ba-side="before"
+                aria-pressed="true"
+              >
+                {block.beforeLabel}
+              </button>
+              <button
+                type="button"
+                class="demo-compare__option"
+                data-ba-side="after"
+                aria-pressed="false"
+              >
+                {block.afterLabel}
+              </button>
+            </div>
+            <figure class="demo-ba__frame">
+              <img
+                src={withBase(block.beforeSrc)}
+                alt={block.beforeAlt}
+                data-ba-image
+                data-before-src={withBase(block.beforeSrc)}
+                data-after-src={withBase(block.afterSrc)}
+                data-before-alt={block.beforeAlt}
+                data-after-alt={block.afterAlt}
+                data-media-asset
+              />
+              <button
+                type="button"
+                class="media-frame__inspect-fab"
+                data-lightbox-open
+                data-lightbox-src={withBase(block.beforeSrc)}
+                data-lightbox-alt={block.beforeAlt}
+                data-lightbox-caption={block.note}
+                data-ba-lightbox
+                aria-label={block.beforeLabel}
+              >
+                <span class="media-frame__inspect-hint" aria-hidden="true" />
+              </button>
+            </figure>
+            <p class="demo-ba__note">{block.note}</p>
+          </div>
+        ) : null}
+
+        {block.kind === "decision-list" ? (
+          <ul class="demo-decisions">
+            {block.items.map((item) => (
+              <li class="demo-decisions__item">
+                <button
+                  type="button"
+                  class="demo-decisions__trigger"
+                  data-expand-toggle
+                  aria-expanded="false"
+                >
+                  <span>{item.title}</span>
+                  <span aria-hidden="true">+</span>
+                </button>
+                <div class="demo-decisions__body" data-expand-panel hidden>
+                  <p>{item.body}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : null}
+
+        {block.kind === "timeline" ? (
+          <ol class="demo-timeline" data-timeline>
+            {block.items.map((item, index) => (
+              <li
+                class:list={[
+                  "demo-timeline__item",
+                  { "is-active": index === 0 },
+                ]}
+              >
+                <button
+                  type="button"
+                  class="demo-timeline__marker"
+                  data-timeline-select
+                  data-timeline-id={item.id}
+                  aria-pressed={index === 0 ? "true" : "false"}
+                >
+                  {item.label}
+                </button>
+                <p
+                  class="demo-timeline__body"
+                  data-timeline-body
+                  data-timeline-id={item.id}
+                  hidden={index !== 0}
+                >
+                  {item.body}
+                </p>
+              </li>
+            ))}
+          </ol>
+        ) : null}
+
+        {block.kind === "tech-flow" ? (
+          <div class="demo-flow">
+            <div class="demo-flow__nodes" aria-hidden="true">
+              {block.nodes.flatMap((node, index) =>
+                index > 0
+                  ? [
+                      <span class="demo-flow__arrow">→</span>,
+                      <span class="demo-flow__node">{node.label}</span>,
+                    ]
+                  : [<span class="demo-flow__node">{node.label}</span>],
+              )}
+            </div>
+            <p class="demo-flow__note">{block.note}</p>
+          </div>
+        ) : null}
+
+        {block.kind === "annotation-media" ? (
+          <div class="demo-annotate" data-annotate>
+            <figure class="demo-annotate__media">
+              <button
+                type="button"
+                class="media-frame__inspect"
+                data-lightbox-open
+                data-lightbox-src={withBase(block.src)}
+                data-lightbox-alt={block.alt}
+              >
+                <img
+                  src={withBase(block.src)}
+                  alt={block.alt}
+                  data-media-asset
+                />
+                <span class="media-frame__inspect-hint" aria-hidden="true" />
+              </button>
+            </figure>
+            <div class="demo-annotate__list">
+              {block.annotations.map((ann, index) => (
+                <button
+                  type="button"
+                  class:list={[
+                    "demo-annotate__chip",
+                    { "is-active": index === 0 },
+                  ]}
+                  data-annotate-select
+                  data-annotate-id={ann.id}
+                  aria-pressed={index === 0 ? "true" : "false"}
+                >
+                  {ann.label}
+                </button>
+              ))}
+            </div>
+            {block.annotations.map((ann, index) => (
+              <p
+                class:list={[
+                  "demo-annotate__body",
+                  { "is-active": index === 0 },
+                ]}
+                data-annotate-body
+                data-annotate-id={ann.id}
+                hidden={index !== 0}
+              >
+                {ann.body}
+              </p>
+            ))}
+          </div>
+        ) : null}
+
+        {block.kind === "concept-chips" ? (
+          <div class="demo-concepts" data-concepts>
+            <div class="demo-concepts__chips">
+              {block.concepts.map((concept, index) => (
+                <button
+                  type="button"
+                  class:list={[
+                    "demo-concepts__chip",
+                    { "is-active": index === 0 },
+                  ]}
+                  data-concept-select
+                  data-concept-id={concept.id}
+                  aria-pressed={index === 0 ? "true" : "false"}
+                >
+                  {concept.label}
+                </button>
+              ))}
+            </div>
+            {block.concepts.map((concept, index) => (
+              <p
+                class:list={[
+                  "demo-concepts__body",
+                  { "is-active": index === 0 },
+                ]}
+                data-concept-body
+                data-concept-id={concept.id}
+                hidden={index !== 0}
+              >
+                {concept.body}
+              </p>
+            ))}
+          </div>
+        ) : null}
+
+        {block.kind === "rich-intro" ? (
+          <div class="demo-rich">
+            <p class="demo-rich__lead">{block.lead}</p>
+            <p>{block.body}</p>
+          </div>
+        ) : null}
+
+        {block.kind === "checklist" ? (
+          <ul class="demo-check">
+            {block.items.map((item) => (
+              <li
+                class:list={[
+                  "demo-check__item",
+                  { "is-done": Boolean(item.done) },
+                ]}
+              >
+                <span aria-hidden="true">{item.done ? "✓" : "○"}</span>
+                <span>{item.label}</span>
+              </li>
+            ))}
+          </ul>
+        ) : null}
+
+        {block.kind === "glossary" ? (
+          <dl class="demo-glossary" data-glossary>
+            {block.terms.map((term, index) => (
+              <div class="demo-glossary__row">
+                <button
+                  type="button"
+                  class:list={[
+                    "demo-glossary__term",
+                    { "is-active": index === 0 },
+                  ]}
+                  data-glossary-select
+                  data-glossary-id={term.id}
+                  aria-pressed={index === 0 ? "true" : "false"}
+                >
+                  {term.term}
+                </button>
+                <p
+                  class="demo-glossary__def"
+                  data-glossary-def
+                  data-glossary-id={term.id}
+                  hidden={index !== 0}
+                >
+                  {term.definition}
+                </p>
+              </div>
+            ))}
+          </dl>
+        ) : null}
+
+        {block.kind === "media-text-split" ? (
+          <div class="demo-split">
+            <figure class="demo-split__media">
+              <button
+                type="button"
+                class="media-frame__inspect"
+                data-lightbox-open
+                data-lightbox-src={withBase(block.src)}
+                data-lightbox-alt={block.alt}
+              >
+                <img
+                  src={withBase(block.src)}
+                  alt={block.alt}
+                  data-media-asset
+                />
+                <span class="media-frame__inspect-hint" aria-hidden="true" />
+              </button>
+            </figure>
+            <p class="demo-split__body">{block.body}</p>
+          </div>
+        ) : null}
+
+        {block.kind === "param-explorer" ? (
+          <div class="demo-params" data-params>
+            <div class="demo-params__list">
+              {block.params.map((param, index) => (
+                <button
+                  type="button"
+                  class:list={[
+                    "demo-params__item",
+                    { "is-active": index === 0 },
+                  ]}
+                  data-param-select
+                  data-param-id={param.id}
+                  aria-pressed={index === 0 ? "true" : "false"}
+                >
+                  <span>{param.label}</span>
+                  <strong>{param.value}</strong>
+                </button>
+              ))}
+            </div>
+            {block.params.map((param, index) => (
+              <p
+                class="demo-params__explain"
+                data-param-body
+                data-param-id={param.id}
+                hidden={index !== 0}
+              >
+                {param.explanation}
+              </p>
+            ))}
+          </div>
+        ) : null}
+
+        {block.kind === "related-chapters" ? (
+          <div class="demo-related">
+            <div class="demo-related__links">
+              {block.links.map((link) => (
+                <button
+                  type="button"
+                  class="demo-related__link"
+                  data-chapter-select
+                  data-chapter-id={link.id}
+                >
+                  {link.label}
+                </button>
+              ))}
+            </div>
+            <p class="demo-related__note">{block.note}</p>
+          </div>
+        ) : null}
+      </section>
+    ))}
+  </div>
+) : null}

@@ -1,0 +1,48 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ProjectWorkspace from "./ProjectWorkspace.astro";
+import SiteHeader from "./SiteHeader.astro";
+import {
+  assertLocaleCompleteness,
+  getSiteContent,
+  type Locale,
+} from "../content/site";
+import { isDemoMode } from "../content/portfolio-mode";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+assertLocaleCompleteness();
+const content = getSiteContent(locale);
+const demo = isDemoMode();
+const skipLabel =
+  locale === "fr" ? "Aller au contenu principal" : "Skip to main content";
+---
+
+<BaseLayout
+  locale={locale}
+  title={content.meta.title}
+  description={content.meta.description}
+  demoMode={demo}
+>
+  <div class="app-shell">
+    <a class="skip-link" href="#main-content">
+      {skipLabel}
+    </a>
+    <SiteHeader content={content} demoMode={demo} />
+    <ProjectWorkspace content={content} />
+    <p class="app-credit" aria-hidden="true">
+      {content.footer.note}
+    </p>
+  </div>
+
+  <script>
+    import "../scripts/workspace";
+    import "../scripts/theme";
+    import "../scripts/accent";
+    import "../scripts/interactives";
+    import "../scripts/lightbox";
+  </script>
+</BaseLayout>

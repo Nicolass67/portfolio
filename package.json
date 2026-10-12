@@ -1,0 +1,45 @@
+{
+  "name": "gameplay-programmer-portfolio",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Portfolio bilingue de Gameplay Programmer centré sur Tactical Encounter Lab.",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "typecheck": "astro check",
+    "lint": "eslint \"src/**/*.{ts,mts}\" \"tests/**/*.{ts,mts}\" \"*.config.{js,mjs,ts}\"",
+    "format": "prettier --write \"src/**/*\" \"tests/**/*\" \"*.{json,mjs,ts}\"",
+    "format:check": "prettier --check \"src/**/*\" \"tests/**/*\" \"*.{json,mjs,ts}\"",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "check": "npm run format:check && npm run lint && npm run typecheck && npm run test && npm run build"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "dependencies": {
+    "@fontsource/fraunces": "^5.3.0",
+    "@fontsource/ibm-plex-mono": "^5.3.0",
+    "@fontsource/outfit": "^5.3.0",
+    "@fontsource/source-sans-3": "^5.3.1",
+    "@fontsource/source-serif-4": "^5.3.1",
+    "@fontsource/syne": "^5.3.0",
+    "astro": "^7.3.8"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@axe-core/playwright": "^4.13.0",
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.64.0",
+    "@types/node": "^26.6.5",
+    "eslint": "^10.12.0",
+    "prettier": "^3.9.10",
+    "prettier-plugin-astro": "^1.1.1",
+    "typescript": "^6.0.2",
+    "typescript-eslint": "^8.61.0",
+    "vitest": "^5.0.4"
+  }
+}

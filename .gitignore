@@ -1,0 +1,28 @@
+# Archives de transmission destinées à la revue externe
+artifacts/reviews/*.zip
+artifacts/reviews/_staging/
+
+# Application Astro / Node
+node_modules/
+dist/
+.astro/
+coverage/
+
+# Tests générés
+playwright-report/
+test-results/
+
+# Secrets et environnement local
+.env
+.env.*
+!.env.example
+
+# OS / éditeur
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.log
+*.tmp
+.vscode/*
+!.vscode/extensions.json
+.idea/

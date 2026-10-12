@@ -1,0 +1,101 @@
+---
+import {
+  accentFamilies,
+  accentPalette,
+  DEFAULT_ACCENT_ID,
+} from "../content/accent-palette";
+import type { Locale } from "../content/site";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const isFrench = locale === "fr";
+const label = isFrench ? "Accent" : "Accent";
+const panelLabel = isFrench
+  ? "Explorateur d’accent (revue uniquement)"
+  : "Accent explorer (review only)";
+const hint = isFrench
+  ? "Outil temporaire — n’apparaît pas en build public."
+  : "Temporary tool — not shown in the public build.";
+const customLabel = isFrench ? "Couleur libre" : "Custom color";
+---
+
+<div class="accent-explorer" data-accent-explorer>
+  <button
+    type="button"
+    class="accent-explorer__trigger"
+    data-accent-toggle
+    aria-expanded="false"
+    aria-controls="accent-explorer-panel"
+    title={panelLabel}
+  >
+    <span
+      class="accent-explorer__swatch"
+      data-accent-preview
+      aria-hidden="true"
+    ></span>
+    <span>{label}</span>
+  </button>
+
+  <div
+    id="accent-explorer-panel"
+    class="accent-explorer__panel"
+    data-accent-panel
+    hidden
+    role="dialog"
+    aria-label={panelLabel}
+  >
+    <p class="accent-explorer__hint">{hint}</p>
+
+    {accentFamilies.map((family) => {
+      const swatches = accentPalette.filter((s) => s.family === family.id);
+      if (swatches.length === 0) return null;
+      return (
+        <div class="accent-explorer__family">
+          <p class="accent-explorer__family-label">
+            {isFrench ? family.fr : family.en}
+          </p>
+          <div class="accent-explorer__grid" role="list">
+            {swatches.map((swatch) => (
+              <button
+                type="button"
+                class="accent-explorer__option"
+                role="listitem"
+                data-accent-option
+                data-accent-id={swatch.id}
+                data-accent-value={swatch.value}
+                aria-pressed={
+                  swatch.id === DEFAULT_ACCENT_ID ? "true" : "false"
+                }
+                title={isFrench ? swatch.fr : swatch.en}
+              >
+                <span
+                  class="accent-explorer__dot"
+                  style={`background:${swatch.value}`}
+                  aria-hidden="true"
+                />
+                <span class="accent-explorer__name">
+                  {isFrench ? swatch.fr : swatch.en}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      );
+    })}
+
+    <label class="accent-explorer__custom">
+      <span>{customLabel}</span>
+      <input
+        type="color"
+        data-accent-custom
+        value={
+          accentPalette.find((s) => s.id === DEFAULT_ACCENT_ID)?.value ??
+          "#2146d6"
+        }
+      />
+    </label>
+  </div>
+</div>

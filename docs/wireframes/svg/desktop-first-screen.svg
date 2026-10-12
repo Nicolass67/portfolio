@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640" role="img" aria-labelledby="title desc">
+  <title id="title">Wireframe desktop premier ecran A+B</title>
+  <desc id="desc">Proposition de conception non validee - hybride editorial et synthese technique</desc>
+  <rect width="960" height="640" fill="#F2F3F1"/>
+  <text x="24" y="28" font-family="Georgia, serif" font-size="11" fill="#0F5C4C">Proposition de conception - non validee | A+B | sans media</text>
+  <line x1="24" y1="48" x2="936" y2="48" stroke="#C8CDC6" stroke-width="1"/>
+  <text x="24" y="72" font-family="Segoe UI, sans-serif" font-size="14" fill="#171916" font-weight="600">[Nom]</text>
+  <text x="78" y="72" font-family="Segoe UI, sans-serif" font-size="13" fill="#4A524C">Gameplay Programmer</text>
+  <text x="620" y="72" font-family="Segoe UI, sans-serif" font-size="12" fill="#4A524C">Projets</text>
+  <text x="680" y="72" font-family="Segoe UI, sans-serif" font-size="12" fill="#4A524C">Profil</text>
+  <text x="736" y="72" font-family="Segoe UI, sans-serif" font-size="12" fill="#4A524C">Contact</text>
+  <text x="860" y="72" font-family="Consolas, monospace" font-size="12" fill="#4A524C">FR</text>
+  <text x="888" y="72" font-family="Consolas, monospace" font-size="12" fill="#0F5C4C" font-weight="700">EN</text>
+  <line x1="888" y1="76" x2="908" y2="76" stroke="#0F5C4C" stroke-width="2"/>
+  <line x1="24" y1="88" x2="936" y2="88" stroke="#C8CDC6" stroke-width="1"/>
+  <rect x="24" y="110" width="200" height="480" fill="none" stroke="#C8CDC6" stroke-dasharray="4 4"/>
+  <text x="40" y="160" font-family="Georgia, serif" font-size="22" fill="#171916">[Nom]</text>
+  <text x="40" y="190" font-family="Segoe UI, sans-serif" font-size="14" fill="#0F5C4C">Gameplay Programmer</text>
+  <text x="40" y="230" font-family="Segoe UI, sans-serif" font-size="12" fill="#4A524C">[Positionnement</text>
+  <text x="40" y="248" font-family="Segoe UI, sans-serif" font-size="12" fill="#4A524C">en une ligne]</text>
+  <text x="260" y="140" font-family="Consolas, monospace" font-size="12" fill="#4A524C">01</text>
+  <text x="260" y="185" font-family="Georgia, serif" font-size="36" fill="#171916">Tactical Encounter Lab</text>
+  <text x="260" y="220" font-family="Segoe UI, sans-serif" font-size="14" fill="#4A524C">Slice de combat tactique - presentation generale</text>
+  <rect x="260" y="245" width="660" height="110" fill="#FFFFFF" stroke="#C8CDC6"/>
+  <text x="280" y="275" font-family="Consolas, monospace" font-size="13" fill="#171916">UE 5.6 | C++ | GAS | State Tree</text>
+  <text x="280" y="300" font-family="Consolas, monospace" font-size="13" fill="#171916">Projet personnel | realise seul</text>
+  <text x="280" y="325" font-family="Consolas, monospace" font-size="13" fill="#171916">Kit V1 : epee | arc | parry | dash | focus</text>
+  <rect x="260" y="380" width="200" height="36" fill="#0F5C4C"/>
+  <text x="285" y="403" font-family="Segoe UI, sans-serif" font-size="13" fill="#F2F3F1">Examiner le dossier</text>
+  <text x="480" y="403" font-family="Segoe UI, sans-serif" font-size="13" fill="#0F5C4C">Systemes v</text>
+  <text x="260" y="460" font-family="Segoe UI, sans-serif" font-size="13" fill="#171916" font-weight="600">Sommaire d'inspection</text>
+  <text x="260" y="490" font-family="Consolas, monospace" font-size="12" fill="#4A524C">01 Concept</text>
+  <text x="380" y="490" font-family="Consolas, monospace" font-size="12" fill="#4A524C">02 Systemes</text>
+  <text x="500" y="490" font-family="Consolas, monospace" font-size="12" fill="#4A524C">03 Architecture</text>
+  <text x="260" y="515" font-family="Consolas, monospace" font-size="12" fill="#4A524C">04 Defis</text>
+  <text x="380" y="515" font-family="Consolas, monospace" font-size="12" fill="#4A524C">05 Apprentissages</text>
+  <text x="540" y="515" font-family="Consolas, monospace" font-size="12" fill="#4A524C">06 Etat / limites</text>
+  <text x="260" y="580" font-family="Segoe UI, sans-serif" font-size="11" fill="#4A524C">Heritage A : asymetrie + typographie | Heritage B : synthese dense + sommaire</text>
+</svg>

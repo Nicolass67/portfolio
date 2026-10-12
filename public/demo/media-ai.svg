@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img">
+  <rect width="960" height="540" fill="#F7F3EC"/>
+  <g fill="none" stroke="#2F5BFF" stroke-width="2">
+    <circle cx="480" cy="250" r="36"/>
+    <circle cx="320" cy="170" r="22"/>
+    <circle cx="640" cy="170" r="22"/>
+    <circle cx="340" cy="340" r="22"/>
+    <circle cx="620" cy="340" r="22"/>
+    <path d="M454 230 L342 184 M506 230 L618 184 M454 270 L358 324 M506 270 L602 324"/>
+  </g>
+  <text x="96" y="460" fill="#5A6478" font-family="Georgia,serif" font-size="22">Demo visual · AI sandbox</text>
+</svg>

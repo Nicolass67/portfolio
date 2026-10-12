@@ -1,0 +1,209 @@
+/*
+  Mission 10 — three LIGHT visual candidates (review only via ?visual=).
+  Rejected baseline: dark graphite + neon green + dashboard cards.
+  Not a public theme feature. Final site ships ONE approved light theme.
+*/
+
+/* A — Precision Futurism: engineered grid, sharp edges, cobalt */
+html[data-theme="precision"] {
+  --bg: #f4f6fa;
+  --bg-deep: #e8edf6;
+  --ink: #121826;
+  --ink-soft: #5a6578;
+  --accent: #2f5bff;
+  --accent-soft: color-mix(in srgb, #2f5bff 12%, transparent);
+  --line: color-mix(in srgb, #121826 12%, transparent);
+  --font-display: "Syne", "Segoe UI", sans-serif;
+  --font-body: "Outfit", "Segoe UI", sans-serif;
+  --radius-media: 0;
+  --hero-media-ratio: 1.2fr 0.9fr;
+  --index-weight: 800;
+  --shell-pattern: linear-gradient(
+    180deg,
+    #f8f9fc 0%,
+    var(--bg) 38%,
+    var(--bg-deep) 100%
+  );
+}
+
+html[data-theme="precision"] .site-header {
+  border-bottom: 1px solid var(--line);
+}
+
+html[data-theme="precision"] .project-rail {
+  border-right: 1px solid var(--line);
+  padding-right: 0.85rem;
+}
+
+html[data-theme="precision"] .project-index__item {
+  border-left: 2px solid transparent;
+  padding-left: 0.55rem;
+}
+
+html[data-theme="precision"] .project-index__item.is-active {
+  border-left-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+html[data-theme="precision"] .project-index__num {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+
+html[data-theme="precision"] .project-hero__copy h2 {
+  letter-spacing: -0.05em;
+  max-width: 14ch;
+}
+
+html[data-theme="precision"] .project-hero__overview {
+  gap: 2rem;
+}
+
+html[data-theme="precision"] .media-frame {
+  outline: 1px solid var(--line);
+}
+
+html[data-theme="precision"] .text-action {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.78rem;
+}
+
+/* B — Immersive Creative Technology: media-led, expressive serif titles */
+html[data-theme="immersive"] {
+  --bg: #f7f3ec;
+  --bg-deep: #efe8db;
+  --ink: #1c1712;
+  --ink-soft: #6b6258;
+  --accent: #0f6a6a;
+  --accent-soft: color-mix(in srgb, #0f6a6a 12%, transparent);
+  --line: color-mix(in srgb, #1c1712 10%, transparent);
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Outfit", "Segoe UI", sans-serif;
+  --radius-media: 1.75rem 0.35rem 1.75rem 0.35rem;
+  --hero-media-ratio: 1.45fr 0.7fr;
+  --index-weight: 700;
+  --shell-pattern:
+    radial-gradient(
+      900px 480px at 78% 8%,
+      color-mix(in srgb, var(--accent) 12%, transparent),
+      transparent 62%
+    ),
+    var(--bg);
+}
+
+html[data-theme="immersive"] .site-header {
+  border-bottom: 0;
+}
+
+html[data-theme="immersive"] .projects-layout {
+  grid-template-columns: minmax(6.5rem, 8rem) minmax(0, 1fr);
+  gap: 1.5rem;
+}
+
+html[data-theme="immersive"]
+  .project-index__item.is-active
+  .project-index__label {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.3em;
+  text-decoration-color: var(--accent);
+}
+
+html[data-theme="immersive"] .project-hero__overview {
+  grid-template-columns: var(--hero-media-ratio);
+  align-items: end;
+}
+
+html[data-theme="immersive"] .project-hero__media-slot {
+  order: -1;
+  min-height: 0;
+}
+
+html[data-theme="immersive"] .project-hero__copy {
+  align-content: end;
+  padding-bottom: 1rem;
+}
+
+html[data-theme="immersive"] .project-hero__copy h2 {
+  max-width: 10ch;
+  font-size: clamp(2.6rem, 5vw, 4.2rem);
+  line-height: 0.95;
+  font-weight: 700;
+}
+
+html[data-theme="immersive"] .project-hero__summary {
+  font-size: 1.05rem;
+  max-width: 28rem;
+}
+
+html[data-theme="immersive"] .media-frame {
+  min-height: 16rem;
+}
+
+html[data-theme="immersive"] .brand__role {
+  font-family: var(--font-display);
+}
+
+/* C — Contemporary Digital Studio (recommended default) */
+html[data-theme="studio"] {
+  --bg: #f6f1e8;
+  --bg-deep: #efe6d8;
+  --ink: #17140f;
+  --ink-soft: #6a6258;
+  --accent: #2146d6;
+  --accent-soft: color-mix(in srgb, #2146d6 11%, transparent);
+  --line: color-mix(in srgb, #17140f 11%, transparent);
+  --font-display: "Syne", "Segoe UI", sans-serif;
+  --font-body: "Outfit", "Segoe UI", sans-serif;
+  --radius-media: 1.25rem;
+  --hero-media-ratio: 1.05fr 1fr;
+  --index-weight: 700;
+  --shell-pattern:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--accent) 7%, transparent),
+      transparent 42%
+    ),
+    var(--bg);
+}
+
+html[data-theme="studio"] .brand__role {
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+html[data-theme="studio"] .project-index__item.is-active {
+  background: var(--accent-soft);
+  border-radius: 999px;
+  padding-inline: 0.7rem;
+}
+
+html[data-theme="studio"] .media-frame {
+  box-shadow: 0 18px 50px color-mix(in srgb, var(--ink) 8%, transparent);
+}
+
+html[data-theme="studio"] .project-hero__copy h2 {
+  max-width: 11ch;
+}
+
+html[data-theme="studio"] .profile-stage__intro h1 {
+  letter-spacing: -0.045em;
+}
+
+@media (max-width: 60rem) {
+  html[data-theme="precision"] .project-rail {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+    padding-right: 0;
+    padding-bottom: 0.75rem;
+  }
+
+  html[data-theme="immersive"] .project-hero__media-slot {
+    order: 0;
+  }
+
+  html[data-theme="immersive"] .project-hero__copy h2 {
+    font-size: clamp(2rem, 8vw, 2.8rem);
+  }
+}

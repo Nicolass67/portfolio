@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img">
+  <rect width="640" height="360" fill="#EEF2F8"/>
+  <circle cx="220" cy="180" r="70" fill="none" stroke="#1A1F2C" stroke-width="2"/>
+  <circle cx="380" cy="180" r="70" fill="none" stroke="#2F5BFF" stroke-width="2"/>
+  <text x="48" y="40" fill="#5A6478" font-family="Georgia,serif" font-size="16">Demo gallery 03</text>
+</svg>

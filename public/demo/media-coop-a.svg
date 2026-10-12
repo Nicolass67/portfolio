@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img">
+  <rect width="640" height="360" fill="#F2F0EA"/>
+  <rect x="48" y="70" width="160" height="220" fill="#E7EDF8" stroke="#2F5BFF" stroke-width="2"/>
+  <rect x="240" y="70" width="160" height="220" fill="#E7EDF8" stroke="#1A1F2C" stroke-width="1.5"/>
+  <rect x="432" y="70" width="160" height="220" fill="#E7EDF8" stroke="#1A1F2C" stroke-width="1.5"/>
+  <text x="48" y="40" fill="#5A6478" font-family="Georgia,serif" font-size="16">Demo gallery 01</text>
+</svg>

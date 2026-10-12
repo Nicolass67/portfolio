@@ -1,0 +1,72 @@
+---
+import type { SiteContent } from "../content/site";
+import { withBase } from "../lib/paths";
+import AccentExplorer from "./AccentExplorer.astro";
+
+interface Props {
+  content: SiteContent;
+  demoMode?: boolean;
+}
+
+const { content, demoMode = false } = Astro.props;
+const isFrench = content.locale === "fr";
+const navLabel = isFrench ? "Navigation principale" : "Primary navigation";
+const homeHref = withBase("/");
+const enHref = withBase("/en/");
+---
+
+<header class="site-header" id="top">
+  <div class="site-header__inner">
+    <div class="brand">
+      <span class="brand__role">{content.identity.role}</span>
+      <span class="brand__rule" aria-hidden="true" />
+      <span class="brand__specialty">Unreal Engine / C++</span>
+    </div>
+
+    <nav class="site-nav" aria-label={navLabel}>
+      <button
+        type="button"
+        class="site-nav__button is-active"
+        data-view-nav="projects"
+        aria-pressed="true"
+      >
+        {content.navigation.projects}
+      </button>
+      <button
+        type="button"
+        class="site-nav__button"
+        data-view-nav="profile"
+        aria-pressed="false"
+      >
+        {content.navigation.profile}
+      </button>
+    </nav>
+
+    <div class="site-header__tools">
+      {demoMode ? <AccentExplorer locale={content.locale} /> : null}
+      <nav
+        class="language-switcher"
+        aria-label={isFrench ? "Langues" : "Languages"}
+      >
+        <a
+          href={homeHref}
+          hreflang="fr"
+          lang="fr"
+          aria-current={isFrench ? "page" : undefined}
+          data-language-link
+        >
+          FR
+        </a>
+        <a
+          href={enHref}
+          hreflang="en"
+          lang="en"
+          aria-current={!isFrench ? "page" : undefined}
+          data-language-link
+        >
+          EN
+        </a>
+      </nav>
+    </div>
+  </div>
+</header>

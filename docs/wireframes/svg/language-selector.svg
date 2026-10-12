@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="320" viewBox="0 0 720 320" role="img" aria-labelledby="title desc">
+  <title id="title">Selecteur de langue</title>
+  <desc id="desc">Proposition de conception non validee - emplacement et etats FR EN</desc>
+  <rect width="720" height="320" fill="#F2F3F1"/>
+  <text x="24" y="28" font-family="Georgia, serif" font-size="11" fill="#0F5C4C">Proposition de conception - non validee | selecteur de langue</text>
+  <rect x="24" y="60" width="672" height="56" fill="#FFFFFF" stroke="#C8CDC6"/>
+  <text x="40" y="94" font-family="Segoe UI, sans-serif" font-size="14" fill="#171916">[Nom]</text>
+  <text x="100" y="94" font-family="Segoe UI, sans-serif" font-size="13" fill="#4A524C">Gameplay Programmer</text>
+  <text x="400" y="94" font-family="Segoe UI, sans-serif" font-size="12" fill="#4A524C">Projets</text>
+  <text x="460" y="94" font-family="Segoe UI, sans-serif" font-size="12" fill="#4A524C">Profil</text>
+  <text x="520" y="94" font-family="Segoe UI, sans-serif" font-size="12" fill="#4A524C">Contact</text>
+  <text x="600" y="94" font-family="Consolas, monospace" font-size="13" fill="#4A524C">FR</text>
+  <text x="628" y="94" font-family="Consolas, monospace" font-size="13" fill="#C8CDC6">|</text>
+  <text x="648" y="94" font-family="Consolas, monospace" font-size="13" fill="#0F5C4C" font-weight="700">EN</text>
+  <line x1="648" y1="98" x2="670" y2="98" stroke="#0F5C4C" stroke-width="2"/>
+  <text x="24" y="160" font-family="Segoe UI, sans-serif" font-size="13" fill="#171916" font-weight="600">Comportement propose</text>
+  <text x="24" y="190" font-family="Segoe UI, sans-serif" font-size="12" fill="#4A524C">- Emplacement : en-tete, a droite - compact, texte (pas drapeaux seuls)</text>
+  <text x="24" y="215" font-family="Segoe UI, sans-serif" font-size="12" fill="#4A524C">- Actif : accent + aria-current | inactif : lien vers /fr/ ou /en/</text>
+  <text x="24" y="240" font-family="Segoe UI, sans-serif" font-size="12" fill="#4A524C">- Switch : conserver #ancre si IDs stables (#systems)</text>
+  <text x="24" y="265" font-family="Segoe UI, sans-serif" font-size="12" fill="#4A524C">- URLs : prefixe de locale | hreflang (implementation future)</text>
+  <text x="24" y="290" font-family="Segoe UI, sans-serif" font-size="12" fill="#4A524C">- Langue par defaut : recommandation EN - a valider (Q-03)</text>
+</svg>

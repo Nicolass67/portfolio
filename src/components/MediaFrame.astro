@@ -1,0 +1,187 @@
+---
+import type { MediaItem } from "../content/site";
+import { withBase } from "../lib/paths";
+
+interface Props {
+  media: MediaItem | null | undefined;
+  emptyLabel: string;
+  emptyHint: string;
+  class?: string;
+}
+
+const { media, emptyLabel, emptyHint, class: className = "" } = Astro.props;
+const kind = media?.kind ?? "none";
+const aspect = media?.aspectRatio ?? "16 / 9";
+const gallerySources = (media?.sources?.filter(Boolean) ?? []).map(withBase);
+const hasImage =
+  (kind === "image" || kind === "diagram") &&
+  typeof media?.src === "string" &&
+  media.src.length > 0;
+const hasVideoFile =
+  kind === "video" && typeof media?.src === "string" && media.src.length > 0;
+const hasVideoPoster =
+  kind === "video" &&
+  typeof media?.poster === "string" &&
+  media.poster.length > 0;
+const hasGallery = kind === "gallery" && gallerySources.length > 0;
+const hasYoutubeId =
+  kind === "youtube" &&
+  typeof media?.youtubeId === "string" &&
+  media.youtubeId.length > 0;
+const hasYoutubePoster =
+  kind === "youtube" &&
+  typeof media?.poster === "string" &&
+  media.poster.length > 0;
+const isYoutube = kind === "youtube";
+const isEmpty =
+  !hasImage && !hasVideoFile && !hasVideoPoster && !hasGallery && !isYoutube;
+const embedTitle =
+  media?.embedTitle ??
+  media?.alt ??
+  (media?.caption ? media.caption : "Demo video");
+const resolvedSrc = media?.src ? withBase(media.src) : "";
+const resolvedPoster = media?.poster ? withBase(media.poster) : "";
+const fullSrc = withBase(
+  (typeof media?.fullSrc === "string" && media.fullSrc.length > 0
+    ? media.fullSrc
+    : media?.src) ?? "",
+);
+const inspectLabel = media?.alt || media?.caption ? undefined : "Enlarge image";
+---
+
+<figure
+  class:list={[
+    "media-frame",
+    className,
+    {
+      "media-frame--empty": isEmpty,
+      "media-frame--gallery": hasGallery,
+      "media-frame--video-slot": kind === "video" || isYoutube,
+      "media-frame--diagram": kind === "diagram",
+      "media-frame--youtube": isYoutube,
+    },
+  ]}
+  style={`--media-aspect: ${aspect};`}
+  data-media-kind={kind}
+  data-media-frame
+>
+  {hasImage ? (
+    <button
+      type="button"
+      class="media-frame__inspect"
+      data-lightbox-open
+      data-lightbox-src={fullSrc}
+      data-lightbox-alt={media!.alt ?? ""}
+      data-lightbox-caption={media?.caption ?? ""}
+      aria-label={inspectLabel}
+    >
+      <img
+        src={resolvedSrc}
+        alt={media!.alt ?? ""}
+        loading="lazy"
+        decoding="async"
+        data-media-asset
+      />
+      <span class="media-frame__inspect-hint" aria-hidden="true" />
+    </button>
+  ) : hasVideoFile ? (
+    <video
+      controls
+      preload="metadata"
+      playsinline
+      poster={resolvedPoster || undefined}
+    >
+      <source src={resolvedSrc} />
+    </video>
+  ) : hasVideoPoster ? (
+    <div class="media-frame__video-slot">
+      <img
+        src={resolvedPoster}
+        alt={media!.alt ?? ""}
+        loading="lazy"
+        decoding="async"
+        data-media-asset
+      />
+      <span class="media-frame__video-badge" aria-hidden="true" />
+    </div>
+  ) : hasGallery ? (
+    <div class="media-frame__gallery" role="list">
+      {gallerySources.map((source, index) => (
+        <div class="media-frame__gallery-item" role="listitem">
+          <button
+            type="button"
+            class="media-frame__inspect"
+            data-lightbox-open
+            data-lightbox-src={source}
+            data-lightbox-alt={`${media?.alt ?? ""} (${index + 1}/${gallerySources.length})`}
+            data-lightbox-caption={media?.caption ?? ""}
+          >
+            <img
+              src={source}
+              alt={`${media?.alt ?? ""} (${index + 1}/${gallerySources.length})`}
+              loading="lazy"
+              decoding="async"
+              data-media-asset
+            />
+            <span class="media-frame__inspect-hint" aria-hidden="true" />
+          </button>
+        </div>
+      ))}
+    </div>
+  ) : isYoutube ? (
+    <div
+      class="media-frame__youtube"
+      data-youtube-embed
+      data-youtube-id={hasYoutubeId ? media!.youtubeId : ""}
+    >
+      {hasYoutubeId ? (
+        <button
+          type="button"
+          class="media-frame__youtube-load"
+          data-youtube-load
+        >
+          {hasYoutubePoster ? (
+            <img
+              src={resolvedPoster}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              data-media-asset
+            />
+          ) : (
+            <span class="media-frame__youtube-poster-fallback" />
+          )}
+          <span class="media-frame__video-badge" aria-hidden="true" />
+          <span class="media-frame__youtube-label">{embedTitle}</span>
+        </button>
+      ) : (
+        <div class="media-frame__empty" role="img" aria-label={emptyLabel}>
+          <p class="media-frame__mark" aria-hidden="true">
+            ▶
+          </p>
+          <p class="media-frame__empty-label">{emptyLabel}</p>
+          <p class="media-frame__empty-hint">{emptyHint}</p>
+        </div>
+      )}
+      <div class="media-frame__youtube-player" data-youtube-player hidden />
+    </div>
+  ) : (
+    <div class="media-frame__empty" role="img" aria-label={emptyLabel}>
+      <p class="media-frame__mark" aria-hidden="true">
+        ◇
+      </p>
+      <p class="media-frame__empty-label">{emptyLabel}</p>
+      <p class="media-frame__empty-hint">{emptyHint}</p>
+    </div>
+  )}
+  {!isEmpty && !isYoutube ? (
+    <div class="media-frame__fallback" hidden data-media-fallback>
+      <p class="media-frame__mark" aria-hidden="true">
+        ◇
+      </p>
+      <p class="media-frame__empty-label">{emptyLabel}</p>
+      <p class="media-frame__empty-hint">{emptyHint}</p>
+    </div>
+  ) : null}
+  {!isEmpty && media?.caption ? <figcaption>{media.caption}</figcaption> : null}
+</figure>

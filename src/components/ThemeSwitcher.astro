@@ -1,0 +1,40 @@
+---
+interface Props {
+  locale: "fr" | "en";
+  enabled: boolean;
+}
+
+const { locale, enabled } = Astro.props;
+
+const label =
+  locale === "fr" ? "Direction visuelle (revue)" : "Visual direction (review)";
+const options = [
+  { id: "d1", fr: "D1 baseline", en: "D1 baseline" },
+  { id: "graphite", fr: "A Graphite", en: "A Graphite" },
+  { id: "futurism", fr: "B Futurisme", en: "B Futurism" },
+  { id: "cinematic", fr: "C Cinématique", en: "C Cinematic" },
+] as const;
+---
+
+{enabled ? (
+  <div
+    class="theme-switcher"
+    data-theme-switcher
+    role="group"
+    aria-label={label}
+  >
+    <p class="theme-switcher__label">{label}</p>
+    <div class="theme-switcher__options">
+      {options.map((option) => (
+        <button
+          type="button"
+          class="theme-switcher__button"
+          data-theme-option={option.id}
+          aria-pressed={option.id === "d1" ? "true" : "false"}
+        >
+          {locale === "fr" ? option.fr : option.en}
+        </button>
+      ))}
+    </div>
+  </div>
+) : null}

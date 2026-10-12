@@ -1,0 +1,315 @@
+---
+import { chapterBlocksFor, overviewBlocksFor } from "../content/demo-blocks";
+import type { SiteContent } from "../content/site";
+import DemoBlocks from "./DemoBlocks.astro";
+import MediaFrame from "./MediaFrame.astro";
+
+interface Props {
+  content: SiteContent;
+}
+
+const { content } = Astro.props;
+const { explorer, projects, demoNotice, mode, profile } = content;
+const isFrench = content.locale === "fr";
+const firstId = projects[0]?.id ?? "";
+const isDemo = mode === "demo";
+const chaptersLabel = isFrench ? "Chapitres" : "Chapters";
+const jumpLabel = isFrench ? "Autres projets" : "Other projects";
+---
+
+<div
+  class="workspace"
+  id="main-content"
+  data-workspace
+  data-portfolio-mode={mode}
+  data-view="projects"
+  data-project-mode="overview"
+  data-active-project={firstId}
+>
+  {demoNotice ? (
+    <p class="demo-chip" data-demo-banner role="status">
+      <span>{demoNotice.title}</span>
+      {" — "}
+      {isFrench
+        ? "projets fictifs pour tests d’interface"
+        : "fictional projects for interface testing"}
+    </p>
+  ) : null}
+
+  <section
+    class="view view--projects is-active"
+    data-view-panel="projects"
+    aria-labelledby="projects-title"
+  >
+    <div class="projects-layout" data-projects-layout>
+      <aside class="context-rail" data-context-rail>
+        <div
+          class="context-rail__panel context-rail__panel--overview is-active"
+          data-rail-panel="overview"
+        >
+          <p class="eyebrow" id="projects-title">
+            {explorer.title}
+          </p>
+          <nav
+            class="project-index"
+            aria-label={explorer.projectIndexLabel}
+            data-project-tabs
+          >
+            {projects.map((project, index) => (
+              <button
+                type="button"
+                class:list={[
+                  "project-index__item",
+                  { "is-active": index === 0 },
+                ]}
+                data-project-select
+                data-project-id={project.id}
+                aria-pressed={index === 0 ? "true" : "false"}
+              >
+                <span class="project-index__num">{project.index}</span>
+                <span class="project-index__label">
+                  {project.navLabel ?? project.title}
+                </span>
+              </button>
+            ))}
+          </nav>
+        </div>
+
+        <div
+          class="context-rail__panel context-rail__panel--case"
+          data-rail-panel="case"
+          hidden
+        >
+          {projects.map((project, index) => (
+            <div
+              class:list={["case-rail", { "is-active": index === 0 }]}
+              data-case-rail
+              data-project-id={project.id}
+              hidden={index !== 0}
+            >
+              <div class="case-identity">
+                <p class="eyebrow">{project.caseStudy.eyebrow}</p>
+                <p class="case-identity__title">{project.title}</p>
+              </div>
+
+              <nav class="case-project-jump" aria-label={jumpLabel}>
+                {projects.map((jumpProject) => (
+                  <button
+                    type="button"
+                    class:list={[
+                      "case-project-jump__item",
+                      { "is-active": jumpProject.id === project.id },
+                    ]}
+                    data-project-switch
+                    data-project-id={jumpProject.id}
+                    aria-pressed={
+                      jumpProject.id === project.id ? "true" : "false"
+                    }
+                    aria-label={jumpProject.navLabel ?? jumpProject.title}
+                    title={jumpProject.navLabel ?? jumpProject.title}
+                  >
+                    <span aria-hidden="true">{jumpProject.index}</span>
+                  </button>
+                ))}
+              </nav>
+
+              <p class="case-rail__chapters-label">{chaptersLabel}</p>
+              <nav
+                class="chapter-index"
+                aria-label={project.caseStudy.contentsLabel}
+                data-chapter-nav
+              >
+                {project.caseStudy.chapters.map((chapter) => (
+                  <button
+                    type="button"
+                    class="chapter-index__item"
+                    data-chapter-select
+                    data-chapter-id={chapter.id}
+                    data-project-id={project.id}
+                    aria-pressed="false"
+                  >
+                    <span class="chapter-index__mark" aria-hidden="true" />
+                    <span class="chapter-index__text">
+                      <span class="chapter-index__title">{chapter.title}</span>
+                      <span class="chapter-index__eyebrow">
+                        {chapter.eyebrow}
+                      </span>
+                    </span>
+                  </button>
+                ))}
+              </nav>
+
+              <button
+                type="button"
+                class="text-action text-action--ghost case-rail__back"
+                data-close-case-study
+              >
+                <span aria-hidden="true">←</span>
+                <span>{explorer.backToProject}</span>
+              </button>
+            </div>
+          ))}
+        </div>
+      </aside>
+
+      <div class="project-stage" data-project-stage>
+        {projects.map((project, index) => {
+          const overviewBlocks = isDemo
+            ? overviewBlocksFor(project.id, content.locale)
+            : [];
+          return (
+            <article
+              class:list={["project-hero", { "is-active": index === 0 }]}
+              data-project-card
+              data-project-id={project.id}
+              data-demonstration-only={
+                project.demonstrationOnly ? "true" : "false"
+              }
+              aria-hidden={index === 0 ? "false" : "true"}
+              aria-labelledby={`project-title-${project.id}`}
+            >
+              <div
+                class="project-hero__overview"
+                data-project-mode-panel="overview"
+              >
+                <div class="project-hero__media-slot" data-hero-media>
+                  <MediaFrame
+                    media={project.featuredMedia}
+                    emptyLabel={project.mediaEmptyLabel}
+                    emptyHint={project.mediaEmptyHint}
+                    class="project-hero__media"
+                  />
+                </div>
+
+                <div class="project-hero__copy" data-hero-copy>
+                  <p class="project-hero__kicker">
+                    <span>{explorer.activeLabel}</span>
+                    {project.demonstrationOnly ? (
+                      <span class="project-hero__demo">
+                        {isFrench ? "Fictif" : "Demo"}
+                      </span>
+                    ) : null}
+                  </p>
+                  <h2 id={`project-title-${project.id}`} data-project-title>
+                    {project.title}
+                  </h2>
+                  <p class="project-hero__kind">{project.kind}</p>
+                  <p class="project-hero__summary">{project.summary}</p>
+                  <p class="project-hero__meta">
+                    <span>{project.technologies.join(" · ")}</span>
+                    <span class="project-hero__dot" aria-hidden="true" />
+                    <span>{project.kit.join(" · ")}</span>
+                  </p>
+
+                  {overviewBlocks.length > 0 ? (
+                    <DemoBlocks
+                      blocks={overviewBlocks}
+                      class="demo-blocks--overview"
+                    />
+                  ) : null}
+
+                  <button
+                    type="button"
+                    class="text-action"
+                    data-open-case-study
+                    data-project-id={project.id}
+                  >
+                    <span>{explorer.caseStudyAction}</span>
+                    <span aria-hidden="true">→</span>
+                  </button>
+                </div>
+              </div>
+
+              <div
+                class="project-hero__case"
+                data-project-mode-panel="case-study"
+                hidden
+              >
+                <div class="chapter-canvas" data-chapter-stage>
+                  <div class="chapter-canvas__idle" data-chapter-idle>
+                    <p class="eyebrow">{project.caseStudy.eyebrow}</p>
+                    <h2 id={`case-title-${project.id}`}>
+                      {project.caseStudy.title}
+                    </h2>
+                    <p>{explorer.chapterOverviewHint}</p>
+                    <p class="chapter-canvas__count">
+                      {project.caseStudy.chapters.length}{" "}
+                      {isFrench ? "chapitres" : "chapters"}
+                    </p>
+                  </div>
+                  {project.caseStudy.chapters.map((chapter) => {
+                    const blocks = isDemo
+                      ? chapterBlocksFor(project.id, chapter.id, content.locale)
+                      : [];
+                    return (
+                      <article
+                        class="chapter-panel"
+                        data-chapter-panel
+                        data-chapter-id={chapter.id}
+                        aria-hidden="true"
+                        aria-labelledby={`chapter-heading-${project.id}-${chapter.id}`}
+                      >
+                        <header class="chapter-panel__head">
+                          <p class="eyebrow">{chapter.eyebrow}</p>
+                          <h3
+                            id={`chapter-heading-${project.id}-${chapter.id}`}
+                          >
+                            {chapter.title}
+                          </h3>
+                          <p class="chapter-panel__lead">{chapter.intro}</p>
+                        </header>
+                        <div class="chapter-panel__body">
+                          {chapter.paragraphs.map((paragraph) => (
+                            <p>{paragraph}</p>
+                          ))}
+                          {chapter.media && chapter.media.kind !== "none" ? (
+                            <MediaFrame
+                              media={chapter.media}
+                              emptyLabel={project.mediaEmptyLabel}
+                              emptyHint={project.mediaEmptyHint}
+                              class="chapter-panel__media"
+                            />
+                          ) : null}
+                          {blocks.length > 0 ? (
+                            <DemoBlocks
+                              blocks={blocks}
+                              class="demo-blocks--chapter"
+                            />
+                          ) : null}
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <section
+    class="view view--profile"
+    data-view-panel="profile"
+    aria-labelledby="profile-title"
+    aria-hidden="true"
+    hidden
+  >
+    <div class="profile-stage" data-profile-stage>
+      <div class="profile-stage__intro">
+        <p class="eyebrow">{profile.eyebrow}</p>
+        <h1 id="profile-title">{profile.title}</h1>
+      </div>
+      <div class="profile-stage__body">
+        {profile.paragraphs.map((paragraph) => (
+          <p>{paragraph}</p>
+        ))}
+        <div class="profile-stage__contact">
+          <h2>{profile.contactTitle}</h2>
+          <p>{profile.contactNote}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

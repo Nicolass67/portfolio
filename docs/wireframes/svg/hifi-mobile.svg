@@ -1,0 +1,44 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="390" height="1100" viewBox="0 0 390 1100" role="img" aria-labelledby="t d">
+  <title id="t">Hi-fi mobile D1 A+B</title>
+  <desc id="d">Proposition visuelle non validee - mobile</desc>
+  <rect width="390" height="1100" fill="#F2F3F1"/>
+  <rect x="6" y="6" width="378" height="1088" rx="16" fill="none" stroke="#C8CDC6"/>
+  <text x="24" y="36" font-family="Georgia, serif" font-size="9" fill="#0F5C4C">D1 mobile - non validee</text>
+  <line x1="24" y1="48" x2="366" y2="48" stroke="#C8CDC6"/>
+  <text x="24" y="74" font-family="Segoe UI, sans-serif" font-size="13" font-weight="600" fill="#171916">[Nom]</text>
+  <text x="280" y="74" font-family="Consolas, monospace" font-size="11" fill="#4A524C">FR</text>
+  <text x="308" y="74" font-family="Consolas, monospace" font-size="11" font-weight="700" fill="#0F5C4C">EN</text>
+  <text x="348" y="74" font-family="Segoe UI, sans-serif" font-size="14" fill="#171916">=</text>
+  <line x1="24" y1="90" x2="366" y2="90" stroke="#C8CDC6"/>
+  <text x="24" y="125" font-family="Georgia, serif" font-size="22" fill="#171916">[Nom]</text>
+  <text x="24" y="152" font-family="Segoe UI, sans-serif" font-size="13" fill="#0F5C4C">Gameplay Programmer</text>
+  <text x="24" y="178" font-family="Segoe UI, sans-serif" font-size="12" fill="#4A524C">Unreal / C++ systems work</text>
+  <line x1="24" y1="198" x2="366" y2="198" stroke="#C8CDC6"/>
+  <text x="24" y="230" font-family="Consolas, monospace" font-size="11" fill="#4A524C">01 / FEATURED</text>
+  <text x="24" y="270" font-family="Georgia, serif" font-size="26" fill="#171916">Tactical</text>
+  <text x="24" y="302" font-family="Georgia, serif" font-size="26" fill="#171916">Encounter Lab</text>
+  <text x="24" y="335" font-family="Segoe UI, sans-serif" font-size="12" fill="#4A524C">Tactical combat slice</text>
+  <rect x="24" y="355" width="342" height="105" fill="#FFFFFF" stroke="#C8CDC6"/>
+  <text x="36" y="385" font-family="Consolas, monospace" font-size="11" fill="#171916">UE 5.6 | C++ | GAS | State Tree</text>
+  <text x="36" y="410" font-family="Consolas, monospace" font-size="11" fill="#171916">Solo personal project</text>
+  <text x="36" y="435" font-family="Consolas, monospace" font-size="11" fill="#171916">Kit: sword|bow|parry|dash|focus</text>
+  <rect x="24" y="480" width="220" height="42" fill="#0F5C4C"/>
+  <text x="42" y="506" font-family="Segoe UI, sans-serif" font-size="13" fill="#F2F3F1">Explore the case study</text>
+  <text x="24" y="555" font-family="Segoe UI, sans-serif" font-size="13" font-weight="600" fill="#171916">Outline</text>
+  <text x="24" y="585" font-family="Consolas, monospace" font-size="12" fill="#4A524C">01 Concept</text>
+  <text x="24" y="608" font-family="Consolas, monospace" font-size="12" fill="#4A524C">02 Systems</text>
+  <text x="24" y="631" font-family="Consolas, monospace" font-size="12" fill="#4A524C">03 Architecture ...</text>
+  <line x1="24" y1="660" x2="366" y2="660" stroke="#C8CDC6"/>
+  <text x="24" y="700" font-family="Georgia, serif" font-size="16" fill="#171916">&gt; Concept</text>
+  <line x1="24" y1="720" x2="366" y2="720" stroke="#C8CDC6"/>
+  <rect x="24" y="735" width="5" height="150" fill="#0F5C4C"/>
+  <text x="40" y="765" font-family="Georgia, serif" font-size="16" fill="#0F5C4C">v Systems</text>
+  <text x="40" y="800" font-family="Segoe UI, sans-serif" font-size="12" fill="#171916">GAS kit, State Tree AI,</text>
+  <text x="40" y="820" font-family="Segoe UI, sans-serif" font-size="12" fill="#171916">encounter run - general level</text>
+  <line x1="24" y1="905" x2="366" y2="905" stroke="#C8CDC6"/>
+  <text x="24" y="945" font-family="Georgia, serif" font-size="16" fill="#171916">&gt; Architecture</text>
+  <line x1="24" y1="965" x2="366" y2="965" stroke="#C8CDC6"/>
+  <text x="24" y="1020" font-family="Georgia, serif" font-size="16" fill="#171916">Profile / Contact</text>
+  <text x="24" y="1050" font-family="Segoe UI, sans-serif" font-size="12" fill="#4A524C">[Links provisional]</text>
+  <text x="24" y="1080" font-family="Segoe UI, sans-serif" font-size="10" fill="#4A524C">Touch targets &gt;= 44px</text>
+</svg>

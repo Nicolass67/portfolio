@@ -1,0 +1,32 @@
+---
+import type { SiteContent } from "../content/site";
+
+interface Props {
+  content: SiteContent;
+}
+
+const { content } = Astro.props;
+const { profile } = content;
+---
+
+<section
+  class="profile-section page-shell"
+  id="profile"
+  aria-labelledby="profile-title"
+>
+  <div class="profile-section__heading">
+    <p class="eyebrow">{profile.eyebrow}</p>
+    <h2 id="profile-title">{profile.title}</h2>
+  </div>
+
+  <div class="profile-section__content">
+    {profile.paragraphs.map((paragraph) => (
+      <p>{paragraph}</p>
+    ))}
+
+    <section class="contact-note" aria-labelledby="contact-title">
+      <h3 id="contact-title">{profile.contactTitle}</h3>
+      <p>{profile.contactNote}</p>
+    </section>
+  </div>
+</section>
