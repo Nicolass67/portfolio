@@ -297,7 +297,7 @@
 - Contexte : le CTA « Étude de cas » était trop implicite (lien bas de page, jargon, après blocs démo).
 - Décision **validée par l’utilisateur** (2026-10-12) :
   - CTA principal fort sous le résumé, **avant** les blocs overview ; libellé « Lire l’étude technique » + compteur de chapitres.
-  - Feuille Projets mobile : affordance « Ouvrir l’étude » (comportement `data-project-switch` inchangé).
+  - Feuille Projets mobile : items n° + titre, typo alignée sur la feuille Chapitres (comportement `data-project-switch` inchangé).
   - Chips projets = changer d’aperçu uniquement (pas d’ouverture auto de l’étude).
   - Bandeau média « Lire l’étude » **retiré** (doublon avec le CTA texte ; lightbox image préservée).
 - Statut : **validé / implémenté**.

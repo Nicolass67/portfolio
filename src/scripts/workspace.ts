@@ -120,6 +120,9 @@ function initWorkspace(root: HTMLElement) {
   }
 
   const mobileQuery = window.matchMedia("(max-width: 52.99rem)");
+  const reduceMotionQuery = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  );
 
   function isMobileLayout() {
     return mobileQuery.matches;
@@ -155,16 +158,45 @@ function initWorkspace(root: HTMLElement) {
       .forEach(syncChapterBodyScrollFade);
   }
 
+  function closeMobileSheet(sheet: HTMLDialogElement) {
+    if (!sheet.open || sheet.classList.contains("is-closing")) return;
+    if (reduceMotionQuery.matches) {
+      sheet.classList.remove("is-opening", "is-closing");
+      sheet.close();
+      return;
+    }
+
+    sheet.classList.remove("is-opening");
+    sheet.classList.add("is-closing");
+
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      sheet.removeEventListener("animationend", onEnd);
+      window.clearTimeout(fallback);
+      sheet.classList.remove("is-closing");
+      if (sheet.open) sheet.close();
+    };
+    const onEnd = (event: AnimationEvent) => {
+      if (event.target !== sheet) return;
+      finish();
+    };
+    sheet.addEventListener("animationend", onEnd);
+    const fallback = window.setTimeout(finish, 320);
+  }
+
   function closeMobileSheets() {
     root
       .querySelectorAll<HTMLDialogElement>("dialog[data-mobile-sheet]")
       .forEach((sheet) => {
-        if (sheet.open) sheet.close();
+        if (sheet.open) closeMobileSheet(sheet);
       });
   }
 
   function openMobileSheet(sheet: HTMLDialogElement) {
     sheet.tabIndex = -1;
+    sheet.classList.remove("is-closing");
     sheet.classList.add("is-opening");
     if (!sheet.open) {
       sheet.showModal();
@@ -184,10 +216,16 @@ function initWorkspace(root: HTMLElement) {
         if (
           event.target === sheet &&
           sheet.open &&
-          !sheet.classList.contains("is-opening")
+          !sheet.classList.contains("is-opening") &&
+          !sheet.classList.contains("is-closing")
         ) {
-          sheet.close();
+          closeMobileSheet(sheet);
         }
+      });
+      // Escape: animate out instead of an instant native close.
+      sheet.addEventListener("cancel", (event) => {
+        event.preventDefault();
+        closeMobileSheet(sheet);
       });
     });
 
@@ -269,10 +307,6 @@ function initWorkspace(root: HTMLElement) {
       if (title) chapterLabel.textContent = title;
     }
   }
-
-  const reduceMotionQuery = window.matchMedia(
-    "(prefers-reduced-motion: reduce)",
-  );
 
   function pulseMotion(element: HTMLElement | null, token: string) {
     if (!element || reduceMotionQuery.matches) return;
@@ -582,9 +616,10 @@ function initWorkspace(root: HTMLElement) {
       target instanceof HTMLDialogElement &&
       target.matches("dialog[data-mobile-sheet]") &&
       target.open &&
-      !target.classList.contains("is-opening")
+      !target.classList.contains("is-opening") &&
+      !target.classList.contains("is-closing")
     ) {
-      target.close();
+      closeMobileSheet(target);
       return;
     }
 
@@ -592,7 +627,8 @@ function initWorkspace(root: HTMLElement) {
       "[data-mobile-sheet-close]",
     );
     if (sheetClose) {
-      sheetClose.closest("dialog")?.close();
+      const sheet = sheetClose.closest<HTMLDialogElement>("dialog");
+      if (sheet) closeMobileSheet(sheet);
       return;
     }
 

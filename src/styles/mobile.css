@@ -593,6 +593,11 @@
     animation: mobile-sheet-in 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 
+  .mobile-sheet[open].is-closing {
+    animation: mobile-sheet-out 280ms cubic-bezier(0.4, 0, 0.2, 1) both;
+    pointer-events: none;
+  }
+
   .mobile-sheet::backdrop {
     background: color-mix(in srgb, var(--ink) 35%, transparent);
   }
@@ -601,7 +606,12 @@
     animation: mobile-sheet-backdrop-in 240ms ease both;
   }
 
-  .mobile-sheet.is-opening .mobile-sheet__close {
+  .mobile-sheet[open].is-closing::backdrop {
+    animation: mobile-sheet-backdrop-out 240ms ease both;
+  }
+
+  .mobile-sheet.is-opening .mobile-sheet__close,
+  .mobile-sheet.is-closing .mobile-sheet__close {
     pointer-events: none;
   }
 
@@ -616,6 +626,17 @@
     }
   }
 
+  @keyframes mobile-sheet-out {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0.98;
+      transform: translateY(110%);
+    }
+  }
+
   @keyframes mobile-sheet-backdrop-in {
     from {
       opacity: 0;
@@ -625,12 +646,33 @@
     }
   }
 
+  @keyframes mobile-sheet-backdrop-out {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
   .mobile-sheet__frame {
     display: grid;
     gap: 0.55rem;
     max-height: min(78vh, 36rem);
     padding: 0.45rem 0.85rem calc(0.85rem + env(safe-area-inset-bottom, 0px));
     overflow: auto;
+  }
+
+  /* Projects sheet: fixed short list — size to content, never scroll. */
+  .mobile-sheet[data-mobile-sheet="projects"],
+  .mobile-sheet[data-mobile-sheet="projects"][open] {
+    height: fit-content;
+    max-height: none;
+  }
+
+  .mobile-sheet[data-mobile-sheet="projects"] .mobile-sheet__frame {
+    max-height: none;
+    overflow: hidden;
   }
 
   .mobile-sheet__grab {
@@ -969,7 +1011,9 @@
   }
 
   .mobile-sheet[open],
-  .mobile-sheet[open]::backdrop {
+  .mobile-sheet[open].is-closing,
+  .mobile-sheet[open]::backdrop,
+  .mobile-sheet[open].is-closing::backdrop {
     animation: none;
   }
 }

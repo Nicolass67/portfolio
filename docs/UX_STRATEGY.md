@@ -12,11 +12,11 @@ Affordance scroll desktop (étude de cas) : overlays fade haut/bas sur `.chapter
 
 ## Navigation contextuelle (Mission 13)
 
-| État | Rail gauche | Zone principale |
-| ---- | ----------- | --------------- |
-| Overview | Liste des 6 projets : **n° + titre uniquement** | Média + synthèse + métadonnées |
-| Étude de cas | Titre du projet actif + **bandeau de saut** (n° 01–06, un clic) + index chapitres | Contenu du chapitre |
-| Retour overview | Rail titres restauré | Overview du projet courant |
+| État            | Rail gauche                                                                       | Zone principale                |
+| --------------- | --------------------------------------------------------------------------------- | ------------------------------ |
+| Overview        | Liste des 6 projets : **n° + titre uniquement**                                   | Média + synthèse + métadonnées |
+| Étude de cas    | Titre du projet actif + **bandeau de saut** (n° 01–06, un clic) + index chapitres | Contenu du chapitre            |
+| Retour overview | Rail titres restauré                                                              | Overview du projet courant     |
 
 ### Règles
 
@@ -38,5 +38,5 @@ L’expérience étroite n’est **pas** une transposition du rail desktop. Voir
 
 - Overview : chips projets sticky + lecture verticale ; entrée étude explicite via CTA « Lire l’étude technique » (D-035).
 - Case study : barre basse (Aperçu / Chapitre / Projets) + feuilles `<dialog>` ; scroll document.
-- Feuille Projets : libellé « Ouvrir l’étude » sur chaque item.
+- Feuille Projets : liste n° + titre (même typo que la feuille Chapitres) ; ouverture d’étude au tap.
 - Desktop ≥ 53rem : CTA étude renforcé aussi ; layout rail inchangé (D-030 / D-033).
