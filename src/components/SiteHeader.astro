@@ -60,7 +60,13 @@ const showColorExplorers = demoMode && import.meta.env.DEV;
       <nav
         class="language-switcher"
         aria-label={isFrench ? "Langues" : "Languages"}
+        data-language-nav
       >
+        <span
+          class="language-switcher__indicator"
+          data-language-indicator
+          aria-hidden="true"
+        ></span>
         <a
           href={homeHref}
           hreflang="fr"
@@ -69,15 +75,9 @@ const showColorExplorers = demoMode && import.meta.env.DEV;
           aria-current={isFrench ? "page" : undefined}
           data-language-link
         >
-          <span class="language-switcher__flag" aria-hidden="true">
-            <svg viewBox="0 0 3 2" focusable="false">
-              <rect width="1" height="2" fill="#002395"></rect>
-              <rect x="1" width="1" height="2" fill="#fff"></rect>
-              <rect x="2" width="1" height="2" fill="#ed2939"></rect>
-            </svg>
-          </span>
-          <span class="language-switcher__code">FR</span>
+          FR
         </a>
+        <span class="language-switcher__sep" aria-hidden="true">/</span>
         <a
           href={enHref}
           hreflang="en"
@@ -86,32 +86,7 @@ const showColorExplorers = demoMode && import.meta.env.DEV;
           aria-current={!isFrench ? "page" : undefined}
           data-language-link
         >
-          <span class="language-switcher__flag" aria-hidden="true">
-            <svg viewBox="0 0 60 40" focusable="false">
-              <rect width="60" height="40" fill="#012169"></rect>
-              <path
-                d="M0 0 L60 40 M60 0 L0 40"
-                stroke="#fff"
-                stroke-width="8"
-              ></path>
-              <path
-                d="M0 0 L60 40 M60 0 L0 40"
-                stroke="#C8102E"
-                stroke-width="5"
-              ></path>
-              <path
-                d="M30 0 V40 M0 20 H60"
-                stroke="#fff"
-                stroke-width="12"
-              ></path>
-              <path
-                d="M30 0 V40 M0 20 H60"
-                stroke="#C8102E"
-                stroke-width="7"
-              ></path>
-            </svg>
-          </span>
-          <span class="language-switcher__code">EN</span>
+          EN
         </a>
       </nav>
     </div>

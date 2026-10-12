@@ -46,7 +46,9 @@ const fullSrc = withBase(
     ? media.fullSrc
     : media?.src) ?? "",
 );
-const inspectLabel = media?.alt || media?.caption ? undefined : "Enlarge image";
+const enlargeFallback = "Enlarge image";
+const inspectLabel =
+  [media?.alt, media?.caption].filter(Boolean).join(" — ") || enlargeFallback;
 ---
 
 <figure
@@ -115,6 +117,7 @@ const inspectLabel = media?.alt || media?.caption ? undefined : "Enlarge image";
             data-lightbox-src={source}
             data-lightbox-alt={`${media?.alt ?? ""} (${index + 1}/${gallerySources.length})`}
             data-lightbox-caption={media?.caption ?? ""}
+            aria-label={`${inspectLabel} (${index + 1}/${gallerySources.length})`}
           >
             <img
               src={source}

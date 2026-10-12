@@ -171,8 +171,14 @@ test.describe("fullscreen portfolio workspace", () => {
     );
     await expect(page.locator('[data-view-panel="profile"]')).toBeVisible();
     await expect(page.locator('[data-view-panel="projects"]')).toBeHidden();
+    await expect(page.locator("[data-profile-stage]")).toBeVisible();
+    await expect(page.locator(".profile-hero")).toBeVisible();
+    await expect(page.locator(".profile-panel")).toHaveCount(6);
+    await expect(page.locator(".profile-notice")).toHaveCount(0);
+    await expect(page.locator("html")).toHaveClass(/is-profile-view/);
 
     await page.locator('[data-view-nav="projects"]').click();
+    await expect(page.locator("html")).not.toHaveClass(/is-profile-view/);
     await expect(page.locator("[data-workspace]")).toHaveAttribute(
       "data-view",
       "projects",
@@ -213,7 +219,7 @@ test.describe("fullscreen portfolio workspace", () => {
     } else {
       await page
         .locator(
-          '[data-case-rail].is-active [data-project-switch][data-project-id="demo-ai-sandbox"]',
+          '[data-rail-panel="case"] [data-project-switch][data-project-id="demo-ai-sandbox"]',
         )
         .click();
     }
@@ -394,6 +400,18 @@ test.describe("fullscreen portfolio workspace", () => {
         horizontal: false,
       });
     }
+  });
+
+  test("mobile profile fits without document overflow", async ({
+    page,
+  }, testInfo) => {
+    test.skip(!testInfo.project.name.includes("mobile"), "mobile only");
+    await page.goto(appPath("/"));
+    await page.locator('[data-view-nav="profile"]').click();
+    await expect(page.locator("html")).toHaveClass(/is-profile-view/);
+    await expect(page.locator("[data-profile-stage]")).toBeVisible();
+    const overflow = await documentOverflow(page);
+    expect(overflow).toEqual({ vertical: false, horizontal: false });
   });
 
   test("reduced motion keeps navigation functional", async ({ page }) => {
@@ -657,7 +675,7 @@ test.describe("fullscreen portfolio workspace", () => {
       ).toBeVisible();
       await expect(page.locator(".project-index").first()).toBeHidden();
       await expect(
-        page.locator("[data-case-rail].is-active [data-project-switch]"),
+        page.locator('[data-rail-panel="case"] [data-project-switch]'),
       ).toHaveCount(6);
       await page.locator("[data-case-rail-back]").click();
       await expect(page.locator('[data-rail-panel="overview"]')).toBeVisible();

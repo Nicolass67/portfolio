@@ -59,8 +59,18 @@ function syncNavIndicator(animate = true) {
 
   const navRect = nav.getBoundingClientRect();
   const btnRect = active.getBoundingClientRect();
-  const left = btnRect.left - navRect.left + nav.scrollLeft;
-  const width = btnRect.width;
+  // Prefer the label text width so flex:1 mobile buttons don't get a full-half underline.
+  let labelLeft = btnRect.left;
+  let labelWidth = btnRect.width;
+  const range = document.createRange();
+  range.selectNodeContents(active);
+  const textRect = range.getBoundingClientRect();
+  if (textRect.width > 0) {
+    labelLeft = textRect.left;
+    labelWidth = textRect.width;
+  }
+  const left = labelLeft - navRect.left + nav.scrollLeft;
+  const width = labelWidth;
   const canAnimate = animate && indicator.dataset.ready === "true";
 
   if (!canAnimate) {
@@ -93,8 +103,16 @@ function initWorkspace(root: HTMLElement) {
     return cards.some((card) => card.dataset.projectId === id);
   }
 
+  function firstChapterId(projectId: string): string | null {
+    const card = cards.find((item) => item.dataset.projectId === projectId);
+    return (
+      card?.querySelector<HTMLElement>("[data-chapter-panel]")?.dataset
+        .chapterId ?? null
+    );
+  }
+
   function knownChapter(projectId: string, chapterId: string | null) {
-    if (!chapterId) return true;
+    if (!chapterId) return false;
     const card = cards.find((item) => item.dataset.projectId === projectId);
     return !!card?.querySelector(
       `[data-chapter-panel][data-chapter-id="${chapterId}"]`,
@@ -105,6 +123,36 @@ function initWorkspace(root: HTMLElement) {
 
   function isMobileLayout() {
     return mobileQuery.matches;
+  }
+
+  const syncChapterBodyScrollFade = (body: HTMLElement) => {
+    const panel = body.closest<HTMLElement>(".chapter-panel");
+    const shell = body.closest<HTMLElement>("[data-chapter-scroll]");
+    if (!panel || !shell) return;
+    // Mobile uses document scroll — no desktop edge cue.
+    if (isMobileLayout() || !panel.classList.contains("is-open")) {
+      delete shell.dataset.scrollFade;
+      return;
+    }
+    const maxScroll = body.scrollHeight - body.clientHeight;
+    if (maxScroll <= 2) {
+      shell.dataset.scrollFade = "none";
+      return;
+    }
+    const atStart = body.scrollTop <= 2;
+    const atEnd = body.scrollTop >= maxScroll - 2;
+    if (atStart && atEnd) shell.dataset.scrollFade = "none";
+    else if (atStart) shell.dataset.scrollFade = "bottom";
+    else if (atEnd) shell.dataset.scrollFade = "top";
+    else shell.dataset.scrollFade = "both";
+  };
+
+  function syncOpenChapterScrollFades() {
+    root
+      .querySelectorAll<HTMLElement>(
+        ".chapter-panel.is-open .chapter-panel__body",
+      )
+      .forEach(syncChapterBodyScrollFade);
   }
 
   function closeMobileSheets() {
@@ -143,49 +191,35 @@ function initWorkspace(root: HTMLElement) {
       });
     });
 
-  function applyChapter(projectId: string, chapterId: string | null) {
+  function applyChapter(projectId: string, chapterId: string) {
     const card = cards.find((item) => item.dataset.projectId === projectId);
-    const idle = card?.querySelector<HTMLElement>("[data-chapter-idle]");
     const buttons = root.querySelectorAll<HTMLButtonElement>(
       `[data-chapter-select][data-project-id="${projectId}"]`,
     );
     const panels = card?.querySelectorAll<HTMLElement>("[data-chapter-panel]");
 
     buttons.forEach((button) => {
-      const active =
-        chapterId != null && button.dataset.chapterId === chapterId;
+      const active = button.dataset.chapterId === chapterId;
       button.classList.toggle("is-active", active);
       button.setAttribute("aria-pressed", active ? "true" : "false");
     });
 
     panels?.forEach((panel) => {
-      const active = chapterId != null && panel.dataset.chapterId === chapterId;
+      const active = panel.dataset.chapterId === chapterId;
       panel.classList.toggle("is-open", active);
       panel.setAttribute("aria-hidden", active ? "false" : "true");
       setInert(panel, !active);
     });
-
-    if (idle) {
-      idle.hidden = chapterId != null;
-      idle.classList.toggle("is-hidden", chapterId != null);
-    }
 
     const chapterLabel = root.querySelector<HTMLElement>(
       "[data-mobile-chapter-label]",
     );
     // Only the active project owns the shared mobile chapter label.
     if (chapterLabel && projectId === state.projectId) {
-      if (chapterId) {
-        const title =
-          card
-            ?.querySelector(
-              `[data-chapter-panel][data-chapter-id="${chapterId}"] h3`,
-            )
-            ?.textContent?.trim() || chapterLabel.dataset.placeholder;
-        if (title) chapterLabel.textContent = title;
-      } else if (chapterLabel.dataset.placeholder) {
-        chapterLabel.textContent = chapterLabel.dataset.placeholder;
-      }
+      const title = card
+        ?.querySelector(`[data-chapter-panel][data-chapter-id="${chapterId}"] h3`)
+        ?.textContent?.trim();
+      if (title) chapterLabel.textContent = title;
     }
   }
 
@@ -224,6 +258,10 @@ function initWorkspace(root: HTMLElement) {
     root.dataset.activeProject = state.projectId;
     root.dataset.activeChapter = state.chapterId ?? "";
     root.classList.toggle("is-profile", state.view === "profile");
+    document.documentElement.classList.toggle(
+      "is-profile-view",
+      state.view === "profile",
+    );
     const inCaseStudy =
       state.view === "projects" && state.projectMode === "case-study";
     root.classList.toggle("is-case-study", inCaseStudy);
@@ -265,12 +303,16 @@ function initWorkspace(root: HTMLElement) {
 
     layout?.classList.toggle("is-case-mode", inCase);
     if (overviewRail) {
-      overviewRail.hidden = inCase;
+      overviewRail.hidden = false;
       overviewRail.classList.toggle("is-active", !inCase);
+      overviewRail.setAttribute("aria-hidden", inCase ? "true" : "false");
+      setInert(overviewRail, inCase);
     }
     if (caseRailPanel) {
-      caseRailPanel.hidden = !inCase;
+      caseRailPanel.hidden = false;
       caseRailPanel.classList.toggle("is-active", inCase);
+      caseRailPanel.setAttribute("aria-hidden", inCase ? "false" : "true");
+      setInert(caseRailPanel, !inCase);
     }
     root.querySelectorAll<HTMLElement>("[data-case-rail]").forEach((rail) => {
       const active = inCase && rail.dataset.projectId === state.projectId;
@@ -300,6 +342,12 @@ function initWorkspace(root: HTMLElement) {
       projectsPanel.hidden = !show;
       projectsPanel.setAttribute("aria-hidden", show ? "false" : "true");
       setInert(projectsPanel, !show);
+      if (show && previousView === "profile") {
+        pulseMotion(
+          projectsPanel.querySelector("[data-projects-layout]"),
+          "projects-enter",
+        );
+      }
     }
 
     if (profilePanel) {
@@ -308,7 +356,7 @@ function initWorkspace(root: HTMLElement) {
       profilePanel.hidden = !show;
       profilePanel.setAttribute("aria-hidden", show ? "false" : "true");
       setInert(profilePanel, !show);
-      if (show && previousView !== "profile") {
+      if (show && previousView === "projects") {
         pulseMotion(
           profilePanel.querySelector("[data-profile-stage]"),
           "profile-enter",
@@ -353,29 +401,34 @@ function initWorkspace(root: HTMLElement) {
       const showCase = active && state.projectMode === "case-study";
       const showOverview = active && state.projectMode === "overview";
       const projectChanged = previousProject !== id;
-      const enteringCase = active && previousMode !== "case-study" && showCase;
-      const leavingCase =
-        active && previousMode === "case-study" && showOverview;
       const chapterChanged =
         active &&
         showCase &&
-        !enteringCase &&
+        previousMode === "case-study" &&
         !projectChanged &&
         (state.chapterId ?? "") !== previousChapter;
 
-      applyChapter(
-        id,
-        active && state.projectMode === "case-study" ? state.chapterId : null,
-      );
+      // Ne pas vider les chapitres des cartes inactives : évite le flash
+      // du canvas vide pendant le fondu de changement de projet.
+      if (active && state.projectMode === "case-study" && state.chapterId) {
+        applyChapter(id, state.chapterId);
+      }
 
-      // Arm fade-in before reveal to avoid a full-opacity flash then jump.
+      const enteringCase =
+        active && previousMode !== "case-study" && showCase;
+      const leavingCase =
+        active && previousMode === "case-study" && showOverview;
+
+      // Swap projet / chapitre : soft-enter. Mode overview↔case : CSS desktop ; pulse sur mobile.
       if (active && projectChanged && showOverview) {
         pulseMotion(card, "project-swap");
-      }
-      if (enteringCase || (active && projectChanged && showCase)) {
+      } else if (active && projectChanged && showCase) {
         pulseMotion(caseStudy, "case-enter");
-      } else if (leavingCase) {
-        pulseMotion(overview, "overview-enter");
+      } else if (isMobileLayout() && (enteringCase || leavingCase)) {
+        pulseMotion(
+          enteringCase ? caseStudy : overview,
+          enteringCase ? "case-enter" : "overview-enter",
+        );
       } else if (chapterChanged && state.chapterId) {
         const openPanel = card.querySelector<HTMLElement>(
           `[data-chapter-panel][data-chapter-id="${state.chapterId}"]`,
@@ -386,11 +439,13 @@ function initWorkspace(root: HTMLElement) {
       if (overview) {
         overview.hidden = !showOverview;
         overview.classList.toggle("is-visible", showOverview);
+        overview.setAttribute("aria-hidden", showOverview ? "false" : "true");
         setInert(overview, !showOverview);
       }
       if (caseStudy) {
         caseStudy.hidden = !showCase;
         caseStudy.classList.toggle("is-visible", showCase);
+        caseStudy.setAttribute("aria-hidden", showCase ? "false" : "true");
         setInert(caseStudy, !showCase);
       }
     });
@@ -415,18 +470,13 @@ function initWorkspace(root: HTMLElement) {
     }
 
     writeStoredState(state);
+    syncOpenChapterScrollFades();
   }
 
   function setState(partial: Partial<WorkspaceState>) {
     const next: WorkspaceState = { ...state, ...partial };
     if (!knownProject(next.projectId)) {
       next.projectId = firstId;
-    }
-    if (!knownChapter(next.projectId, next.chapterId)) {
-      next.chapterId = null;
-    }
-    if (next.view === "profile") {
-      // Keep project/chapter memory while profile is shown.
     }
     if (
       partial.projectId != null &&
@@ -438,17 +488,34 @@ function initWorkspace(root: HTMLElement) {
         next.projectMode = "overview";
       }
     }
+    if (!knownChapter(next.projectId, next.chapterId)) {
+      next.chapterId = null;
+    }
+    // Étude de cas : toujours un chapitre ouvert (plus d’état idle).
+    if (next.projectMode === "case-study" && !next.chapterId) {
+      next.chapterId = firstChapterId(next.projectId);
+    }
+    if (next.projectMode === "overview") {
+      next.chapterId = null;
+    }
     state = next;
     applyState();
   }
 
   const stored = readStoredState(firstId);
   if (stored && knownProject(stored.projectId)) {
+    let chapterId = knownChapter(stored.projectId, stored.chapterId)
+      ? stored.chapterId
+      : null;
+    if (stored.projectMode === "case-study" && !chapterId) {
+      chapterId = firstChapterId(stored.projectId);
+    }
+    if (stored.projectMode === "overview") {
+      chapterId = null;
+    }
     state = {
       ...stored,
-      chapterId: knownChapter(stored.projectId, stored.chapterId)
-        ? stored.chapterId
-        : null,
+      chapterId,
     };
   }
 
@@ -579,16 +646,11 @@ function initWorkspace(root: HTMLElement) {
     if (chapterSelect?.dataset.chapterId) {
       const projectId = chapterSelect.dataset.projectId ?? state.projectId;
       const chapterId = chapterSelect.dataset.chapterId;
-      const sameChapter =
-        state.projectId === projectId &&
-        state.projectMode === "case-study" &&
-        state.chapterId === chapterId;
-      // Mobile sheets: keep a chapter open; desktop rail can still toggle idle.
-      const nextChapter = sameChapter && !isMobileLayout() ? null : chapterId;
+      // Recliquer le chapitre actif ne le désélectionne pas (pas d’état idle).
       setState({
         projectId,
         projectMode: "case-study",
-        chapterId: nextChapter,
+        chapterId,
       });
       if (chapterSelect.closest("dialog[data-mobile-sheet]")) {
         closeMobileSheets();
@@ -600,10 +662,153 @@ function initWorkspace(root: HTMLElement) {
   // Place the underline without animating on first paint / restored state.
   syncNavIndicator(false);
 
+  const syncMobileHeaderStack = () => {
+    if (!isMobileLayout()) {
+      document.documentElement.style.removeProperty("--mobile-header-stack");
+      return;
+    }
+    const header = document.querySelector<HTMLElement>(".site-header");
+    if (!header) return;
+    const height = Math.ceil(header.getBoundingClientRect().height);
+    if (height > 0) {
+      document.documentElement.style.setProperty(
+        "--mobile-header-stack",
+        `${height}px`,
+      );
+    }
+  };
+
+  syncMobileHeaderStack();
+  const headerEl = document.querySelector(".site-header");
+  if (headerEl && typeof ResizeObserver !== "undefined") {
+    const headerObserver = new ResizeObserver(() => syncMobileHeaderStack());
+    headerObserver.observe(headerEl);
+  }
+  mobileQuery.addEventListener("change", syncMobileHeaderStack);
+
+  const syncProjectIndexFade = (index: HTMLElement) => {
+    const maxScroll = index.scrollWidth - index.clientWidth;
+    if (maxScroll <= 1) {
+      index.dataset.scrollFade = "none";
+      return;
+    }
+    const atStart = index.scrollLeft <= 1;
+    const atEnd = index.scrollLeft >= maxScroll - 1;
+    if (atStart && atEnd) index.dataset.scrollFade = "none";
+    else if (atStart) index.dataset.scrollFade = "right";
+    else if (atEnd) index.dataset.scrollFade = "left";
+    else index.dataset.scrollFade = "both";
+  };
+
+  const projectIndexes = [
+    ...root.querySelectorAll<HTMLElement>(".project-index"),
+  ];
+  const syncAllProjectIndexFades = () => {
+    projectIndexes.forEach(syncProjectIndexFade);
+  };
+  projectIndexes.forEach((index) => {
+    index.addEventListener("scroll", () => syncProjectIndexFade(index), {
+      passive: true,
+    });
+    if (typeof ResizeObserver !== "undefined") {
+      const indexObserver = new ResizeObserver(() =>
+        syncProjectIndexFade(index),
+      );
+      indexObserver.observe(index);
+    }
+  });
+  syncAllProjectIndexFades();
+  mobileQuery.addEventListener("change", syncAllProjectIndexFades);
+
+  root.querySelectorAll<HTMLElement>(".chapter-panel__body").forEach((body) => {
+    body.addEventListener("scroll", () => syncChapterBodyScrollFade(body), {
+      passive: true,
+    });
+    if (typeof ResizeObserver !== "undefined") {
+      const bodyObserver = new ResizeObserver(() =>
+        syncChapterBodyScrollFade(body),
+      );
+      bodyObserver.observe(body);
+    }
+  });
+  syncOpenChapterScrollFades();
+  mobileQuery.addEventListener("change", syncOpenChapterScrollFades);
+
   window.addEventListener(
     "resize",
     () => {
       syncNavIndicator(false);
+      syncMobileHeaderStack();
+      syncAllProjectIndexFades();
+      syncOpenChapterScrollFades();
+    },
+    { passive: true },
+  );
+}
+
+function syncLanguageIndicator(animate = true) {
+  const nav = document.querySelector<HTMLElement>("[data-language-nav]");
+  const indicator = nav?.querySelector<HTMLElement>(
+    "[data-language-indicator]",
+  );
+  const active = nav?.querySelector<HTMLAnchorElement>(
+    "[data-language-link][aria-current='page'], [data-language-link].is-active",
+  );
+  if (!nav || !indicator || !active) return;
+
+  const navRect = nav.getBoundingClientRect();
+  const linkRect = active.getBoundingClientRect();
+  const left = linkRect.left - navRect.left + nav.scrollLeft;
+  const width = linkRect.width;
+  const canAnimate = animate && indicator.dataset.ready === "true";
+
+  if (!canAnimate) {
+    indicator.style.transition = "none";
+  }
+  indicator.style.width = `${width}px`;
+  indicator.style.transform = `translate3d(${left}px, 0, 0)`;
+  if (!canAnimate) {
+    void indicator.offsetWidth;
+    indicator.style.transition = "";
+    indicator.dataset.ready = "true";
+  }
+}
+
+function initLanguageSwitcher() {
+  const nav = document.querySelector<HTMLElement>("[data-language-nav]");
+  if (!nav) return;
+
+  syncLanguageIndicator(false);
+
+  nav.addEventListener("click", (event) => {
+    const link = (event.target as Element | null)?.closest<HTMLAnchorElement>(
+      "[data-language-link]",
+    );
+    if (!link || link.getAttribute("aria-current") === "page") return;
+
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    if (reduceMotion) return;
+
+    event.preventDefault();
+    nav.querySelectorAll<HTMLAnchorElement>("[data-language-link]").forEach(
+      (item) => {
+        item.removeAttribute("aria-current");
+        item.classList.remove("is-active");
+      },
+    );
+    link.classList.add("is-active");
+    syncLanguageIndicator(true);
+    window.setTimeout(() => {
+      window.location.assign(link.href);
+    }, 300);
+  });
+
+  window.addEventListener(
+    "resize",
+    () => {
+      syncLanguageIndicator(false);
     },
     { passive: true },
   );
@@ -613,3 +818,4 @@ const workspace = document.querySelector<HTMLElement>("[data-workspace]");
 if (workspace) {
   initWorkspace(workspace);
 }
+initLanguageSwitcher();

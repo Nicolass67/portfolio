@@ -4,9 +4,11 @@
 
 1. **Projets** — index + projet actif (média large + copie + blocs démo optionnels).
 2. **Étude de cas** — remplace l’overview ; chapitres un à la fois ; blocs interactifs denses.
-3. **Profil** — remplace le workspace projets.
+3. **Profil** — remplace le workspace projets ; composition structurée en **un seul écran** (pas de scroll) — hero + panneaux sobres + contact. L’histoire est visuelle / structurelle, pas littéraire. Mobile : layout dédié (voir `MOBILE_UX.md`).
 
-Contraintes : projet 1 par défaut, pas de collapse, pas de modale de navigation, pas de changement d’URL, desktop sans scroll document, **scrollbars jamais visibles**.
+Contraintes : projet 1 par défaut, pas de collapse, pas de modale de navigation, pas de changement d’URL, desktop sans scroll document, Profil sans scroll, **scrollbars jamais visibles**.
+
+Affordance scroll desktop (étude de cas) : overlays fade haut/bas sur `.chapter-panel__scroll` (bords de la zone scrollable, sous le titre du chapitre, hors rail) selon la position ; absents sans overflow dans cette direction. Absent sur mobile.
 
 ## Navigation contextuelle (Mission 13)
 

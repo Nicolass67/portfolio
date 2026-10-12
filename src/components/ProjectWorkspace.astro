@@ -45,6 +45,7 @@ const nextProjectLabel = isFrench ? "Projet suivant" : "Next project";
         <div
           class="context-rail__panel context-rail__panel--overview is-active"
           data-rail-panel="overview"
+          aria-hidden="false"
         >
           <p class="eyebrow" id="projects-title">
             {explorer.title}
@@ -77,9 +78,8 @@ const nextProjectLabel = isFrench ? "Projet suivant" : "Next project";
         <div
           class="context-rail__panel context-rail__panel--case"
           data-rail-panel="case"
-          hidden
+          aria-hidden="true"
         >
-          {/* Same first row as overview "Projets" — back sits under the pastilles so the label never jumps. */}
           <div class="case-rail__projects">
             <p class="eyebrow">{projectsSwitchLabel}</p>
             <nav class="case-project-jump" aria-label={jumpLabel}>
@@ -129,14 +129,17 @@ const nextProjectLabel = isFrench ? "Projet suivant" : "Next project";
                 aria-label={project.caseStudy.contentsLabel}
                 data-chapter-nav
               >
-                {project.caseStudy.chapters.map((chapter) => (
+                {project.caseStudy.chapters.map((chapter, chapterIndex) => (
                   <button
                     type="button"
-                    class="chapter-index__item"
+                    class:list={[
+                      "chapter-index__item",
+                      { "is-active": chapterIndex === 0 },
+                    ]}
                     data-chapter-select
                     data-chapter-id={chapter.id}
                     data-project-id={project.id}
-                    aria-pressed="false"
+                    aria-pressed={chapterIndex === 0 ? "true" : "false"}
                   >
                     <span class="chapter-index__mark" aria-hidden="true" />
                     <span class="chapter-index__text">
@@ -237,17 +240,6 @@ const nextProjectLabel = isFrench ? "Projet suivant" : "Next project";
                 hidden
               >
                 <div class="chapter-canvas" data-chapter-stage>
-                  <div class="chapter-canvas__idle" data-chapter-idle>
-                    <p class="eyebrow">{project.caseStudy.eyebrow}</p>
-                    <h2 id={`case-title-${project.id}`}>
-                      {project.caseStudy.title}
-                    </h2>
-                    <p>{explorer.chapterOverviewHint}</p>
-                    <p class="chapter-canvas__count">
-                      {project.caseStudy.chapters.length}{" "}
-                      {isFrench ? "chapitres" : "chapters"}
-                    </p>
-                  </div>
                   {project.caseStudy.chapters.map((chapter, chapterIndex) => {
                     const blocks = isDemo
                       ? chapterBlocksFor(project.id, chapter.id, content.locale)
@@ -256,10 +248,13 @@ const nextProjectLabel = isFrench ? "Projet suivant" : "Next project";
                       project.caseStudy.chapters[chapterIndex + 1] ?? null;
                     return (
                       <article
-                        class="chapter-panel"
+                        class:list={[
+                          "chapter-panel",
+                          { "is-open": chapterIndex === 0 },
+                        ]}
                         data-chapter-panel
                         data-chapter-id={chapter.id}
-                        aria-hidden="true"
+                        aria-hidden={chapterIndex === 0 ? "false" : "true"}
                         aria-labelledby={`chapter-heading-${project.id}-${chapter.id}`}
                       >
                         <header class="chapter-panel__head">
@@ -271,75 +266,86 @@ const nextProjectLabel = isFrench ? "Projet suivant" : "Next project";
                           </h3>
                           <p class="chapter-panel__lead">{chapter.intro}</p>
                         </header>
-                        <div class="chapter-panel__body">
-                          {chapter.paragraphs.map((paragraph) => (
-                            <p>{paragraph}</p>
-                          ))}
-                          {chapter.media && chapter.media.kind !== "none" ? (
-                            <MediaFrame
-                              media={chapter.media}
-                              emptyLabel={project.mediaEmptyLabel}
-                              emptyHint={project.mediaEmptyHint}
-                              class="chapter-panel__media"
-                            />
-                          ) : null}
-                          {blocks.length > 0 ? (
-                            <DemoBlocks
-                              blocks={blocks}
-                              class="demo-blocks--chapter"
-                            />
-                          ) : null}
-                          <footer
-                            class="chapter-continue"
-                            data-chapter-continue
-                          >
-                            {nextChapter ? (
-                              <button
-                                type="button"
-                                class="chapter-continue__action"
-                                data-chapter-select
-                                data-project-id={project.id}
-                                data-chapter-id={nextChapter.id}
-                              >
-                                <span class="chapter-continue__meta">
-                                  <span class="chapter-continue__label">
-                                    {nextChapterLabel}
-                                  </span>
-                                  <span class="chapter-continue__title">
-                                    {nextChapter.title}
-                                  </span>
-                                </span>
-                                <span
-                                  class="chapter-continue__arrow"
-                                  aria-hidden="true"
-                                >
-                                  →
-                                </span>
-                              </button>
-                            ) : nextProject ? (
-                              <button
-                                type="button"
-                                class="chapter-continue__action"
-                                data-project-switch
-                                data-project-id={nextProject.id}
-                              >
-                                <span class="chapter-continue__meta">
-                                  <span class="chapter-continue__label">
-                                    {nextProjectLabel}
-                                  </span>
-                                  <span class="chapter-continue__title">
-                                    {nextProject.navLabel ?? nextProject.title}
-                                  </span>
-                                </span>
-                                <span
-                                  class="chapter-continue__arrow"
-                                  aria-hidden="true"
-                                >
-                                  →
-                                </span>
-                              </button>
+                        <div class="chapter-panel__scroll" data-chapter-scroll>
+                          <div class="chapter-panel__body">
+                            {chapter.paragraphs.map((paragraph) => (
+                              <p>{paragraph}</p>
+                            ))}
+                            {chapter.media && chapter.media.kind !== "none" ? (
+                              <MediaFrame
+                                media={chapter.media}
+                                emptyLabel={project.mediaEmptyLabel}
+                                emptyHint={project.mediaEmptyHint}
+                                class="chapter-panel__media"
+                              />
                             ) : null}
-                          </footer>
+                            {blocks.length > 0 ? (
+                              <DemoBlocks
+                                blocks={blocks}
+                                class="demo-blocks--chapter"
+                              />
+                            ) : null}
+                            <footer
+                              class="chapter-continue"
+                              data-chapter-continue
+                            >
+                              {nextChapter ? (
+                                <button
+                                  type="button"
+                                  class="chapter-continue__action"
+                                  data-chapter-select
+                                  data-project-id={project.id}
+                                  data-chapter-id={nextChapter.id}
+                                >
+                                  <span class="chapter-continue__meta">
+                                    <span class="chapter-continue__label">
+                                      {nextChapterLabel}
+                                    </span>
+                                    <span class="chapter-continue__title">
+                                      {nextChapter.title}
+                                    </span>
+                                  </span>
+                                  <span
+                                    class="chapter-continue__arrow"
+                                    aria-hidden="true"
+                                  >
+                                    →
+                                  </span>
+                                </button>
+                              ) : nextProject ? (
+                                <button
+                                  type="button"
+                                  class="chapter-continue__action"
+                                  data-project-switch
+                                  data-project-id={nextProject.id}
+                                >
+                                  <span class="chapter-continue__meta">
+                                    <span class="chapter-continue__label">
+                                      {nextProjectLabel}
+                                    </span>
+                                    <span class="chapter-continue__title">
+                                      {nextProject.navLabel ??
+                                        nextProject.title}
+                                    </span>
+                                  </span>
+                                  <span
+                                    class="chapter-continue__arrow"
+                                    aria-hidden="true"
+                                  >
+                                    →
+                                  </span>
+                                </button>
+                              ) : null}
+                            </footer>
+                          </div>
+                          <div
+                            class="chapter-panel__edge chapter-panel__edge--top"
+                            aria-hidden="true"
+                          ></div>
+                          <div
+                            class="chapter-panel__edge chapter-panel__edge--bottom"
+                            aria-hidden="true"
+                          ></div>
                         </div>
                       </article>
                     );
@@ -403,14 +409,17 @@ const nextProjectLabel = isFrench ? "Projet suivant" : "Next project";
           aria-label={project.caseStudy.contentsLabel}
           hidden={index !== 0}
         >
-          {project.caseStudy.chapters.map((chapter) => (
+          {project.caseStudy.chapters.map((chapter, chapterIndex) => (
             <button
               type="button"
-              class="mobile-sheet__item"
+              class:list={[
+                "mobile-sheet__item",
+                { "is-active": chapterIndex === 0 },
+              ]}
               data-chapter-select
               data-chapter-id={chapter.id}
               data-project-id={project.id}
-              aria-pressed="false"
+              aria-pressed={chapterIndex === 0 ? "true" : "false"}
             >
               <span class="mobile-sheet__item-eyebrow">{chapter.eyebrow}</span>
               <span class="mobile-sheet__item-title">{chapter.title}</span>

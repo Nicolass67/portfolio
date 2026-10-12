@@ -286,6 +286,12 @@
 - Remplace partiellement D-030 pour le comportement du saut pastilles.
 - Statut : **validé par l’utilisateur**.
 
+## D-036 — Profil structuré (placeholder démo)
+
+- Décision : vue Profil en composition structurée (hero + panneaux + contact), single-screen sans scroll. L’« histoire » est dans l’**UX/UI** (hiérarchie, rythme, parcours de lecture), pas dans des libellés narratifs. Copy **sobre** (Parcours, Domaines, Stack, Approche, Objectif, Méthode, Contact). Typo lisible ; bannière placeholder retirée. Mobile : layout dédié ; `html.is-profile-view` verrouille le viewport. Authentic = faits courts + slots, sans rôles inventés.
+- Raison : juger densité et composition avant contenu réel.
+- Statut : **implémenté** ; copy recentrée sobre (arbitrage UX 2026-10-12).
+
 ## D-035 — Entrée explicite vers l’étude technique
 
 - Contexte : le CTA « Étude de cas » était trop implicite (lien bas de page, jargon, après blocs démo).

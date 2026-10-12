@@ -23,10 +23,14 @@ Observation navigateur réel (`390×844`, mode démo, état case study restauré
 | Chapitre | Sélection dans la feuille → ferme la feuille → contenu seul → **scroll document en haut** |
 | Fin de chapitre | CTA « Chapitre suivant » en bas du contenu (mobile) ; dernier chapitre → **projet suivant** (étude de cas) |
 | Lightbox | Pinch-to-zoom + pan + double-tap ; swipe entre images seulement à zoom 1× |
-| Scroll | Scroll de page uniquement sous le breakpoint ; pas de scroll interne workspace |
+| Scroll | Scroll de page uniquement sous le breakpoint (projets / étude) ; pas de scroll interne workspace ; **vue Profil** = viewport verrouillé, contenu single-screen (`html.is-profile-view`) |
 | Scrollbars | Toujours masquées (contrainte projet) |
-| Desktop | Aucun changement de layout hors media query ; rail / grille / panneaux inchangés ≥ 53 rem |
-| Header mobile | Titre plus grand ; langues en rangée pleine largeur (≥ ~3.25 rem), drapeaux SVG FR/EN (pas d’emoji) |
+| Desktop | Case study : rail `11–13.5rem` + média chapitre plus haut ; overview inchangé hors media query |
+| Header mobile | Titre lisible ; FR/EN avec drapeaux SVG ; explorateurs couleur masqués (aligné Pages) |
+| Indicateur nav | Underline calée sur la largeur du libellé (pas le flex demi-écran) |
+| Touch densés | Étapes / options / thumbs / Développer ≥ `--touch-min` (2.75 rem) |
+| Sheets | Items plus denses (`padding` réduit, min-height tactile conservé) |
+| Chips fade | Masque latéral seulement côté contenu restant (pas aux extrémités) |
 
 ## Niveaux UX
 

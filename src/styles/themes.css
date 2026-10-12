@@ -189,7 +189,7 @@ html[data-theme="studio"] .project-hero__copy h2 {
   max-width: 11ch;
 }
 
-html[data-theme="studio"] .profile-stage__intro h1 {
+html[data-theme="studio"] .profile-hero h1 {
   letter-spacing: -0.045em;
 }
 

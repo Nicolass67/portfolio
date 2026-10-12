@@ -44,7 +44,7 @@ document
       frame.classList.add("media-frame--empty", "media-frame--failed");
       frame
         .querySelectorAll(
-          "img, video, .media-frame__gallery, .media-frame__video-slot",
+          "img, video, .media-frame__inspect, .media-frame__gallery, .media-frame__video-slot",
         )
         .forEach((node) => {
           if (node instanceof HTMLElement) node.hidden = true;

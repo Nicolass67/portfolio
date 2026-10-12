@@ -120,6 +120,11 @@ const { blocks, class: className = "" } = Astro.props;
                 data-lightbox-alt={block.items[0]?.alt ?? ""}
                 data-lightbox-caption={block.items[0]?.caption ?? ""}
                 data-gallery-inspect
+                aria-label={
+                  [block.items[0]?.alt, block.items[0]?.caption]
+                    .filter(Boolean)
+                    .join(" — ") || "Enlarge image"
+                }
               >
                 <img
                   src={withBase(block.items[0]?.src ?? "")}
@@ -147,6 +152,11 @@ const { blocks, class: className = "" } = Astro.props;
                   data-alt={item.alt}
                   data-caption={item.caption}
                   aria-pressed={index === 0 ? "true" : "false"}
+                  aria-label={
+                    item.alt ||
+                    item.caption ||
+                    `Image ${index + 1}`
+                  }
                 >
                   <img src={withBase(item.src)} alt="" loading="lazy" />
                 </button>
@@ -280,6 +290,7 @@ const { blocks, class: className = "" } = Astro.props;
                 data-lightbox-open
                 data-lightbox-src={withBase(block.src)}
                 data-lightbox-alt={block.alt}
+                aria-label={block.alt || "Enlarge image"}
               >
                 <img
                   src={withBase(block.src)}
@@ -416,6 +427,7 @@ const { blocks, class: className = "" } = Astro.props;
                 data-lightbox-open
                 data-lightbox-src={withBase(block.src)}
                 data-lightbox-alt={block.alt}
+                aria-label={block.alt || "Enlarge image"}
               >
                 <img
                   src={withBase(block.src)}

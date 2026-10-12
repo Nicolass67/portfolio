@@ -116,7 +116,6 @@ export interface SiteContent {
     /** Affordance in the mobile projects sheet. */
     openStudyAction: string;
     backToProject: string;
-    chapterOverviewHint: string;
   };
   /** Shown only when mode === "demo". */
   demoNotice: {
@@ -406,7 +405,6 @@ const authenticShell = {
       caseStudyHint: "sujets techniques",
       openStudyAction: "Ouvrir l’étude",
       backToProject: "Tous les projets",
-      chapterOverviewHint: "Choisissez un sujet technique pour l’afficher ici.",
     },
     profile: buildAuthenticProfile("fr"),
     footer: {
@@ -444,7 +442,6 @@ const authenticShell = {
       caseStudyHint: "technical topics",
       openStudyAction: "Open study",
       backToProject: "All projects",
-      chapterOverviewHint: "Choose a technical topic to display it here.",
     },
     profile: buildAuthenticProfile("en"),
     footer: {
@@ -484,8 +481,6 @@ function demoExplorer(locale: Locale): SiteContent["explorer"] {
         caseStudyHint: "sujets techniques",
         openStudyAction: "Ouvrir l’étude",
         backToProject: "Tous les projets",
-        chapterOverviewHint:
-          "Choisissez un sujet technique pour l’afficher ici.",
       }
     : {
         eyebrow: "Demonstration",
@@ -499,7 +494,6 @@ function demoExplorer(locale: Locale): SiteContent["explorer"] {
         caseStudyHint: "technical topics",
         openStudyAction: "Open study",
         backToProject: "All projects",
-        chapterOverviewHint: "Choose a technical topic to display it here.",
       };
 }
 

@@ -72,7 +72,7 @@ test.describe("reference screenshots", () => {
 
       await page
         .locator(
-          '[data-case-rail].is-active [data-project-switch][data-project-id="demo-combat-systems"]',
+          '[data-rail-panel="case"] [data-project-switch][data-project-id="demo-combat-systems"]',
         )
         .click();
       await expect(page.locator("[data-workspace]")).toHaveAttribute(

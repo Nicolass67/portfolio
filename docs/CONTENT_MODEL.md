@@ -6,6 +6,7 @@
 - Démo projets : `demo-projects.ts` (métadonnées + médias overview).
 - Chapitres denses : `demo-dense.ts` (`buildDenseChapters`, générateur de blocs).
 - Blocs interactifs démo : `demo-blocks.ts` (`overviewBlocksFor`, `chapterBlocksFor`, kinds).
+- Profil : `profile.ts` (`buildDemoProfile` / `buildAuthenticProfile`) — récit (pitch + beat, fil rouge) + panneaux (`timeline` | `chips` | `pairs` | `text`) + conversation ; ton narratif, pas fiche CV ; démo = placeholders fictifs ; authentic = faits courts + slots.
 - Médias : `image` | `video` | `gallery` | `diagram` | `youtube` | `none`.
 - Lightbox : `fullSrc` optionnel (sinon `src`) + `caption` ; fallback si chargement échoue ; groupes via `data-lightbox-group` / galerie / `gallery-select`.
 - YouTube : `youtubeId` / embed configurable ; sans id → placeholder click-to-load (pas de faux gameplay).
