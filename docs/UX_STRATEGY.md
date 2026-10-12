@@ -29,3 +29,11 @@ Les images inspectables (média featured, galeries, annotations, splits, expand 
 ## Contenu dense (démo)
 
 Toujours fictif ; un chapitre à la fois ; divulgation progressive.
+
+## Mobile (≤ 52.99rem)
+
+L’expérience étroite n’est **pas** une transposition du rail desktop. Voir `docs/MOBILE_UX.md`. En bas de chaque chapitre, un CTA ouvre le **chapitre suivant** ; au dernier chapitre, le **projet suivant** (étude de cas).
+
+- Overview : chips projets sticky + lecture verticale (média → synthèse → CTA).
+- Case study : barre basse (Aperçu / Chapitre / Projets) + feuilles `<dialog>` ; scroll document.
+- Desktop ≥ 53rem : inchangé (D-030 / D-033).

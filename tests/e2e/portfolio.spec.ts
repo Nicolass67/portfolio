@@ -18,6 +18,12 @@ async function documentOverflow(page: Page) {
   }));
 }
 
+async function isMobileViewport(page: Page) {
+  return page.evaluate(
+    () => window.matchMedia("(max-width: 52.99rem)").matches,
+  );
+}
+
 test.describe("fullscreen portfolio workspace", () => {
   test("starts on Projects with project 1 active and no collapse control", async ({
     page,
@@ -114,18 +120,30 @@ test.describe("fullscreen portfolio workspace", () => {
       ),
     ).toHaveAttribute("hidden", "");
     await expect(page.locator('[data-rail-panel="overview"]')).toBeHidden();
-    await expect(page.locator('[data-rail-panel="case"]')).toBeVisible();
-    await expect(
-      page.locator(
-        '[data-case-rail][data-project-id="demo-combat-systems"] .case-identity__title',
-      ),
-    ).toBeVisible();
-
-    await page
-      .locator(
-        '[data-case-rail].is-active [data-chapter-select][data-chapter-id="systems"]',
-      )
-      .click();
+    if (await isMobileViewport(page)) {
+      await expect(page.locator("[data-mobile-case-bar]")).toBeVisible();
+      await page.locator('[data-mobile-sheet-open="chapters"]').click();
+      await expect(
+        page.locator('dialog[data-mobile-sheet="chapters"]'),
+      ).toBeVisible();
+      await page
+        .locator(
+          'dialog[data-mobile-sheet="chapters"] [data-mobile-chapter-group][data-project-id="demo-combat-systems"] [data-chapter-select][data-chapter-id="systems"]',
+        )
+        .click();
+    } else {
+      await expect(page.locator('[data-rail-panel="case"]')).toBeVisible();
+      await expect(
+        page.locator(
+          '[data-case-rail][data-project-id="demo-combat-systems"] .case-identity__title',
+        ),
+      ).toBeVisible();
+      await page
+        .locator(
+          '[data-case-rail].is-active [data-chapter-select][data-chapter-id="systems"]',
+        )
+        .click();
+    }
 
     await expect(page).toHaveURL(before);
     await expect(page.locator("[data-chapter-panel].is-open")).toHaveCount(1);
@@ -185,11 +203,20 @@ test.describe("fullscreen portfolio workspace", () => {
     );
     await expect(page.locator("[data-chapter-panel].is-open")).toHaveCount(1);
 
-    await page
-      .locator(
-        '[data-case-rail].is-active [data-project-switch][data-project-id="demo-ai-sandbox"]',
-      )
-      .click();
+    if (await isMobileViewport(page)) {
+      await page.locator('[data-mobile-sheet-open="projects"]').click();
+      await page
+        .locator(
+          'dialog[data-mobile-sheet="projects"] [data-project-switch][data-project-id="demo-ai-sandbox"]',
+        )
+        .click();
+    } else {
+      await page
+        .locator(
+          '[data-case-rail].is-active [data-project-switch][data-project-id="demo-ai-sandbox"]',
+        )
+        .click();
+    }
 
     await expect(page.locator("[data-workspace]")).toHaveAttribute(
       "data-active-project",
@@ -209,11 +236,20 @@ test.describe("fullscreen portfolio workspace", () => {
         '[data-project-card].is-active [data-project-mode-panel="case-study"]',
       ),
     ).toBeVisible();
-    await expect(
-      page.locator(
-        '[data-case-rail][data-project-id="demo-ai-sandbox"].is-active',
-      ),
-    ).toBeVisible();
+    if (await isMobileViewport(page)) {
+      await expect(page.locator("[data-mobile-case-bar]")).toBeVisible();
+      await expect(
+        page.locator(
+          '[data-mobile-chapter-group][data-project-id="demo-ai-sandbox"]',
+        ),
+      ).not.toHaveAttribute("hidden", "");
+    } else {
+      await expect(
+        page.locator(
+          '[data-case-rail][data-project-id="demo-ai-sandbox"].is-active',
+        ),
+      ).toBeVisible();
+    }
     await expect(page.locator("[data-chapter-panel].is-open")).toHaveCount(1);
   });
 
@@ -501,6 +537,80 @@ test.describe("fullscreen portfolio workspace", () => {
     expect(bgAfter.toLowerCase()).toBe("#f4f6fa");
   });
 
+  test("mobile chapter continue advances to the next chapter", async ({
+    page,
+  }, testInfo) => {
+    test.skip(!testInfo.project.name.includes("mobile"), "mobile only");
+    await page.goto(appPath("/"));
+    await page
+      .locator("[data-project-card].is-active [data-open-case-study]")
+      .click();
+    const openPanel = page.locator("[data-chapter-panel].is-open");
+    await expect(openPanel).toHaveCount(1);
+    const firstId = await openPanel.getAttribute("data-chapter-id");
+    expect(firstId).toBeTruthy();
+
+    const continueBtn = openPanel.locator(
+      "[data-chapter-continue] [data-chapter-select]",
+    );
+    await expect(continueBtn).toBeVisible();
+    const nextId = await continueBtn.getAttribute("data-chapter-id");
+    expect(nextId).toBeTruthy();
+    expect(nextId).not.toBe(firstId);
+
+    await continueBtn.scrollIntoViewIfNeeded();
+    await continueBtn.click();
+    await expect(page.locator("[data-chapter-panel].is-open")).toHaveAttribute(
+      "data-chapter-id",
+      nextId!,
+    );
+    await expect(page.locator("[data-mobile-chapter-label]")).not.toHaveText(
+      /Choisir un chapitre|Choose a chapter/,
+    );
+  });
+
+  test("mobile last chapter continue jumps to the next project", async ({
+    page,
+  }, testInfo) => {
+    test.skip(!testInfo.project.name.includes("mobile"), "mobile only");
+    await page.goto(appPath("/"));
+    await page
+      .locator("[data-project-card].is-active [data-open-case-study]")
+      .click();
+    await page.locator('[data-mobile-sheet-open="chapters"]').click();
+    const lastChapter = page
+      .locator(
+        'dialog[data-mobile-sheet="chapters"] [data-mobile-chapter-group][data-project-id="demo-combat-systems"] [data-chapter-select]',
+      )
+      .last();
+    await lastChapter.click();
+    await expect(page.locator("[data-chapter-panel].is-open")).toHaveCount(1);
+
+    const nextProjectBtn = page.locator(
+      "[data-chapter-panel].is-open [data-chapter-continue] [data-project-switch]",
+    );
+    await expect(nextProjectBtn).toBeVisible();
+    await expect(nextProjectBtn).toHaveAttribute(
+      "data-project-id",
+      "demo-ai-sandbox",
+    );
+    await nextProjectBtn.scrollIntoViewIfNeeded();
+    await nextProjectBtn.click();
+    await expect(page.locator("[data-workspace]")).toHaveAttribute(
+      "data-active-project",
+      "demo-ai-sandbox",
+    );
+    await expect(page.locator("[data-workspace]")).toHaveAttribute(
+      "data-project-mode",
+      "case-study",
+    );
+    await expect(
+      page.locator(
+        '[data-project-card][data-project-id="demo-ai-sandbox"].is-active [data-chapter-panel].is-open',
+      ),
+    ).toHaveCount(1);
+  });
+
   test("case study swaps left rail to chapter navigation", async ({ page }) => {
     await page.goto(appPath("/"));
     await expect(page.locator('[data-rail-panel="overview"]')).toBeVisible();
@@ -511,21 +621,32 @@ test.describe("fullscreen portfolio workspace", () => {
       /is-case-mode/,
     );
     await expect(page.locator('[data-rail-panel="overview"]')).toBeHidden();
-    await expect(
-      page.locator("[data-case-rail].is-active [data-chapter-nav]"),
-    ).toBeVisible();
-    await expect(page.locator(".project-index").first()).toBeHidden();
     await expect(page.locator("[data-project-picker-toggle]")).toHaveCount(0);
-    await expect(
-      page.locator("[data-case-rail].is-active [data-project-switch]"),
-    ).toHaveCount(6);
-    await page
-      .locator("[data-workspace-toolbar] [data-close-case-study]")
-      .click();
-    await expect(page.locator('[data-rail-panel="overview"]')).toBeVisible();
-    await expect(
-      page.locator("[data-workspace-toolbar] [data-close-case-study]"),
-    ).toBeHidden();
+
+    if (await isMobileViewport(page)) {
+      await expect(page.locator("[data-mobile-case-bar]")).toBeVisible();
+      await expect(page.locator(".context-rail")).toBeHidden();
+      await page
+        .locator("[data-mobile-case-bar] [data-close-case-study]")
+        .click();
+      await expect(page.locator("[data-mobile-case-bar]")).toBeHidden();
+      await expect(page.locator('[data-rail-panel="overview"]')).toBeVisible();
+    } else {
+      await expect(
+        page.locator("[data-case-rail].is-active [data-chapter-nav]"),
+      ).toBeVisible();
+      await expect(page.locator(".project-index").first()).toBeHidden();
+      await expect(
+        page.locator("[data-case-rail].is-active [data-project-switch]"),
+      ).toHaveCount(6);
+      await page
+        .locator("[data-workspace-toolbar] [data-close-case-study]")
+        .click();
+      await expect(page.locator('[data-rail-panel="overview"]')).toBeVisible();
+      await expect(
+        page.locator("[data-workspace-toolbar] [data-close-case-study]"),
+      ).toBeHidden();
+    }
   });
 
   test("project sidebar shows titles only without metadata", async ({

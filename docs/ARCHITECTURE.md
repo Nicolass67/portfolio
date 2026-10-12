@@ -41,6 +41,8 @@ Persistance : `sessionStorage`. Pas de `pushState` / hash.
 | `lightbox.ts` | Modal image accessible |
 | `theme.ts` | `?visual=` démo + fallback images |
 | `accent.ts` | Explorateur accent |
+| `background.ts` | Explorateur fond |
+| `mobile.css` | UX mobile dédiée (≤ 52.99rem) ; barre case + feuilles |
 | `interactives.ts` | Blocs démo |
 
 ## Contenu

@@ -2,7 +2,8 @@
 
 ## État global
 
-- Phase : **Déploiement en ligne opérationnel** (GitHub Pages via Actions).
+- Phase : **Refonte UX mobile dédiée** (D-034) + déploiement Pages opérationnel.
+- Mobile ≤ 52.99rem : chips sticky, barre case + feuilles chapitres/projets, scroll page, CTA bas de chapitre (suivant / projet suivant) — desktop préservé.
 - Dépôt : [`Nicolass67/portfolio`](https://github.com/Nicolass67/portfolio) — **public** (accord explicite 2026-10-12) ; branche `main`.
 - Site publié : [https://nicolass67.github.io/portfolio/](https://nicolass67.github.io/portfolio/) (HTTP 200 vérifié).
 - Workflow : `.github/workflows/deploy.yml` — CI (format/lint/typecheck/unit/build) + deploy Pages.

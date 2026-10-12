@@ -49,6 +49,32 @@ function writeStoredState(state: WorkspaceState) {
   }
 }
 
+function syncNavIndicator(animate = true) {
+  const nav = document.querySelector<HTMLElement>("[data-site-nav]");
+  const indicator = nav?.querySelector<HTMLElement>("[data-nav-indicator]");
+  const active = nav?.querySelector<HTMLButtonElement>(
+    "[data-view-nav].is-active, [data-view-nav][aria-pressed='true']",
+  );
+  if (!nav || !indicator || !active) return;
+
+  const navRect = nav.getBoundingClientRect();
+  const btnRect = active.getBoundingClientRect();
+  const left = btnRect.left - navRect.left + nav.scrollLeft;
+  const width = btnRect.width;
+  const canAnimate = animate && indicator.dataset.ready === "true";
+
+  if (!canAnimate) {
+    indicator.style.transition = "none";
+  }
+  indicator.style.width = `${width}px`;
+  indicator.style.transform = `translate3d(${left}px, 0, 0)`;
+  if (!canAnimate) {
+    void indicator.offsetWidth;
+    indicator.style.transition = "";
+    indicator.dataset.ready = "true";
+  }
+}
+
 function initWorkspace(root: HTMLElement) {
   const cards = Array.from(
     root.querySelectorAll<HTMLElement>("[data-project-card]"),
@@ -75,18 +101,29 @@ function initWorkspace(root: HTMLElement) {
     );
   }
 
+  const mobileQuery = window.matchMedia("(max-width: 52.99rem)");
+
+  function isMobileLayout() {
+    return mobileQuery.matches;
+  }
+
+  function closeMobileSheets() {
+    root
+      .querySelectorAll<HTMLDialogElement>("dialog[data-mobile-sheet]")
+      .forEach((sheet) => {
+        if (sheet.open) sheet.close();
+      });
+  }
+
   function applyChapter(projectId: string, chapterId: string | null) {
     const card = cards.find((item) => item.dataset.projectId === projectId);
-    const caseRail = root.querySelector<HTMLElement>(
-      `[data-case-rail][data-project-id="${projectId}"]`,
-    );
     const idle = card?.querySelector<HTMLElement>("[data-chapter-idle]");
-    const buttons = caseRail?.querySelectorAll<HTMLButtonElement>(
-      "[data-chapter-select]",
+    const buttons = root.querySelectorAll<HTMLButtonElement>(
+      `[data-chapter-select][data-project-id="${projectId}"]`,
     );
     const panels = card?.querySelectorAll<HTMLElement>("[data-chapter-panel]");
 
-    buttons?.forEach((button) => {
+    buttons.forEach((button) => {
       const active =
         chapterId != null && button.dataset.chapterId === chapterId;
       button.classList.toggle("is-active", active);
@@ -103,6 +140,24 @@ function initWorkspace(root: HTMLElement) {
     if (idle) {
       idle.hidden = chapterId != null;
       idle.classList.toggle("is-hidden", chapterId != null);
+    }
+
+    const chapterLabel = root.querySelector<HTMLElement>(
+      "[data-mobile-chapter-label]",
+    );
+    // Only the active project owns the shared mobile chapter label.
+    if (chapterLabel && projectId === state.projectId) {
+      if (chapterId) {
+        const title =
+          card
+            ?.querySelector(
+              `[data-chapter-panel][data-chapter-id="${chapterId}"] h3`,
+            )
+            ?.textContent?.trim() || chapterLabel.dataset.placeholder;
+        if (title) chapterLabel.textContent = title;
+      } else if (chapterLabel.dataset.placeholder) {
+        chapterLabel.textContent = chapterLabel.dataset.placeholder;
+      }
     }
   }
 
@@ -148,7 +203,26 @@ function initWorkspace(root: HTMLElement) {
     root
       .querySelectorAll<HTMLButtonElement>("[data-close-case-study]")
       .forEach((button) => {
+        // Mobile case bar owns its back control; desktop toolbar keeps the other.
+        if (button.closest("[data-mobile-case-bar]")) {
+          button.hidden = false;
+          return;
+        }
         button.hidden = !inCaseStudy;
+      });
+
+    const mobileCaseBar = root.querySelector<HTMLElement>(
+      "[data-mobile-case-bar]",
+    );
+    if (mobileCaseBar) {
+      mobileCaseBar.hidden = !inCaseStudy;
+    }
+
+    root
+      .querySelectorAll<HTMLElement>("[data-mobile-chapter-group]")
+      .forEach((group) => {
+        const active = group.dataset.projectId === state.projectId;
+        group.hidden = !active;
       });
 
     const layout = root.querySelector<HTMLElement>("[data-projects-layout]");
@@ -183,6 +257,7 @@ function initWorkspace(root: HTMLElement) {
         button.classList.toggle("is-active", active);
         button.setAttribute("aria-pressed", active ? "true" : "false");
       });
+    syncNavIndicator(previousView !== state.view);
 
     const projectsPanel = root.querySelector<HTMLElement>(
       '[data-view-panel="projects"]',
@@ -222,6 +297,17 @@ function initWorkspace(root: HTMLElement) {
         button.classList.toggle("is-active", active);
         button.setAttribute("aria-pressed", active ? "true" : "false");
       });
+
+    if (previousProject !== state.projectId) {
+      const activeTab = root.querySelector<HTMLButtonElement>(
+        `[data-rail-panel="overview"] [data-project-select][data-project-id="${state.projectId}"]`,
+      );
+      activeTab?.scrollIntoView({
+        inline: "center",
+        block: "nearest",
+        behavior: reduceMotionQuery.matches ? "auto" : "smooth",
+      });
+    }
 
     cards.forEach((card) => {
       const id = card.dataset.projectId ?? "";
@@ -281,6 +367,25 @@ function initWorkspace(root: HTMLElement) {
       }
     });
 
+    const shouldResetScroll =
+      isMobileLayout() &&
+      state.view === "projects" &&
+      (previousProject !== state.projectId ||
+        previousMode !== state.projectMode ||
+        (state.projectMode === "case-study" &&
+          (state.chapterId ?? "") !== previousChapter));
+    if (shouldResetScroll) {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: reduceMotionQuery.matches ? "auto" : "smooth",
+      });
+    }
+
+    if (!inCaseStudy) {
+      closeMobileSheets();
+    }
+
     writeStoredState(state);
   }
 
@@ -319,9 +424,36 @@ function initWorkspace(root: HTMLElement) {
     };
   }
 
+  const chapterLabelEl = root.querySelector<HTMLElement>(
+    "[data-mobile-chapter-label]",
+  );
+  if (chapterLabelEl && !chapterLabelEl.dataset.placeholder) {
+    chapterLabelEl.dataset.placeholder =
+      chapterLabelEl.textContent?.trim() ?? "";
+  }
+
   document.addEventListener("click", (event) => {
     const target = event.target;
     if (!(target instanceof Element)) return;
+
+    const sheetClose = target.closest<HTMLButtonElement>(
+      "[data-mobile-sheet-close]",
+    );
+    if (sheetClose) {
+      sheetClose.closest("dialog")?.close();
+      return;
+    }
+
+    const sheetOpen = target.closest<HTMLButtonElement>(
+      "[data-mobile-sheet-open]",
+    );
+    if (sheetOpen?.dataset.mobileSheetOpen) {
+      const sheet = root.querySelector<HTMLDialogElement>(
+        `dialog[data-mobile-sheet="${sheetOpen.dataset.mobileSheetOpen}"]`,
+      );
+      sheet?.showModal();
+      return;
+    }
 
     const viewNav = target.closest<HTMLButtonElement>("[data-view-nav]");
     if (viewNav?.dataset.viewNav === "projects") {
@@ -339,7 +471,7 @@ function initWorkspace(root: HTMLElement) {
       "[data-project-switch]",
     );
     if (projectJump?.dataset.projectId) {
-      // Pastilles 1/2/3 → ouvrir directement la page (étude de cas) du projet cible.
+      // Pastilles / feuille Projets → étude de cas du projet cible.
       const projectId = projectJump.dataset.projectId;
       const card = cards.find((item) => item.dataset.projectId === projectId);
       const firstChapter =
@@ -355,6 +487,7 @@ function initWorkspace(root: HTMLElement) {
         projectMode: "case-study",
         chapterId: firstChapter,
       });
+      closeMobileSheets();
       return;
     }
 
@@ -396,6 +529,7 @@ function initWorkspace(root: HTMLElement) {
       "[data-close-case-study]",
     );
     if (closeCase) {
+      closeMobileSheets();
       setState({ projectMode: "overview", chapterId: null });
       return;
     }
@@ -406,21 +540,34 @@ function initWorkspace(root: HTMLElement) {
     if (chapterSelect?.dataset.chapterId) {
       const projectId = chapterSelect.dataset.projectId ?? state.projectId;
       const chapterId = chapterSelect.dataset.chapterId;
-      const nextChapter =
+      const sameChapter =
         state.projectId === projectId &&
         state.projectMode === "case-study" &&
-        state.chapterId === chapterId
-          ? null
-          : chapterId;
+        state.chapterId === chapterId;
+      // Mobile sheets: keep a chapter open; desktop rail can still toggle idle.
+      const nextChapter = sameChapter && !isMobileLayout() ? null : chapterId;
       setState({
         projectId,
         projectMode: "case-study",
         chapterId: nextChapter,
       });
+      if (chapterSelect.closest("dialog[data-mobile-sheet]")) {
+        closeMobileSheets();
+      }
     }
   });
 
   applyState();
+  // Place the underline without animating on first paint / restored state.
+  syncNavIndicator(false);
+
+  window.addEventListener(
+    "resize",
+    () => {
+      syncNavIndicator(false);
+    },
+    { passive: true },
+  );
 }
 
 const workspace = document.querySelector<HTMLElement>("[data-workspace]");

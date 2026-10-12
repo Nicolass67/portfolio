@@ -9,12 +9,19 @@ interface Props {
 }
 
 const { content } = Astro.props;
-const { explorer, projects, demoNotice, mode, profile } = content;
+const { explorer, projects, mode, profile } = content;
 const isFrench = content.locale === "fr";
 const firstId = projects[0]?.id ?? "";
 const isDemo = mode === "demo";
 const chaptersLabel = isFrench ? "Chapitres" : "Chapters";
 const jumpLabel = isFrench ? "Autres projets" : "Other projects";
+const mobileOverviewLabel = isFrench ? "Aperçu" : "Overview";
+const mobileProjectsLabel = isFrench ? "Projets" : "Projects";
+const mobileCloseLabel = isFrench ? "Fermer" : "Close";
+const mobileChapterPick = isFrench ? "Choisir un chapitre" : "Choose a chapter";
+const mobileProjectPick = isFrench ? "Changer de projet" : "Switch project";
+const nextChapterLabel = isFrench ? "Chapitre suivant" : "Next chapter";
+const nextProjectLabel = isFrench ? "Projet suivant" : "Next project";
 ---
 
 <div
@@ -27,15 +34,6 @@ const jumpLabel = isFrench ? "Autres projets" : "Other projects";
   data-active-project={firstId}
 >
   <div class="workspace-toolbar" data-workspace-toolbar>
-    {demoNotice ? (
-      <p class="demo-chip" data-demo-banner role="status">
-        <span>{demoNotice.title}</span>
-        {" — "}
-        {isFrench
-          ? "projets fictifs pour tests d’interface"
-          : "fictional projects for interface testing"}
-      </p>
-    ) : null}
     <button
       type="button"
       class="text-action text-action--ghost workspace-toolbar__back"
@@ -159,6 +157,7 @@ const jumpLabel = isFrench ? "Autres projets" : "Other projects";
           const overviewBlocks = isDemo
             ? overviewBlocksFor(project.id, content.locale)
             : [];
+          const nextProject = projects[(index + 1) % projects.length] ?? null;
           return (
             <article
               class:list={["project-hero", { "is-active": index === 0 }]}
@@ -239,10 +238,12 @@ const jumpLabel = isFrench ? "Autres projets" : "Other projects";
                       {isFrench ? "chapitres" : "chapters"}
                     </p>
                   </div>
-                  {project.caseStudy.chapters.map((chapter) => {
+                  {project.caseStudy.chapters.map((chapter, chapterIndex) => {
                     const blocks = isDemo
                       ? chapterBlocksFor(project.id, chapter.id, content.locale)
                       : [];
+                    const nextChapter =
+                      project.caseStudy.chapters[chapterIndex + 1] ?? null;
                     return (
                       <article
                         class="chapter-panel"
@@ -278,6 +279,57 @@ const jumpLabel = isFrench ? "Autres projets" : "Other projects";
                               class="demo-blocks--chapter"
                             />
                           ) : null}
+                          <footer
+                            class="chapter-continue"
+                            data-chapter-continue
+                          >
+                            {nextChapter ? (
+                              <button
+                                type="button"
+                                class="chapter-continue__action"
+                                data-chapter-select
+                                data-project-id={project.id}
+                                data-chapter-id={nextChapter.id}
+                              >
+                                <span class="chapter-continue__meta">
+                                  <span class="chapter-continue__label">
+                                    {nextChapterLabel}
+                                  </span>
+                                  <span class="chapter-continue__title">
+                                    {nextChapter.title}
+                                  </span>
+                                </span>
+                                <span
+                                  class="chapter-continue__arrow"
+                                  aria-hidden="true"
+                                >
+                                  →
+                                </span>
+                              </button>
+                            ) : nextProject ? (
+                              <button
+                                type="button"
+                                class="chapter-continue__action"
+                                data-project-switch
+                                data-project-id={nextProject.id}
+                              >
+                                <span class="chapter-continue__meta">
+                                  <span class="chapter-continue__label">
+                                    {nextProjectLabel}
+                                  </span>
+                                  <span class="chapter-continue__title">
+                                    {nextProject.navLabel ?? nextProject.title}
+                                  </span>
+                                </span>
+                                <span
+                                  class="chapter-continue__arrow"
+                                  aria-hidden="true"
+                                >
+                                  →
+                                </span>
+                              </button>
+                            ) : null}
+                          </footer>
                         </div>
                       </article>
                     );
@@ -290,6 +342,113 @@ const jumpLabel = isFrench ? "Autres projets" : "Other projects";
       </div>
     </div>
   </section>
+
+  <div class="mobile-case-bar" data-mobile-case-bar hidden>
+    <button type="button" class="mobile-case-bar__back" data-close-case-study>
+      <span aria-hidden="true">←</span>
+      <span>{mobileOverviewLabel}</span>
+    </button>
+    <button
+      type="button"
+      class="mobile-case-bar__chapter"
+      data-mobile-sheet-open="chapters"
+      aria-haspopup="dialog"
+    >
+      <span class="mobile-case-bar__eyebrow">{chaptersLabel}</span>
+      <span data-mobile-chapter-label>{mobileChapterPick}</span>
+    </button>
+    <button
+      type="button"
+      class="mobile-case-bar__projects"
+      data-mobile-sheet-open="projects"
+      aria-haspopup="dialog"
+    >
+      {mobileProjectsLabel}
+    </button>
+  </div>
+
+  <dialog
+    class="mobile-sheet"
+    data-mobile-sheet="chapters"
+    aria-labelledby="mobile-sheet-chapters-title"
+  >
+    <div class="mobile-sheet__frame">
+      <div class="mobile-sheet__grab" aria-hidden="true"></div>
+      <header class="mobile-sheet__head">
+        <h2 id="mobile-sheet-chapters-title">{chaptersLabel}</h2>
+        <button
+          type="button"
+          class="mobile-sheet__close"
+          data-mobile-sheet-close
+        >
+          {mobileCloseLabel}
+        </button>
+      </header>
+      {projects.map((project, index) => (
+        <nav
+          class="mobile-sheet__list"
+          data-mobile-chapter-group
+          data-project-id={project.id}
+          aria-label={project.caseStudy.contentsLabel}
+          hidden={index !== 0}
+        >
+          {project.caseStudy.chapters.map((chapter) => (
+            <button
+              type="button"
+              class="mobile-sheet__item"
+              data-chapter-select
+              data-chapter-id={chapter.id}
+              data-project-id={project.id}
+              aria-pressed="false"
+            >
+              <span class="mobile-sheet__item-eyebrow">{chapter.eyebrow}</span>
+              <span class="mobile-sheet__item-title">{chapter.title}</span>
+            </button>
+          ))}
+        </nav>
+      ))}
+    </div>
+  </dialog>
+
+  <dialog
+    class="mobile-sheet"
+    data-mobile-sheet="projects"
+    aria-labelledby="mobile-sheet-projects-title"
+  >
+    <div class="mobile-sheet__frame">
+      <div class="mobile-sheet__grab" aria-hidden="true"></div>
+      <header class="mobile-sheet__head">
+        <h2 id="mobile-sheet-projects-title">{mobileProjectPick}</h2>
+        <button
+          type="button"
+          class="mobile-sheet__close"
+          data-mobile-sheet-close
+        >
+          {mobileCloseLabel}
+        </button>
+      </header>
+      <nav
+        class="mobile-sheet__list"
+        aria-label={jumpLabel}
+        data-mobile-project-sheet
+      >
+        {projects.map((project, index) => (
+          <button
+            type="button"
+            class:list={["mobile-sheet__item", { "is-active": index === 0 }]}
+            data-project-switch
+            data-project-id={project.id}
+            aria-pressed={index === 0 ? "true" : "false"}
+          >
+            <span class="mobile-sheet__item-eyebrow">{project.index}</span>
+            <span class="mobile-sheet__item-title">
+              {project.navLabel ?? project.title}
+            </span>
+          </button>
+        ))}
+      </nav>
+    </div>
+  </dialog>
 
   <section
     class="view view--profile"

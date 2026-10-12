@@ -24,7 +24,12 @@ const enHref = withBase("/en/");
       <span class="brand__specialty">Unreal Engine / C++</span>
     </div>
 
-    <nav class="site-nav" aria-label={navLabel}>
+    <nav class="site-nav" aria-label={navLabel} data-site-nav>
+      <span
+        class="site-nav__indicator"
+        data-nav-indicator
+        aria-hidden="true"
+      ></span>
       <button
         type="button"
         class="site-nav__button is-active"

@@ -284,6 +284,18 @@
 - Remplace partiellement D-030 pour le comportement du saut pastilles.
 - Statut : **validé par l’utilisateur**.
 
+## D-034 — Refonte UX mobile dédiée
+
+- Contexte : mobile = desktop compressé (rail empilé, grille chapitres trop haute, charge cognitive).
+- Décision d’implémentation (mission utilisateur 2026-10-12) :
+  - Breakpoint `max-width: 52.99rem` ; styles dans `src/styles/mobile.css`.
+  - Overview : index projets en chips sticky ; contenu une colonne ; scroll page.
+  - Case study : barre fixe basse + feuilles chapitres/projets ; rail desktop masqué (conservé en DOM).
+  - Changement de projet : une action (`data-project-switch`) ; scroll haut sur changement de vue/chapitre.
+  - Bas de chapitre (mobile) : CTA « Chapitre suivant » ; dernier chapitre → projet suivant (`data-project-switch`).
+  - Desktop ≥ 53rem : aucune modification de layout intentionnelle.
+- Statut : **implémenté** (validation visuelle navigateur + contrôles projet).
+
 ## D-032 — Déploiement GitHub Pages + Actions
 
 - Plateforme : GitHub Pages avec source **GitHub Actions** (pas de branche `gh-pages`).
