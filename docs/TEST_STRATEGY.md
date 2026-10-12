@@ -5,6 +5,6 @@
 - `npm run check` — format, lint, types, unit, build
 - `npm run test:e2e` — sidebar titres seuls, jump projet 1 clic, lightbox, scrollbars masquées, overflow, axe, screenshots
 - Sidebar : pas de meta/tech dans le rail overview
-- Case study : 6 pastilles `[data-project-switch]` → étude de cas du projet cible ; retour `[data-close-case-study]` dans la toolbar → overview ; plus de picker toggle
+- Case study : 6 pastilles `[data-project-switch]` → étude de cas du projet cible ; retour `[data-case-rail-back]` en haut du rail → overview ; plus de picker toggle
 - Lightbox : ouverture, Escape, close, backdrop, focus restore ; galerie multi-images (flèches / ←→ + compteur) ; vidéo n’ouvre pas la lightbox
 - Scrollbars : `scrollbar-width: none` sur régions concernées

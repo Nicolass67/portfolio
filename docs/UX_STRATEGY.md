@@ -34,7 +34,7 @@ Toujours fictif ; un chapitre à la fois ; divulgation progressive.
 
 L’expérience étroite n’est **pas** une transposition du rail desktop. Voir `docs/MOBILE_UX.md`. En bas de chaque chapitre, un CTA ouvre le **chapitre suivant** ; au dernier chapitre, le **projet suivant** (étude de cas).
 
-- Overview : chips projets sticky + lecture verticale ; entrée étude explicite (bandeau média + CTA « Lire l’étude technique », D-035).
+- Overview : chips projets sticky + lecture verticale ; entrée étude explicite via CTA « Lire l’étude technique » (D-035).
 - Case study : barre basse (Aperçu / Chapitre / Projets) + feuilles `<dialog>` ; scroll document.
 - Feuille Projets : libellé « Ouvrir l’étude » sur chaque item.
 - Desktop ≥ 53rem : CTA étude renforcé aussi ; layout rail inchangé (D-030 / D-033).

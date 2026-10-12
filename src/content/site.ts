@@ -1,5 +1,12 @@
 import { buildDemoProjects } from "./demo-projects";
 import { getPortfolioMode, type PortfolioMode } from "./portfolio-mode";
+import {
+  buildAuthenticProfile,
+  buildDemoProfile,
+  type ProfileContent,
+} from "./profile";
+
+export type { ProfileContent, ProfilePanel } from "./profile";
 
 export const locales = ["fr", "en"] as const;
 
@@ -106,8 +113,6 @@ export interface SiteContent {
     caseStudyAction: string;
     /** Short line under the primary study CTA (chapter count filled in UI). */
     caseStudyHint: string;
-    /** Overlay / media entry label. */
-    caseStudyMediaAction: string;
     /** Affordance in the mobile projects sheet. */
     openStudyAction: string;
     backToProject: string;
@@ -119,13 +124,7 @@ export interface SiteContent {
     body: string;
   } | null;
   projects: ProjectContent[];
-  profile: {
-    eyebrow: string;
-    title: string;
-    paragraphs: string[];
-    contactTitle: string;
-    contactNote: string;
-  };
+  profile: ProfileContent;
   footer: {
     note: string;
   };
@@ -405,22 +404,11 @@ const authenticShell = {
       projectIndexLabel: "Projets",
       caseStudyAction: "Lire l’étude technique",
       caseStudyHint: "sujets techniques",
-      caseStudyMediaAction: "Lire l’étude",
       openStudyAction: "Ouvrir l’étude",
       backToProject: "Tous les projets",
       chapterOverviewHint: "Choisissez un sujet technique pour l’afficher ici.",
     },
-    profile: {
-      eyebrow: "Parcours",
-      title: "Profil",
-      paragraphs: [
-        "Développeur logiciel français diplômé de l’EPITA, orienté vers le gameplay programming avec Unreal Engine et C++.",
-        "Ce portfolio met les projets et les choix techniques avant la biographie afin de permettre une lecture rapide, puis une inspection plus approfondie.",
-      ],
-      contactTitle: "Contact",
-      contactNote:
-        "Aucune coordonnée publique n’est affichée tant qu’elle n’a pas été explicitement approuvée.",
-    },
+    profile: buildAuthenticProfile("fr"),
     footer: {
       note: "Portfolio de Gameplay Programmer · version française",
     },
@@ -454,22 +442,11 @@ const authenticShell = {
       projectIndexLabel: "Projects",
       caseStudyAction: "Read the technical study",
       caseStudyHint: "technical topics",
-      caseStudyMediaAction: "Read the study",
       openStudyAction: "Open study",
       backToProject: "All projects",
       chapterOverviewHint: "Choose a technical topic to display it here.",
     },
-    profile: {
-      eyebrow: "Background",
-      title: "Profile",
-      paragraphs: [
-        "A French EPITA graduate with professional software development experience, moving towards gameplay programming with Unreal Engine and C++.",
-        "This portfolio places projects and technical choices before biography, supporting a quick scan followed by a deeper inspection.",
-      ],
-      contactTitle: "Contact",
-      contactNote:
-        "No public contact detail is displayed until it has been explicitly approved.",
-    },
+    profile: buildAuthenticProfile("en"),
     footer: {
       note: "Gameplay Programmer portfolio · English version",
     },
@@ -505,7 +482,6 @@ function demoExplorer(locale: Locale): SiteContent["explorer"] {
         projectIndexLabel: "Index des projets",
         caseStudyAction: "Lire l’étude technique",
         caseStudyHint: "sujets techniques",
-        caseStudyMediaAction: "Lire l’étude",
         openStudyAction: "Ouvrir l’étude",
         backToProject: "Tous les projets",
         chapterOverviewHint:
@@ -521,7 +497,6 @@ function demoExplorer(locale: Locale): SiteContent["explorer"] {
         projectIndexLabel: "Project index",
         caseStudyAction: "Read the technical study",
         caseStudyHint: "technical topics",
-        caseStudyMediaAction: "Read the study",
         openStudyAction: "Open study",
         backToProject: "All projects",
         chapterOverviewHint: "Choose a technical topic to display it here.",
@@ -544,6 +519,7 @@ export function getSiteContent(locale: Locale): SiteContent {
       explorer: demoExplorer(locale),
       demoNotice: demoNotice(locale),
       projects: buildDemoProjects(locale),
+      profile: buildDemoProfile(locale),
       meta: {
         ...shell.meta,
         title:
@@ -569,6 +545,7 @@ export function getSiteContent(locale: Locale): SiteContent {
     mode,
     demoNotice: null,
     projects: getAuthenticProjects(locale),
+    profile: buildAuthenticProfile(locale),
   };
 }
 

@@ -1,0 +1,112 @@
+---
+import type { ProfileContent } from "../content/profile";
+
+interface Props {
+  profile: ProfileContent;
+}
+
+const { profile } = Astro.props;
+---
+
+<div class="profile-stage" data-profile-stage>
+  {
+    profile.notice ? (
+      <p class="profile-notice" role="status">
+        {profile.notice}
+      </p>
+    ) : null
+  }
+
+  <header class="profile-hero">
+    <div class="profile-hero__identity">
+      <p class="eyebrow">{profile.eyebrow}</p>
+      <h1 id="profile-title">{profile.title}</h1>
+      <p class="profile-hero__role">{profile.role}</p>
+      <div class="profile-hero__facts">
+        <span class="profile-hero__fact">{profile.location}</span>
+        <span class="profile-hero__availability">{profile.availability}</span>
+      </div>
+    </div>
+
+    <div class="profile-hero__pitch">
+      <p>{profile.pitch}</p>
+      <div class="profile-focus">
+        <p class="profile-focus__label">{profile.focusTitle}</p>
+        <ul class="profile-chip-row">
+          {profile.focus.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+
+    <div class="profile-hero__mark" aria-hidden="true">
+      <span class="profile-hero__mark-glyph">◇</span>
+      <span class="profile-hero__mark-caption">GP</span>
+    </div>
+  </header>
+
+  <div class="profile-panels">
+    {
+      profile.panels.map((panel) => (
+        <section class="profile-panel" data-profile-panel={panel.kind}>
+          <h2 class="profile-panel__title">{panel.title}</h2>
+
+          {panel.kind === "timeline" ? (
+            <ol class="profile-timeline">
+              {panel.entries.map((entry) => (
+                <li class="profile-timeline__item">
+                  <div class="profile-timeline__head">
+                    <span class="profile-timeline__label">{entry.label}</span>
+                    <span class="profile-timeline__meta">{entry.meta}</span>
+                  </div>
+                  <p class="profile-timeline__detail">{entry.detail}</p>
+                </li>
+              ))}
+            </ol>
+          ) : null}
+
+          {panel.kind === "chips" ? (
+            <ul class="profile-chip-row">
+              {panel.chips.map((chip) => (
+                <li>{chip}</li>
+              ))}
+            </ul>
+          ) : null}
+
+          {panel.kind === "pairs" ? (
+            <dl class="profile-pairs">
+              {panel.pairs.map((pair) => (
+                <div class="profile-pairs__row">
+                  <dt>{pair.key}</dt>
+                  <dd>{pair.value}</dd>
+                </div>
+              ))}
+            </dl>
+          ) : null}
+
+          {panel.kind === "text" ? (
+            <p class="profile-panel__body">{panel.body}</p>
+          ) : null}
+        </section>
+      ))
+    }
+  </div>
+
+  <footer class="profile-contact">
+    <div class="profile-contact__intro">
+      <h2>{profile.contactTitle}</h2>
+      <p>{profile.contactNote}</p>
+    </div>
+    <dl class="profile-pairs profile-pairs--contact">
+      {
+        profile.contactItems.map((item) => (
+          <div class="profile-pairs__row">
+            <dt>{item.key}</dt>
+            <dd>{item.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </footer>
+</div>

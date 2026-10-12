@@ -231,7 +231,7 @@ function initWorkspace(root: HTMLElement) {
     root
       .querySelectorAll<HTMLButtonElement>("[data-close-case-study]")
       .forEach((button) => {
-        // Mobile case bar owns its back control; desktop toolbar keeps the other.
+        // Mobile case bar always keeps its control; desktop back lives in the case rail.
         if (button.closest("[data-mobile-case-bar]")) {
           button.hidden = false;
           return;

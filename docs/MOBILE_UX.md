@@ -17,7 +17,7 @@ Observation navigateur réel (`390×844`, mode démo, état case study restauré
 | Sujet | Choix |
 | ----- | ----- |
 | Breakpoint | `max-width: 52.99rem` (aligné sur le shell existant) ; tablette portrait 768 px dans ce mode |
-| Overview | Une colonne : média (bandeau « Lire l’étude ») → titre → synthèse → meta → **CTA étude fort** → blocs ; chips = aperçu seulement |
+| Overview | Une colonne : média → titre → synthèse → meta → **CTA étude fort** → blocs ; chips = aperçu seulement |
 | Case study | **Barre sticky** : Retour · chapitre courant · Projets ; **feuilles** (`<dialog>`) chapitres/projets avec slide-up ; focus sur la feuille (pas Fermer) ; clic backdrop → fermer |
 | Projet → projet | Une action dans la feuille Projets (`data-project-switch`) → étude de cas du projet cible (D-033) |
 | Chapitre | Sélection dans la feuille → ferme la feuille → contenu seul → **scroll document en haut** |

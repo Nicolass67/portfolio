@@ -424,18 +424,6 @@ test.describe("fullscreen portfolio workspace", () => {
     );
   });
 
-  test("media study CTA opens the case study", async ({ page }) => {
-    await page.goto(appPath("/"));
-    await page
-      .locator('[data-project-card].is-active [data-open-case-study="media"]')
-      .click();
-    await expect(page.locator("[data-workspace]")).toHaveAttribute(
-      "data-project-mode",
-      "case-study",
-    );
-    await expect(page.locator("[data-chapter-panel].is-open")).toHaveCount(1);
-  });
-
   test("has no critical accessibility violations on main states", async ({
     page,
   }) => {
@@ -671,13 +659,9 @@ test.describe("fullscreen portfolio workspace", () => {
       await expect(
         page.locator("[data-case-rail].is-active [data-project-switch]"),
       ).toHaveCount(6);
-      await page
-        .locator("[data-workspace-toolbar] [data-close-case-study]")
-        .click();
+      await page.locator("[data-case-rail-back]").click();
       await expect(page.locator('[data-rail-panel="overview"]')).toBeVisible();
-      await expect(
-        page.locator("[data-workspace-toolbar] [data-close-case-study]"),
-      ).toBeHidden();
+      await expect(page.locator("[data-case-rail-back]")).toBeHidden();
     }
   });
 

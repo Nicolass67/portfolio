@@ -4,7 +4,7 @@
 
 - Phase : **Refonte UX mobile dédiée** (D-034) + déploiement Pages opérationnel.
 - Mobile ≤ 52.99rem : chips sticky, barre case + feuilles chapitres/projets, scroll page, CTA bas de chapitre (suivant / projet suivant) — desktop préservé.
-- Entrée étude explicite (D-035) : CTA « Lire l’étude technique » + bandeau média + « Ouvrir l’étude » dans la feuille Projets.
+- Entrée étude explicite (D-035) : CTA « Lire l’étude technique » sous le résumé + « Ouvrir l’étude » dans la feuille Projets (bandeau média retiré).
 - Header mobile : titre agrandi ; FR/EN en rangée pleine largeur (~3.25 rem) avec drapeaux SVG.
 - Dépôt : [`Nicolass67/portfolio`](https://github.com/Nicolass67/portfolio) — **public** (accord explicite 2026-10-12) ; branche `main`.
 - Site publié : [https://nicolass67.github.io/portfolio/](https://nicolass67.github.io/portfolio/) (HTTP 200 vérifié).
@@ -14,7 +14,7 @@
 - Direction visuelle light **conservée**.
 - Outils revue : explorateurs **Accent** + **Fond** uniquement en local ; site en ligne = Craie / Ardoise figés.
 - Rail projets : **titres (+ n°) uniquement** — métadonnées réservées au workspace principal.
-- Case Study desktop : libellé « Projets » + pastilles (n°) au-dessus du titre, puis chapitres ; pastilles → étude de cas du projet ; « Tous les projets » en haut à droite → overview.
+- Case Study desktop : « Tous les projets » en haut du rail, puis « Projets » + pastilles, titre, chapitres ; pastilles → étude de cas ; retour → overview.
 - Lightbox image accessible (`<dialog>`) pour images inspectables ; navigation multi-images (flèches, clavier, swipe, crossfade) ; pinch-zoom / pan / double-tap mobile ; vidéo/YouTube séparés.
 - Scrollbars visuellement masquées (Firefox + WebKit) ; le défilement reste possible.
 - Captures : `artifacts/screenshots/`.

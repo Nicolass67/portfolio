@@ -66,7 +66,6 @@ describe("bilingual project content model", () => {
       const content = getSiteContent(locale);
       expect(content.explorer.caseStudyAction.trim()).not.toBe("");
       expect(content.explorer.caseStudyHint.trim()).not.toBe("");
-      expect(content.explorer.caseStudyMediaAction.trim()).not.toBe("");
       expect(content.explorer.openStudyAction.trim()).not.toBe("");
       expect(content.explorer.backToProject.trim()).not.toBe("");
       expect(content.explorer.projectIndexLabel.trim()).not.toBe("");

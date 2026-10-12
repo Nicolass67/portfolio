@@ -85,9 +85,7 @@ test.describe("reference screenshots", () => {
       });
     }
 
-    const closeCase = page.locator(
-      "[data-workspace-toolbar] [data-close-case-study]",
-    );
+    const closeCase = page.locator("[data-case-rail-back]");
     if (await closeCase.isVisible()) {
       await closeCase.click();
     }

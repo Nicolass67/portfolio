@@ -23,7 +23,7 @@ Persistance : `sessionStorage`. Pas de `pushState` / hash.
 - Overview : `[data-project-select]` (titres seuls).
 - Case study (desktop) : libellé « Projets » + pastilles `[data-project-switch]` **au-dessus** du titre du projet actif, puis index chapitres.
 - Pastilles : un clic → étude de cas du projet cible (premier chapitre).
-- Retour « Tous les projets » : `[data-close-case-study]` dans `.workspace-toolbar` (haut droite, même rangée que le bandeau démo) → overview.
+- Retour « Tous les projets » (desktop) : `[data-case-rail-back]` sous les pastilles (le libellé « Projets » reste aligné avec l’overview) → overview ; mobile : barre basse.
 - Chapitres : `[data-chapter-select]` (index distinct).
 
 ## Lightbox (`lightbox.ts`)

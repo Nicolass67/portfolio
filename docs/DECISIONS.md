@@ -281,7 +281,8 @@
 - Contexte : depuis l’étude de cas, les pastilles 1/2/3 doivent ouvrir l’autre projet sans détour ; le retour ne doit plus être en bas du rail.
 - Décision (instruction utilisateur, corrigée) :
   - Pastilles `[data-project-switch]` → **étude de cas** du projet cible (premier chapitre), pas l’overview.
-  - Bouton « Tous les projets » / « All projects » dans la barre d’outils workspace, **haut droite**, même niveau que le bandeau « Mode démonstration » → overview.
+  - Bouton « Tous les projets » / « All projects » → overview.
+  - Emplacement desktop (raffinement) : **haut du rail case**, au-dessus du libellé « Projets » — évite le saut de layout d’une toolbar au-dessus de la grille.
 - Remplace partiellement D-030 pour le comportement du saut pastilles.
 - Statut : **validé par l’utilisateur**.
 
@@ -290,9 +291,9 @@
 - Contexte : le CTA « Étude de cas » était trop implicite (lien bas de page, jargon, après blocs démo).
 - Décision **validée par l’utilisateur** (2026-10-12) :
   - CTA principal fort sous le résumé, **avant** les blocs overview ; libellé « Lire l’étude technique » + compteur de chapitres.
-  - Seconde entrée : bandeau sur le média overview (« Lire l’étude ») ; lightbox conserve l’inspect image hors bandeau.
   - Feuille Projets mobile : affordance « Ouvrir l’étude » (comportement `data-project-switch` inchangé).
   - Chips projets = changer d’aperçu uniquement (pas d’ouverture auto de l’étude).
+  - Bandeau média « Lire l’étude » **retiré** (doublon avec le CTA texte ; lightbox image préservée).
 - Statut : **validé / implémenté**.
 
 ## D-034 — Refonte UX mobile dédiée
