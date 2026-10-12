@@ -5,7 +5,7 @@
 - Phase : **Refonte UX mobile dédiée** (D-034) + déploiement Pages opérationnel.
 - Mobile ≤ 52.99rem : chips sticky, barre case + feuilles chapitres/projets, scroll page, CTA bas de chapitre (suivant / projet suivant) — desktop préservé.
 - Entrée étude explicite (D-035) : CTA « Lire l’étude technique » sous le résumé ; feuille Projets = n° + titre (bandeau média retiré).
-- Profil structuré (D-036) : composition single-screen ; copy sobre (pas de ton « conte ») ; typo lisible ; mobile dédié.
+- Profil structuré (D-036) : desktop single-screen ; mobile lecture verticale scrollable aérée ; copy sobre ; typo lisible.
 - Header mobile : FR/EN + drapeaux SVG ; explorateurs couleur masqués sur mobile ; indicateur nav calé sur le libellé.
 - Audit forme (2026-10-12) : case desktop rail plus étroit + média chapitre plus haut ; cibles tactiles densés ; sheets densifiées ; aria-labels médias ; profil cards resserrées ; fallback média cassé.
 - Dépôt : [`Nicolass67/portfolio`](https://github.com/Nicolass67/portfolio) — **public** (accord explicite 2026-10-12) ; branche `main`.

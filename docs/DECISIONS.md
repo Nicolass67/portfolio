@@ -288,9 +288,11 @@
 
 ## D-036 — Profil structuré (placeholder démo)
 
-- Décision : vue Profil en composition structurée (hero + panneaux + contact), single-screen sans scroll. L’« histoire » est dans l’**UX/UI** (hiérarchie, rythme, parcours de lecture), pas dans des libellés narratifs. Copy **sobre** (Parcours, Domaines, Stack, Approche, Objectif, Méthode, Contact). Typo lisible ; bannière placeholder retirée. Mobile : layout dédié ; `html.is-profile-view` verrouille le viewport. Authentic = faits courts + slots, sans rôles inventés.
-- Raison : juger densité et composition avant contenu réel.
-- Statut : **implémenté** ; copy recentrée sobre (arbitrage UX 2026-10-12).
+- Décision : vue Profil en composition structurée (hero + panneaux + contact). L’« histoire » est dans l’**UX/UI** (hiérarchie, rythme, parcours de lecture), pas dans des libellés narratifs. Copy **sobre** (Parcours, Domaines, Stack, Approche, Objectif, Méthode, Contact). Typo lisible ; bannière placeholder retirée. Authentic = faits courts + slots, sans rôles inventés.
+- Desktop ≥ 53rem : **single-screen sans scroll document** (contrainte inchangée).
+- Mobile ≤ 52.99rem (**validé utilisateur 2026-10-13**) : **lecture verticale scrollable** ; une colonne aérée ; parcours en liste ; cartes pleine largeur ; pas de verrouillage viewport. Le no-scroll ne s’applique qu’au desktop.
+- Raison : juger densité et composition avant contenu réel ; éviter la compression desktop sur mobile.
+- Statut : **validé / implémenté** (raffinement mobile 2026-10-13).
 
 ## D-035 — Entrée explicite vers l’étude technique
 

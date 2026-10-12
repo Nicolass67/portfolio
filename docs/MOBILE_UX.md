@@ -23,7 +23,8 @@ Observation navigateur réel (`390×844`, mode démo, état case study restauré
 | Chapitre | Sélection dans la feuille → ferme la feuille → contenu seul → **scroll document en haut** |
 | Fin de chapitre | CTA « Chapitre suivant » en bas du contenu (mobile) ; dernier chapitre → **projet suivant** (étude de cas) |
 | Lightbox | Pinch-to-zoom + pan + double-tap ; swipe entre images seulement à zoom 1× |
-| Scroll | Scroll de page uniquement sous le breakpoint (projets / étude) ; pas de scroll interne workspace ; **vue Profil** = viewport verrouillé, contenu single-screen (`html.is-profile-view`) |
+| Scroll | Scroll de page sous le breakpoint (projets / étude / **profil**) ; pas de scroll interne workspace ; profil = colonne unique aérée (D-036 mobile) |
+| Profil | Hero empilé → panneaux 1 colonne (parcours liste, cartes pleine largeur) → contact ; scroll document OK ; desktop reste single-screen |
 | Scrollbars | Toujours masquées (contrainte projet) |
 | Desktop | Case study : rail `11–13.5rem` + média chapitre plus haut ; overview inchangé hors media query |
 | Header mobile | Titre lisible ; FR/EN avec drapeaux SVG ; explorateurs couleur masqués (aligné Pages) |

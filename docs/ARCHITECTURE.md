@@ -51,5 +51,5 @@ Persistance : `sessionStorage`. Pas de `pushState` / hash.
 
 - Mode `demo` / `authentic` via `PUBLIC_PORTFOLIO_MODE`.
 - Dense démo : `demo-dense.ts` + `demo-blocks.ts`.
-- Profil : `ProfileStage.astro` + `content/profile.ts` ; single-screen (overflow masqué) ; `html.is-profile-view` pour verrouiller le viewport mobile.
+- Profil : `ProfileStage.astro` + `content/profile.ts` ; desktop single-screen ; mobile scrollable (`mobile.css`) ; `html.is-profile-view` marque la vue (plus de verrouillage viewport mobile).
 - Médias : `MediaFrame.astro` (+ inspect buttons).

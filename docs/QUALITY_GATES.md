@@ -90,6 +90,7 @@ Applicable aux changements d’interface, navigation, médias ou hydratation.
 ### Gate viewport desktop
 
 - À 1440×900 (et contrôle 1280×720 / 1920×1080) : `scrollHeight ≤ innerHeight` et `scrollWidth ≤ innerWidth` sur overview, étude de cas et profil.
+- Mobile profil : scroll vertical attendu ; pas de débordement horizontal.
 
 Applicable aux changements visuels. Une lecture du CSS ne satisfait pas ce gate.
 

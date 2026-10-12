@@ -402,7 +402,7 @@ test.describe("fullscreen portfolio workspace", () => {
     }
   });
 
-  test("mobile profile fits without document overflow", async ({
+  test("mobile profile scrolls vertically without horizontal overflow", async ({
     page,
   }, testInfo) => {
     test.skip(!testInfo.project.name.includes("mobile"), "mobile only");
@@ -411,7 +411,9 @@ test.describe("fullscreen portfolio workspace", () => {
     await expect(page.locator("html")).toHaveClass(/is-profile-view/);
     await expect(page.locator("[data-profile-stage]")).toBeVisible();
     const overflow = await documentOverflow(page);
-    expect(overflow).toEqual({ vertical: false, horizontal: false });
+    // Mobile profile is a stacked reading surface — vertical scroll is expected.
+    expect(overflow.horizontal).toBe(false);
+    expect(overflow.vertical).toBe(true);
   });
 
   test("reduced motion keeps navigation functional", async ({ page }) => {
