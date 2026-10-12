@@ -149,8 +149,9 @@
   }
 
   .workspace.is-case-study {
+    margin-bottom: 0;
     padding-bottom: calc(
-      var(--mobile-case-bar-h) + 0.75rem + env(safe-area-inset-bottom, 0px)
+      var(--mobile-case-bar-h) + 0.3rem + env(safe-area-inset-bottom, 0px)
     );
   }
 
@@ -402,8 +403,9 @@
   /* Bottom-of-chapter continue (page scroll) */
   .chapter-continue {
     display: block;
-    margin-top: 1.25rem;
-    padding-top: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 0;
+    padding-top: 0.85rem;
     border-top: 1px solid var(--line);
   }
 
