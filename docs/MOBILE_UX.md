@@ -18,7 +18,7 @@ Observation navigateur réel (`390×844`, mode démo, état case study restauré
 | ----- | ----- |
 | Breakpoint | `max-width: 52.99rem` (aligné sur le shell existant) ; tablette portrait 768 px dans ce mode |
 | Overview | Une colonne : média → titre → synthèse → meta → **CTA étude fort** → blocs ; chips = aperçu seulement |
-| Case study | **Barre sticky** : Retour · chapitre courant · Projets ; **feuilles** (`<dialog>`) chapitres/projets avec slide-up ; focus sur la feuille (pas Fermer) ; clic backdrop → fermer |
+| Case study | **Barre sticky** : Retour · chapitre courant · Projets ; **feuilles** (`<dialog>`) chapitres/projets avec slide-up ; fermeture via Fermer / backdrop (pas de poignée drag — affordance trompeuse sur le web) |
 | Projet → projet | Une action dans la feuille Projets (`data-project-switch`) → étude de cas du projet cible (D-033) |
 | Chapitre | Sélection dans la feuille → ferme la feuille → contenu seul → **scroll document en haut** |
 | Fin de chapitre | CTA « Chapitre suivant » en bas du contenu (mobile) ; dernier chapitre → **projet suivant** (étude de cas) |

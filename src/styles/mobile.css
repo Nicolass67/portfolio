@@ -677,14 +677,6 @@
     overflow: hidden;
   }
 
-  .mobile-sheet__grab {
-    width: 2.5rem;
-    height: 0.28rem;
-    margin: 0.2rem auto 0.15rem;
-    border-radius: 999px;
-    background: var(--line);
-  }
-
   .mobile-sheet__head {
     display: flex;
     align-items: center;
