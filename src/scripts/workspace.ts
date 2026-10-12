@@ -233,11 +233,9 @@ function initWorkspace(root: HTMLElement) {
     );
     const panels = card?.querySelectorAll<HTMLElement>("[data-chapter-panel]");
     const previousChapter =
-      root
-        .querySelector<HTMLButtonElement>(
-          `[data-case-rail][data-project-id="${projectId}"] [data-chapter-select].is-active`,
-        )
-        ?.dataset.chapterId ?? "";
+      root.querySelector<HTMLButtonElement>(
+        `[data-case-rail][data-project-id="${projectId}"] [data-chapter-select].is-active`,
+      )?.dataset.chapterId ?? "";
 
     buttons.forEach((button) => {
       const active = button.dataset.chapterId === chapterId;
@@ -264,7 +262,9 @@ function initWorkspace(root: HTMLElement) {
     // Only the active project owns the shared mobile chapter label.
     if (chapterLabel && projectId === state.projectId) {
       const title = card
-        ?.querySelector(`[data-chapter-panel][data-chapter-id="${chapterId}"] h3`)
+        ?.querySelector(
+          `[data-chapter-panel][data-chapter-id="${chapterId}"] h3`,
+        )
         ?.textContent?.trim();
       if (title) chapterLabel.textContent = title;
     }
@@ -461,8 +461,7 @@ function initWorkspace(root: HTMLElement) {
         applyChapter(id, state.chapterId);
       }
 
-      const enteringCase =
-        active && previousMode !== "case-study" && showCase;
+      const enteringCase = active && previousMode !== "case-study" && showCase;
       const leavingCase =
         active && previousMode === "case-study" && showOverview;
 
@@ -846,12 +845,12 @@ function initLanguageSwitcher() {
     if (reduceMotion) return;
 
     event.preventDefault();
-    nav.querySelectorAll<HTMLAnchorElement>("[data-language-link]").forEach(
-      (item) => {
+    nav
+      .querySelectorAll<HTMLAnchorElement>("[data-language-link]")
+      .forEach((item) => {
         item.removeAttribute("aria-current");
         item.classList.remove("is-active");
-      },
-    );
+      });
     link.classList.add("is-active");
     syncLanguageIndicator(true);
     window.setTimeout(() => {

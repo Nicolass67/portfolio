@@ -152,11 +152,7 @@ const { blocks, class: className = "" } = Astro.props;
                   data-alt={item.alt}
                   data-caption={item.caption}
                   aria-pressed={index === 0 ? "true" : "false"}
-                  aria-label={
-                    item.alt ||
-                    item.caption ||
-                    `Image ${index + 1}`
-                  }
+                  aria-label={item.alt || item.caption || `Image ${index + 1}`}
                 >
                   <img src={withBase(item.src)} alt="" loading="lazy" />
                 </button>
