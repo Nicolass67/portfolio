@@ -3,6 +3,7 @@ import { chapterBlocksFor, overviewBlocksFor } from "../content/demo-blocks";
 import type { SiteContent } from "../content/site";
 import DemoBlocks from "./DemoBlocks.astro";
 import MediaFrame from "./MediaFrame.astro";
+import ProfileStage from "./ProfileStage.astro";
 
 interface Props {
   content: SiteContent;
@@ -34,18 +35,6 @@ const nextProjectLabel = isFrench ? "Projet suivant" : "Next project";
   data-project-mode="overview"
   data-active-project={firstId}
 >
-  <div class="workspace-toolbar" data-workspace-toolbar>
-    <button
-      type="button"
-      class="text-action text-action--ghost workspace-toolbar__back"
-      data-close-case-study
-      hidden
-    >
-      <span aria-hidden="true">←</span>
-      <span>{explorer.backToProject}</span>
-    </button>
-  </div>
-
   <section
     class="view view--projects is-active"
     data-view-panel="projects"
@@ -90,6 +79,38 @@ const nextProjectLabel = isFrench ? "Projet suivant" : "Next project";
           data-rail-panel="case"
           hidden
         >
+          {/* Same first row as overview "Projets" — back sits under the pastilles so the label never jumps. */}
+          <div class="case-rail__projects">
+            <p class="eyebrow">{projectsSwitchLabel}</p>
+            <nav class="case-project-jump" aria-label={jumpLabel}>
+              {projects.map((jumpProject, jumpIndex) => (
+                <button
+                  type="button"
+                  class:list={[
+                    "case-project-jump__item",
+                    { "is-active": jumpIndex === 0 },
+                  ]}
+                  data-project-switch
+                  data-project-id={jumpProject.id}
+                  aria-pressed={jumpIndex === 0 ? "true" : "false"}
+                  aria-label={jumpProject.navLabel ?? jumpProject.title}
+                  title={jumpProject.navLabel ?? jumpProject.title}
+                >
+                  <span aria-hidden="true">{jumpProject.index}</span>
+                </button>
+              ))}
+            </nav>
+            <button
+              type="button"
+              class="text-action text-action--ghost case-rail__back"
+              data-close-case-study
+              data-case-rail-back
+            >
+              <span aria-hidden="true">←</span>
+              <span>{explorer.backToProject}</span>
+            </button>
+          </div>
+
           {projects.map((project, index) => (
             <div
               class:list={["case-rail", { "is-active": index === 0 }]}
@@ -97,30 +118,6 @@ const nextProjectLabel = isFrench ? "Projet suivant" : "Next project";
               data-project-id={project.id}
               hidden={index !== 0}
             >
-              <div class="case-rail__projects">
-                <p class="case-rail__projects-label">{projectsSwitchLabel}</p>
-                <nav class="case-project-jump" aria-label={jumpLabel}>
-                  {projects.map((jumpProject) => (
-                    <button
-                      type="button"
-                      class:list={[
-                        "case-project-jump__item",
-                        { "is-active": jumpProject.id === project.id },
-                      ]}
-                      data-project-switch
-                      data-project-id={jumpProject.id}
-                      aria-pressed={
-                        jumpProject.id === project.id ? "true" : "false"
-                      }
-                      aria-label={jumpProject.navLabel ?? jumpProject.title}
-                      title={jumpProject.navLabel ?? jumpProject.title}
-                    >
-                      <span aria-hidden="true">{jumpProject.index}</span>
-                    </button>
-                  ))}
-                </nav>
-              </div>
-
               <div class="case-identity">
                 <p class="eyebrow">{project.caseStudy.eyebrow}</p>
                 <p class="case-identity__title">{project.title}</p>
@@ -188,25 +185,6 @@ const nextProjectLabel = isFrench ? "Projet suivant" : "Next project";
                     emptyHint={project.mediaEmptyHint}
                     class="project-hero__media"
                   />
-                  <button
-                    type="button"
-                    class="project-hero__media-cta"
-                    data-open-case-study="media"
-                    data-project-id={project.id}
-                  >
-                    <span class="project-hero__media-cta-label">
-                      {explorer.caseStudyMediaAction}
-                    </span>
-                    <span class="project-hero__media-cta-meta">
-                      {studyHint}
-                    </span>
-                    <span
-                      class="project-hero__media-cta-arrow"
-                      aria-hidden="true"
-                    >
-                      →
-                    </span>
-                  </button>
                 </div>
 
                 <div class="project-hero__copy" data-hero-copy>
@@ -494,20 +472,6 @@ const nextProjectLabel = isFrench ? "Projet suivant" : "Next project";
     aria-hidden="true"
     hidden
   >
-    <div class="profile-stage" data-profile-stage>
-      <div class="profile-stage__intro">
-        <p class="eyebrow">{profile.eyebrow}</p>
-        <h1 id="profile-title">{profile.title}</h1>
-      </div>
-      <div class="profile-stage__body">
-        {profile.paragraphs.map((paragraph) => (
-          <p>{paragraph}</p>
-        ))}
-        <div class="profile-stage__contact">
-          <h2>{profile.contactTitle}</h2>
-          <p>{profile.contactNote}</p>
-        </div>
-      </div>
-    </div>
+    <ProfileStage profile={profile} />
   </section>
 </div>
