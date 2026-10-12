@@ -398,7 +398,7 @@ const authenticShell = {
       otherProjectsLabel: "Autres projets",
       projectIndexLabel: "Projets",
       caseStudyAction: "Étude de cas",
-      backToProject: "Retour au projet",
+      backToProject: "Tous les projets",
       chapterOverviewHint: "Choisissez un sujet technique pour l’afficher ici.",
     },
     profile: {
@@ -444,7 +444,7 @@ const authenticShell = {
       otherProjectsLabel: "Other projects",
       projectIndexLabel: "Projects",
       caseStudyAction: "Case study",
-      backToProject: "Back to project",
+      backToProject: "All projects",
       chapterOverviewHint: "Choose a technical topic to display it here.",
     },
     profile: {
@@ -492,7 +492,7 @@ function demoExplorer(locale: Locale): SiteContent["explorer"] {
         otherProjectsLabel: "Autres projets",
         projectIndexLabel: "Index des projets",
         caseStudyAction: "Étude de cas",
-        backToProject: "Retour au projet",
+        backToProject: "Tous les projets",
         chapterOverviewHint:
           "Choisissez un sujet technique pour l’afficher ici.",
       }
@@ -505,7 +505,7 @@ function demoExplorer(locale: Locale): SiteContent["explorer"] {
         otherProjectsLabel: "Other projects",
         projectIndexLabel: "Project index",
         caseStudyAction: "Case study",
-        backToProject: "Back to project",
+        backToProject: "All projects",
         chapterOverviewHint: "Choose a technical topic to display it here.",
       };
 }

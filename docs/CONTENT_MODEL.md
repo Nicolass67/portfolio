@@ -7,7 +7,7 @@
 - Chapitres denses : `demo-dense.ts` (`buildDenseChapters`, générateur de blocs).
 - Blocs interactifs démo : `demo-blocks.ts` (`overviewBlocksFor`, `chapterBlocksFor`, kinds).
 - Médias : `image` | `video` | `gallery` | `diagram` | `youtube` | `none`.
-- Lightbox : `fullSrc` optionnel (sinon `src`) + `caption` ; fallback si chargement échoue.
+- Lightbox : `fullSrc` optionnel (sinon `src`) + `caption` ; fallback si chargement échoue ; groupes via `data-lightbox-group` / galerie / `gallery-select`.
 - YouTube : `youtubeId` / embed configurable ; sans id → placeholder click-to-load (pas de faux gameplay).
 - Validation chemins locaux + fallback runtime (jamais d’icône image cassée).
 

@@ -47,7 +47,9 @@ jobs:
       - name: Production build
         run: npm run build
         env:
-          PUBLIC_PORTFOLIO_MODE: authentic
+          # Temporary: ship demo catalogue + explorers so Pages matches local review.
+          # Switch back to authentic before a real public portfolio launch.
+          PUBLIC_PORTFOLIO_MODE: demo
 
       - name: Verify build output
         run: |

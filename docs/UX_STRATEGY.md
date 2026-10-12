@@ -24,7 +24,7 @@ Contraintes : projet 1 par défaut, pas de collapse, pas de modale de navigation
 
 ## Lightbox image
 
-Les images inspectables (média featured, galeries, annotations, splits, expand before/after) ouvrissent un `<dialog>` plein viewport relatif, avec légende, fermeture Escape / bouton / backdrop, restauration du focus. Vidéo et YouTube restent hors lightbox.
+Les images inspectables (média featured, galeries, annotations, splits, expand before/after) ouvrissent un `<dialog>` plein viewport relatif, avec légende, fermeture Escape / bouton / backdrop, restauration du focus. Quand plusieurs images appartiennent au même groupe, des flèches gauche/droite, les touches ←/→ et un swipe horizontal permettent de parcourir le set avec une transition directionnelle (fondu + léger glissement) et un compteur ; le mouvement est réduit si `prefers-reduced-motion`. Vidéo et YouTube restent hors lightbox.
 
 ## Contenu dense (démo)
 

@@ -106,35 +106,50 @@ function initWorkspace(root: HTMLElement) {
     }
   }
 
+  const reduceMotionQuery = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  );
+
   function pulseMotion(element: HTMLElement | null, token: string) {
-    if (!element) return;
-    element.dataset.motion = token;
-    // Restart CSS animation even if the token repeats.
+    if (!element || reduceMotionQuery.matches) return;
+
     element.classList.remove("is-motion");
-    void element.offsetWidth;
-    element.classList.add("is-motion");
-    const clear = () => {
-      element.classList.remove("is-motion");
-      delete element.dataset.motion;
-    };
-    element.addEventListener("animationend", clear, { once: true });
-    // Child-targeted animations (project-swap) may not bubble animationend to the host.
-    window.setTimeout(clear, 420);
+    element.dataset.motion = token;
+    // Start invisible before paint so the first frame is the fade-in, not a flash.
+    element.classList.add("is-motion-pending");
+
+    requestAnimationFrame(() => {
+      element.classList.remove("is-motion-pending");
+      element.classList.add("is-motion");
+      const clear = () => {
+        element.classList.remove("is-motion");
+        delete element.dataset.motion;
+      };
+      element.addEventListener("animationend", clear, { once: true });
+      window.setTimeout(clear, 280);
+    });
   }
 
   function applyState() {
     const previousMode = root.dataset.projectMode;
     const previousView = root.dataset.view;
     const previousProject = root.dataset.activeProject;
+    const previousChapter = root.dataset.activeChapter || "";
 
     root.dataset.view = state.view;
     root.dataset.projectMode = state.projectMode;
     root.dataset.activeProject = state.projectId;
+    root.dataset.activeChapter = state.chapterId ?? "";
     root.classList.toggle("is-profile", state.view === "profile");
-    root.classList.toggle(
-      "is-case-study",
-      state.view === "projects" && state.projectMode === "case-study",
-    );
+    const inCaseStudy =
+      state.view === "projects" && state.projectMode === "case-study";
+    root.classList.toggle("is-case-study", inCaseStudy);
+
+    root
+      .querySelectorAll<HTMLButtonElement>("[data-close-case-study]")
+      .forEach((button) => {
+        button.hidden = !inCaseStudy;
+      });
 
     const layout = root.querySelector<HTMLElement>("[data-projects-layout]");
     const overviewRail = root.querySelector<HTMLElement>(
@@ -223,6 +238,36 @@ function initWorkspace(root: HTMLElement) {
       );
       const showCase = active && state.projectMode === "case-study";
       const showOverview = active && state.projectMode === "overview";
+      const projectChanged = previousProject !== id;
+      const enteringCase = active && previousMode !== "case-study" && showCase;
+      const leavingCase =
+        active && previousMode === "case-study" && showOverview;
+      const chapterChanged =
+        active &&
+        showCase &&
+        !enteringCase &&
+        !projectChanged &&
+        (state.chapterId ?? "") !== previousChapter;
+
+      applyChapter(
+        id,
+        active && state.projectMode === "case-study" ? state.chapterId : null,
+      );
+
+      // Arm fade-in before reveal to avoid a full-opacity flash then jump.
+      if (active && projectChanged && showOverview) {
+        pulseMotion(card, "project-swap");
+      }
+      if (enteringCase || (active && projectChanged && showCase)) {
+        pulseMotion(caseStudy, "case-enter");
+      } else if (leavingCase) {
+        pulseMotion(overview, "overview-enter");
+      } else if (chapterChanged && state.chapterId) {
+        const openPanel = card.querySelector<HTMLElement>(
+          `[data-chapter-panel][data-chapter-id="${state.chapterId}"]`,
+        );
+        pulseMotion(openPanel, "chapter-enter");
+      }
 
       if (overview) {
         overview.hidden = !showOverview;
@@ -233,28 +278,6 @@ function initWorkspace(root: HTMLElement) {
         caseStudy.hidden = !showCase;
         caseStudy.classList.toggle("is-visible", showCase);
         setInert(caseStudy, !showCase);
-      }
-
-      if (active && previousProject !== id) {
-        pulseMotion(card, "project-swap");
-      }
-      if (active && previousMode !== "case-study" && showCase) {
-        pulseMotion(caseStudy, "case-enter");
-      }
-      if (active && previousMode === "case-study" && showOverview) {
-        pulseMotion(overview, "overview-enter");
-      }
-
-      applyChapter(
-        id,
-        active && state.projectMode === "case-study" ? state.chapterId : null,
-      );
-
-      if (active && state.projectMode === "case-study" && state.chapterId) {
-        const openPanel = card.querySelector<HTMLElement>(
-          `[data-chapter-panel][data-chapter-id="${state.chapterId}"]`,
-        );
-        pulseMotion(openPanel, "chapter-enter");
       }
     });
 
@@ -312,12 +335,35 @@ function initWorkspace(root: HTMLElement) {
 
     if (state.view !== "projects") return;
 
+    const projectJump = target.closest<HTMLButtonElement>(
+      "[data-project-switch]",
+    );
+    if (projectJump?.dataset.projectId) {
+      // Pastilles 1/2/3 → ouvrir directement la page (étude de cas) du projet cible.
+      const projectId = projectJump.dataset.projectId;
+      const card = cards.find((item) => item.dataset.projectId === projectId);
+      const firstChapter =
+        root.querySelector<HTMLButtonElement>(
+          `[data-case-rail][data-project-id="${projectId}"] [data-chapter-select]`,
+        )?.dataset.chapterId ??
+        card?.querySelector<HTMLElement>("[data-chapter-panel]")?.dataset
+          .chapterId ??
+        null;
+      setState({
+        view: "projects",
+        projectId,
+        projectMode: "case-study",
+        chapterId: firstChapter,
+      });
+      return;
+    }
+
     const projectSelect = target.closest<HTMLButtonElement>(
-      "[data-project-select], [data-project-switch]",
+      "[data-project-select]",
     );
     if (projectSelect?.dataset.projectId) {
-      // Always open the selected project's overview (also from Case Study).
       setState({
+        view: "projects",
         projectId: projectSelect.dataset.projectId,
         projectMode: "overview",
         chapterId: null,

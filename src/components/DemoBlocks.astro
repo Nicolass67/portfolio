@@ -110,7 +110,7 @@ const { blocks, class: className = "" } = Astro.props;
         ) : null}
 
         {block.kind === "gallery-select" ? (
-          <div class="demo-gallery" data-gallery-select>
+          <div class="demo-gallery" data-gallery-select data-lightbox-group>
             <figure class="demo-gallery__stage">
               <button
                 type="button"

@@ -219,8 +219,8 @@ export const accentPalette: AccentSwatch[] = [
   },
 ];
 
-/** Recommended default until the user approves (matches studio ultramarine). */
-export const DEFAULT_ACCENT_ID = "ultramarine";
+/** Provisional default (user: Ardoise) — explorers kept until final Q-18. */
+export const DEFAULT_ACCENT_ID = "slate";
 
 export function getAccentById(id: string | null | undefined): AccentSwatch {
   return (

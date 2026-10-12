@@ -140,7 +140,7 @@ Ne pas inclure `node_modules/`, caches, builds volumineux, `.git/`, secrets, jet
 
 - Dossier stable : `artifacts/screenshots/`
 - Régénérer via `npx playwright test tests/e2e/screenshots.spec.ts` après tout changement d’apparence ou d’état d’interaction.
-- Mission 10+ : variantes `variant-*` utiles pour la comparaison DA ; Mission 12 : capturer aussi nav case, project switcher, chapitres denses et switch projet→overview.
+- Mission 10+ : variantes `variant-*` utiles pour la comparaison DA ; Mission 12+ : capturer aussi nav case, project switcher, chapitres denses et switch projet→étude de cas (D-033).
 - Inspecter chaque PNG à pleine taille avant livraison ; ne pas conserver une capture obsolète (ex. ancienne nav compacte double-liste).
 - Le ZIP de revue d’une mission UI doit contenir les PNG à jour ; documenter l’inventaire dans `REVIEW_README.md`.
 

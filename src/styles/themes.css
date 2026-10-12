@@ -147,12 +147,12 @@ html[data-theme="immersive"] .brand__role {
 
 /* C — Contemporary Digital Studio (recommended default) */
 html[data-theme="studio"] {
-  --bg: #f6f1e8;
-  --bg-deep: #efe6d8;
+  --bg: #fbfbf9;
+  --bg-deep: color-mix(in srgb, #fbfbf9 88%, #17140f);
   --ink: #17140f;
   --ink-soft: #6a6258;
-  --accent: #2146d6;
-  --accent-soft: color-mix(in srgb, #2146d6 11%, transparent);
+  --accent: #334155;
+  --accent-soft: color-mix(in srgb, #334155 11%, transparent);
   --line: color-mix(in srgb, #17140f 11%, transparent);
   --font-display: "Syne", "Segoe UI", sans-serif;
   --font-body: "Outfit", "Segoe UI", sans-serif;
@@ -180,7 +180,9 @@ html[data-theme="studio"] .project-index__item.is-active {
 }
 
 html[data-theme="studio"] .media-frame {
-  box-shadow: 0 18px 50px color-mix(in srgb, var(--ink) 8%, transparent);
+  box-shadow:
+    0 1px 2px color-mix(in srgb, var(--ink) 3%, transparent),
+    0 8px 22px color-mix(in srgb, var(--ink) 4%, transparent);
 }
 
 html[data-theme="studio"] .project-hero__copy h2 {

@@ -1,10 +1,10 @@
 :root {
-  --bg: #f6f1e8;
-  --bg-deep: #efe6d8;
+  --bg: #fbfbf9;
+  --bg-deep: color-mix(in srgb, #fbfbf9 88%, #17140f);
   --ink: #17140f;
   --ink-soft: #6a6258;
-  --accent: #2146d6;
-  --accent-soft: color-mix(in srgb, #2146d6 11%, transparent);
+  --accent: #334155;
+  --accent-soft: color-mix(in srgb, #334155 11%, transparent);
   --line: color-mix(in srgb, #17140f 11%, transparent);
   --font-display: "Syne", "Segoe UI", sans-serif;
   --font-body: "Outfit", "Segoe UI", sans-serif;
@@ -237,10 +237,24 @@ h3 {
   margin: 0.65rem auto 0.85rem;
 }
 
-.demo-chip {
+.workspace-toolbar {
+  display: none;
   flex: 0 0 auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: 1.6rem;
+}
+
+.workspace-toolbar:has(.demo-chip),
+.workspace.is-case-study .workspace-toolbar {
+  display: flex;
+}
+
+.demo-chip {
+  flex: 0 1 auto;
   width: fit-content;
-  max-width: 100%;
+  max-width: min(100%, 36rem);
   padding: 0.28rem 0.7rem;
   border-radius: 999px;
   background: var(--accent-soft);
@@ -252,6 +266,21 @@ h3 {
 .demo-chip span {
   color: var(--accent);
   font-weight: 700;
+}
+
+.workspace-toolbar__back {
+  flex: 0 0 auto;
+  margin-left: auto;
+  opacity: 1;
+  transition: opacity 160ms ease;
+}
+
+/* Keep layout space: hide without display:none to avoid a height jump. */
+.workspace-toolbar__back[hidden] {
+  display: inline-flex !important;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .view {
@@ -267,17 +296,10 @@ h3 {
 
 .projects-layout {
   display: grid;
-  grid-template-columns: minmax(12rem, 15rem) minmax(0, 1fr);
+  grid-template-columns: minmax(13rem, 16rem) minmax(0, 1fr);
   gap: clamp(1rem, 2.5vw, 2.5rem);
   flex: 1 1 auto;
   min-height: 0;
-  transition:
-    grid-template-columns 320ms cubic-bezier(0.22, 1, 0.36, 1),
-    gap 320ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.projects-layout.is-case-mode {
-  grid-template-columns: minmax(13rem, 16rem) minmax(0, 1fr);
 }
 
 .context-rail {
@@ -369,6 +391,12 @@ h3 {
   font-weight: 700;
   font-size: 1.05rem;
   line-height: 1.15;
+  /* Always reserve 2 lines so pastille jumps don't shift the chapter list. */
+  min-height: calc(1.15em * 2);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }
 
 .case-project-jump {
@@ -431,10 +459,10 @@ h3 {
   display: grid;
   grid-template-columns: 0.55rem minmax(0, 1fr);
   gap: 0.55rem;
-  align-items: start;
+  align-items: center;
   width: 100%;
   min-height: 2.4rem;
-  padding: 0.35rem 0.2rem;
+  padding: 0.35rem 0.35rem 0.35rem 0.45rem;
   text-align: left;
   color: var(--ink-soft);
   border-radius: 0.4rem;
@@ -449,7 +477,6 @@ h3 {
 .chapter-index__mark {
   width: 0.35rem;
   height: 0.35rem;
-  margin-top: 0.45rem;
   border-radius: 50%;
   background: var(--line);
 }
@@ -474,10 +501,6 @@ h3 {
 .chapter-index__eyebrow {
   color: var(--ink-soft);
   font-size: 0.68rem;
-}
-
-.case-rail__back {
-  margin-top: auto;
 }
 
 .project-stage {
@@ -778,7 +801,6 @@ h3 {
 
 .chapter-panel.is-open {
   display: grid;
-  animation: rise var(--motion) both;
 }
 
 .chapter-panel__head h3 {
@@ -797,7 +819,8 @@ h3 {
   align-content: start;
   min-height: 0;
   overflow: auto;
-  padding-right: 0.25rem;
+  /* Room for focus/selection rings on edge content (gallery thumbs, etc.). */
+  padding: 0.2rem 0.35rem 0.45rem 0.2rem;
 }
 
 .chapter-panel__body > p {
@@ -965,19 +988,22 @@ h3 {
     grid-template-columns: 1fr;
   }
 
-  .accent-explorer__panel {
+  .accent-explorer__panel,
+  .bg-explorer__panel {
     right: 0;
     left: auto;
     width: min(20rem, calc(100vw - 1.5rem));
   }
 }
 
-/* ——— Mission 11: accent explorer (demo only) ——— */
-.accent-explorer {
+/* ——— Mission 11: accent / background explorers (demo only) ——— */
+.accent-explorer,
+.bg-explorer {
   position: relative;
 }
 
-.accent-explorer__trigger {
+.accent-explorer__trigger,
+.bg-explorer__trigger {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
@@ -990,15 +1016,24 @@ h3 {
   font-weight: 600;
 }
 
-.accent-explorer__swatch {
+.accent-explorer__swatch,
+.bg-explorer__swatch {
   width: 0.75rem;
   height: 0.75rem;
   border-radius: 50%;
-  background: var(--accent);
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 15%, transparent);
 }
 
-.accent-explorer__panel {
+.accent-explorer__swatch {
+  background: var(--accent);
+}
+
+.bg-explorer__swatch {
+  background: var(--bg);
+}
+
+.accent-explorer__panel,
+.bg-explorer__panel {
   position: absolute;
   top: calc(100% + 0.45rem);
   right: 0;
@@ -1010,21 +1045,26 @@ h3 {
   border: 1px solid var(--line);
   border-radius: 0.9rem;
   background: color-mix(in srgb, var(--bg) 96%, #fff);
-  box-shadow: 0 18px 40px color-mix(in srgb, var(--ink) 12%, transparent);
+  box-shadow:
+    0 1px 2px color-mix(in srgb, var(--ink) 4%, transparent),
+    0 10px 28px color-mix(in srgb, var(--ink) 6%, transparent);
   isolation: isolate;
 }
 
-.accent-explorer__hint {
+.accent-explorer__hint,
+.bg-explorer__hint {
   margin-bottom: 0.65rem;
   color: var(--ink-soft);
   font-size: 0.72rem;
 }
 
-.accent-explorer__family + .accent-explorer__family {
+.accent-explorer__family + .accent-explorer__family,
+.bg-explorer__family + .bg-explorer__family {
   margin-top: 0.7rem;
 }
 
-.accent-explorer__family-label {
+.accent-explorer__family-label,
+.bg-explorer__family-label {
   margin-bottom: 0.35rem;
   color: var(--ink-soft);
   font-size: 0.68rem;
@@ -1033,13 +1073,15 @@ h3 {
   text-transform: uppercase;
 }
 
-.accent-explorer__grid {
+.accent-explorer__grid,
+.bg-explorer__grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.3rem;
 }
 
-.accent-explorer__option {
+.accent-explorer__option,
+.bg-explorer__option {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 0.4rem;
@@ -1053,19 +1095,23 @@ h3 {
 }
 
 .accent-explorer__option.is-active,
-.accent-explorer__option[aria-pressed="true"] {
+.accent-explorer__option[aria-pressed="true"],
+.bg-explorer__option.is-active,
+.bg-explorer__option[aria-pressed="true"] {
   background: var(--accent-soft);
   color: var(--ink);
 }
 
-.accent-explorer__dot {
+.accent-explorer__dot,
+.bg-explorer__dot {
   width: 0.85rem;
   height: 0.85rem;
   border-radius: 50%;
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 18%, transparent);
 }
 
-.accent-explorer__custom {
+.accent-explorer__custom,
+.bg-explorer__custom {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1078,7 +1124,8 @@ h3 {
   font-weight: 600;
 }
 
-.accent-explorer__custom input {
+.accent-explorer__custom input,
+.bg-explorer__custom input {
   width: 2.4rem;
   height: 1.6rem;
   padding: 0;
@@ -1471,36 +1518,35 @@ h3 {
   }
 }
 
-/* ——— Mission 11: transformative motion ——— */
+/* ——— Mission 11: soft enter (opacity only — no scale/blur jump) ——— */
+.project-hero.is-motion-pending[data-motion="project-swap"]
+  .project-hero__overview,
+.project-hero__case.is-motion-pending[data-motion="case-enter"],
+.project-hero__overview.is-motion-pending[data-motion="overview-enter"],
+.chapter-panel.is-motion-pending[data-motion="chapter-enter"],
+.profile-stage.is-motion-pending[data-motion="profile-enter"] {
+  opacity: 0;
+}
+
 .project-hero.is-motion[data-motion="project-swap"] .project-hero__overview,
 .project-hero__case.is-motion[data-motion="case-enter"],
 .project-hero__overview.is-motion[data-motion="overview-enter"],
 .chapter-panel.is-motion[data-motion="chapter-enter"],
 .profile-stage.is-motion[data-motion="profile-enter"] {
-  animation: reconstruct 360ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: soft-enter 220ms ease both;
 }
 
 .project-hero.is-active .project-hero__media-slot,
 .project-hero.is-active .project-hero__copy {
-  transition:
-    transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 240ms ease;
+  transition: opacity 200ms ease;
 }
 
-.workspace.is-case-study .project-hero.is-active .project-hero__case {
-  animation: reconstruct 340ms cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-@keyframes reconstruct {
+@keyframes soft-enter {
   from {
     opacity: 0;
-    transform: translateY(0.55rem) scale(0.985);
-    filter: blur(1px);
   }
   to {
     opacity: 1;
-    transform: none;
-    filter: none;
   }
 }
 
@@ -1600,11 +1646,16 @@ h3 {
   border-radius: 1rem;
   background: var(--bg);
   color: var(--ink);
-  box-shadow: 0 1.5rem 3rem rgb(23 20 15 / 0.28);
+  box-shadow:
+    0 0.25rem 0.75rem rgb(23 20 15 / 0.08),
+    0 1rem 2rem rgb(23 20 15 / 0.12);
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .lightbox::backdrop {
-  background: rgb(23 20 15 / 0.72);
+  background: rgb(23 20 15 / 0.55);
 }
 
 .lightbox__panel {
@@ -1615,40 +1666,189 @@ h3 {
   padding: 1.25rem 1.25rem 1rem;
 }
 
+.lightbox__close,
+.lightbox__nav {
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--line) 85%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--bg) 88%, #fff);
+  color: var(--ink);
+  box-shadow: 0 0.2rem 0.55rem rgb(23 20 15 / 0.06);
+  backdrop-filter: blur(8px);
+  transition:
+    transform 180ms ease,
+    background-color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    opacity 180ms ease;
+}
+
 .lightbox__close {
   position: absolute;
   top: 0.65rem;
   right: 0.65rem;
-  z-index: 2;
-  display: grid;
-  place-items: center;
   width: 2.25rem;
   height: 2.25rem;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--bg) 92%, #fff);
-  color: var(--ink);
   font-size: 1.35rem;
   line-height: 1;
 }
 
+.lightbox__nav {
+  position: absolute;
+  top: 50%;
+  width: 2.75rem;
+  height: 2.75rem;
+  transform: translateY(-50%);
+  opacity: 0.92;
+}
+
+.lightbox__nav--prev {
+  left: 0.55rem;
+}
+
+.lightbox__nav--next {
+  right: 0.55rem;
+}
+
+.lightbox__nav-icon {
+  display: grid;
+  place-items: center;
+  transition: transform 180ms ease;
+}
+
+.lightbox__close:hover,
+.lightbox__nav:hover {
+  background: color-mix(in srgb, var(--bg) 96%, #fff);
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
+  box-shadow: 0 0.25rem 0.7rem rgb(23 20 15 / 0.08);
+  opacity: 1;
+}
+
+.lightbox__close:hover {
+  transform: scale(1.04);
+}
+
+.lightbox__nav--prev:hover {
+  transform: translateY(-50%) translateX(-0.1rem) scale(1.04);
+}
+
+.lightbox__nav--next:hover {
+  transform: translateY(-50%) translateX(0.1rem) scale(1.04);
+}
+
+.lightbox__nav--prev:hover .lightbox__nav-icon {
+  transform: translateX(-0.12rem);
+}
+
+.lightbox__nav--next:hover .lightbox__nav-icon {
+  transform: translateX(0.12rem);
+}
+
+.lightbox__close:focus-visible,
+.lightbox__nav:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.lightbox__close:active,
+.lightbox__nav:active {
+  transform: translateY(-50%) scale(0.97);
+}
+
+.lightbox__close:active {
+  transform: scale(0.97);
+}
+
 .lightbox__figure {
   display: grid;
-  grid-template-rows: minmax(0, 1fr) auto;
-  gap: 0.65rem;
+  grid-template-rows: minmax(0, 1fr) auto auto;
+  gap: 0.55rem;
   height: 100%;
   min-height: 0;
   margin: 0;
+  padding-inline: 2.4rem;
+}
+
+.lightbox:not(.lightbox--multi) .lightbox__figure {
+  padding-inline: 0;
+}
+
+.lightbox__stage {
+  position: relative;
+  display: grid;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 0.65rem;
+  background: var(--bg-deep);
+  isolation: isolate;
+  touch-action: pan-y;
+}
+
+.lightbox__stage > * {
+  grid-area: 1 / 1;
 }
 
 .lightbox__image {
   display: block;
   width: 100%;
   height: 100%;
-  max-height: calc(92vh - 5.5rem);
+  max-height: calc(92vh - 6.5rem);
   object-fit: contain;
   border-radius: 0.65rem;
-  background: var(--bg-deep);
+  background: transparent;
+  opacity: 0;
+  transform: translateX(0) scale(0.985);
+  transition:
+    opacity 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+}
+
+.lightbox__image.is-active {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+  z-index: 1;
+  pointer-events: auto;
+}
+
+.lightbox__image.is-enter-from-right {
+  opacity: 0;
+  transform: translateX(1.75rem) scale(0.98);
+}
+
+.lightbox__image.is-enter-from-left {
+  opacity: 0;
+  transform: translateX(-1.75rem) scale(0.98);
+}
+
+.lightbox__image.is-exit-to-left {
+  opacity: 0;
+  transform: translateX(-1.5rem) scale(0.985);
+  z-index: 0;
+}
+
+.lightbox__image.is-exit-to-right {
+  opacity: 0;
+  transform: translateX(1.5rem) scale(0.985);
+  z-index: 0;
+}
+
+.lightbox.is-navigating .lightbox__caption,
+.lightbox.is-navigating .lightbox__counter {
+  opacity: 0.55;
+  transition: opacity 180ms ease;
+}
+
+.lightbox__caption,
+.lightbox__counter {
+  transition: opacity 180ms ease;
 }
 
 .lightbox__caption {
@@ -1656,6 +1856,15 @@ h3 {
   color: var(--ink-soft);
   font-size: 0.9rem;
   text-align: center;
+}
+
+.lightbox__counter {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
 }
 
 .lightbox__fallback {
@@ -1667,10 +1876,13 @@ h3 {
   border-radius: 0.65rem;
   background: var(--bg-deep);
   text-align: center;
+  z-index: 2;
 }
 
 .lightbox__fallback[hidden],
 .lightbox__caption[hidden],
+.lightbox__counter[hidden],
+.lightbox__nav[hidden],
 .lightbox__image[hidden] {
   display: none !important;
 }
@@ -1708,6 +1920,25 @@ h3 {
   }
 }
 
+@media (max-width: 40rem) {
+  .lightbox__nav {
+    width: 2.35rem;
+    height: 2.35rem;
+  }
+
+  .lightbox__nav--prev {
+    left: 0.35rem;
+  }
+
+  .lightbox__nav--next {
+    right: 0.35rem;
+  }
+
+  .lightbox__figure {
+    padding-inline: 1.85rem;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -1724,5 +1955,28 @@ h3 {
   .lightbox[open],
   .lightbox[open]::backdrop {
     animation: none;
+  }
+
+  .lightbox__image,
+  .lightbox__close,
+  .lightbox__nav,
+  .lightbox__nav-icon,
+  .lightbox__caption,
+  .lightbox__counter {
+    transition: none !important;
+  }
+
+  .lightbox__close:hover,
+  .lightbox__nav:hover,
+  .lightbox__nav--prev:hover,
+  .lightbox__nav--next:hover,
+  .lightbox__close:active,
+  .lightbox__nav:active {
+    transform: none;
+  }
+
+  .lightbox__nav--prev:hover,
+  .lightbox__nav--next:hover {
+    transform: translateY(-50%);
   }
 }

@@ -26,7 +26,7 @@ function applyDirection(direction: VisualDirection) {
     const colors: Record<VisualDirection, string> = {
       precision: "#f4f6fa",
       immersive: "#f7f3ec",
-      studio: "#f6f1e8",
+      studio: "#fbfbf9",
     };
     meta.setAttribute("content", colors[direction]);
   }

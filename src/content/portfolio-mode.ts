@@ -15,13 +15,16 @@ export const visualDirections: VisualDirection[] = [
 /**
  * Authentic = real portfolio projects only (safe for publication).
  * Demo = six fictional projects for layout/interaction review.
+ *
+ * Temporary default: production falls back to demo so the live Pages site
+ * matches local review until authentic content is ready to publish.
  */
 export function getPortfolioMode(): PortfolioMode {
   const configured = import.meta.env.PUBLIC_PORTFOLIO_MODE;
   if (configured === "demo" || configured === "authentic") {
     return configured;
   }
-  return import.meta.env.PROD ? "authentic" : "demo";
+  return "demo";
 }
 
 export function isDemoMode(): boolean {

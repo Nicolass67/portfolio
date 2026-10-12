@@ -25,7 +25,7 @@ Dans `astro.config.mjs` :
 
 Les chemins publics passent par `withBase()` (`src/lib/paths.ts`).
 
-Build public : `PUBLIC_PORTFOLIO_MODE=authentic` (défaut de `npm run build`) — pas d’outils démo / Accent.
+Build Pages (temporaire) : `PUBLIC_PORTFOLIO_MODE=demo` — même catalogue / explorateurs que le localhost de revue. Repasser à `authentic` avant une vraie mise en ligne portfolio.
 
 ## Contrôles CI (obligatoires)
 
@@ -34,7 +34,7 @@ Build public : `PUBLIC_PORTFOLIO_MODE=authentic` (défaut de `npm run build`) �
 3. `npm run lint`
 4. `npm run typecheck`
 5. `npm run test` (Vitest)
-6. `npm run build` (authentic)
+6. `npm run build` (demo temporaire)
 7. Vérification `dist/index.html`, `dist/en/index.html`, `dist/favicon.svg`
 8. Upload artefact Pages + deploy
 
@@ -90,7 +90,9 @@ Ou via API après le premier push du workflow (si les droits le permettent).
 
 ## Visibilité
 
-Le dépôt peut être créé **privé**. GitHub Pages pour les dépôts privés dépend de l’offre du compte. Si Pages refuse la publication, rendre le dépôt **public** (autorisation explicite requise) ou utiliser un plan qui inclut Pages privés.
+- État actuel : dépôt **public** (accord explicite 2026-10-12) — requis pour GitHub Pages sur le plan gratuit.
+- Pas de secrets, `.env`, mots de passe ni jetons dans le dépôt ; `.gitignore` exclut `.env*`.
+- Contenu portfolio (nom, parcours, études) autorisé ; tout secret / credential reste interdit sans accord séparé.
 
 ## Diagnostic rapide
 

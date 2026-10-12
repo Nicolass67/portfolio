@@ -170,7 +170,7 @@ test.describe("fullscreen portfolio workspace", () => {
     );
   });
 
-  test("switching projects from case study opens new project overview", async ({
+  test("switching projects from case study opens the target project page", async ({
     page,
   }) => {
     await page.goto(appPath("/"));
@@ -197,7 +197,7 @@ test.describe("fullscreen portfolio workspace", () => {
     );
     await expect(page.locator("[data-workspace]")).toHaveAttribute(
       "data-project-mode",
-      "overview",
+      "case-study",
     );
     await expect(
       page.locator(
@@ -206,10 +206,15 @@ test.describe("fullscreen portfolio workspace", () => {
     ).toHaveCount(1);
     await expect(
       page.locator(
-        '[data-project-card].is-active [data-project-mode-panel="overview"]',
+        '[data-project-card].is-active [data-project-mode-panel="case-study"]',
       ),
     ).toBeVisible();
-    await expect(page.locator("[data-chapter-panel].is-open")).toHaveCount(0);
+    await expect(
+      page.locator(
+        '[data-case-rail][data-project-id="demo-ai-sandbox"].is-active',
+      ),
+    ).toBeVisible();
+    await expect(page.locator("[data-chapter-panel].is-open")).toHaveCount(1);
   });
 
   test("language switch preserves workspace state", async ({ page }) => {
@@ -458,6 +463,44 @@ test.describe("fullscreen portfolio workspace", () => {
     expect(accentAfter.toLowerCase()).toBe("#dc2626");
   });
 
+  test("background explorer updates tokens without changing state or URL", async ({
+    page,
+  }) => {
+    await page.goto(appPath("/"));
+    await page
+      .locator(
+        '[data-rail-panel="overview"] [data-project-select][data-project-id="demo-ai-sandbox"]',
+      )
+      .click();
+    const before = page.url();
+
+    await page.locator("[data-bg-toggle]").click();
+    await expect(page.locator("[data-bg-panel]")).toBeVisible();
+    await page.locator('[data-bg-option][data-bg-id="precision-mist"]').click();
+
+    await expect(page).toHaveURL(before);
+    await expect(page.locator("[data-workspace]")).toHaveAttribute(
+      "data-active-project",
+      "demo-ai-sandbox",
+    );
+    const bg = await page.evaluate(() =>
+      getComputedStyle(document.documentElement)
+        .getPropertyValue("--bg")
+        .trim(),
+    );
+    expect(bg.toLowerCase()).toBe("#f4f6fa");
+
+    await page
+      .locator("[data-project-card].is-active [data-open-case-study]")
+      .click();
+    const bgAfter = await page.evaluate(() =>
+      getComputedStyle(document.documentElement)
+        .getPropertyValue("--bg")
+        .trim(),
+    );
+    expect(bgAfter.toLowerCase()).toBe("#f4f6fa");
+  });
+
   test("case study swaps left rail to chapter navigation", async ({ page }) => {
     await page.goto(appPath("/"));
     await expect(page.locator('[data-rail-panel="overview"]')).toBeVisible();
@@ -477,9 +520,12 @@ test.describe("fullscreen portfolio workspace", () => {
       page.locator("[data-case-rail].is-active [data-project-switch]"),
     ).toHaveCount(6);
     await page
-      .locator("[data-case-rail].is-active [data-close-case-study]")
+      .locator("[data-workspace-toolbar] [data-close-case-study]")
       .click();
     await expect(page.locator('[data-rail-panel="overview"]')).toBeVisible();
+    await expect(
+      page.locator("[data-workspace-toolbar] [data-close-case-study]"),
+    ).toBeHidden();
   });
 
   test("project sidebar shows titles only without metadata", async ({
@@ -507,7 +553,9 @@ test.describe("fullscreen portfolio workspace", () => {
     await trigger.click();
     const dialog = page.locator("[data-lightbox]");
     await expect(dialog).toBeVisible();
-    await expect(page.locator("[data-lightbox-image]")).toBeVisible();
+    await expect(
+      page.locator("[data-lightbox-image].is-active").first(),
+    ).toBeVisible();
 
     await page
       .locator("[data-lightbox-panel]")
@@ -526,6 +574,58 @@ test.describe("fullscreen portfolio workspace", () => {
     await expect(dialog).toBeVisible();
     // Click viewport corner (backdrop), not the dialog panel.
     await page.mouse.click(8, 8);
+    await expect(dialog).toBeHidden();
+  });
+
+  test("gallery lightbox navigates with arrows and keyboard", async ({
+    page,
+  }) => {
+    await page.goto(appPath("/"));
+    await page
+      .locator(
+        '[data-rail-panel="overview"] [data-project-select][data-project-id="demo-coop-arena"]',
+      )
+      .click();
+
+    const galleryTriggers = page.locator(
+      '[data-project-card].is-active [data-project-mode-panel="overview"] [data-media-kind="gallery"] [data-lightbox-open]',
+    );
+    await expect(galleryTriggers).toHaveCount(3);
+
+    const firstSrc = await galleryTriggers
+      .nth(0)
+      .getAttribute("data-lightbox-src");
+    const secondSrc = await galleryTriggers
+      .nth(1)
+      .getAttribute("data-lightbox-src");
+    expect(firstSrc).toBeTruthy();
+    expect(secondSrc).toBeTruthy();
+    expect(firstSrc).not.toBe(secondSrc);
+
+    await galleryTriggers.nth(0).click();
+    const dialog = page.locator("[data-lightbox]");
+    await expect(dialog).toBeVisible();
+    await expect(dialog).toHaveClass(/lightbox--multi/);
+    await expect(page.locator("[data-lightbox-prev]")).toBeVisible();
+    await expect(page.locator("[data-lightbox-next]")).toBeVisible();
+    await expect(page.locator("[data-lightbox-counter]")).toHaveText("1 / 3");
+    await expect(
+      page.locator("[data-lightbox-image].is-active"),
+    ).toHaveAttribute("src", firstSrc!);
+
+    await page.locator("[data-lightbox-next]").click();
+    await expect(page.locator("[data-lightbox-counter]")).toHaveText("2 / 3");
+    await expect(
+      page.locator("[data-lightbox-image].is-active"),
+    ).toHaveAttribute("src", secondSrc!, { timeout: 3000 });
+
+    await page.keyboard.press("ArrowLeft");
+    await expect(page.locator("[data-lightbox-counter]")).toHaveText("1 / 3");
+    await expect(
+      page.locator("[data-lightbox-image].is-active"),
+    ).toHaveAttribute("src", firstSrc!, { timeout: 3000 });
+
+    await page.keyboard.press("Escape");
     await expect(dialog).toBeHidden();
   });
 

@@ -255,24 +255,34 @@
 
 - Décision : conserver la DA light réussie ; ajouter explorateur d’accent **démo-only** ; blocs interactifs démo réutilisables ; transitions CSS reconstructives sans grosse lib.
 - Navigation case study : **partiellement remplacé** par D-030 (le rail projets compact concurrent a été rejeté).
-- Recommandation accent : **ultramarine `#2146d6`**.
-- Statut : **implémenté** (accent / interactifs) ; **accent public en attente** (Q-18).
+- Défauts provisoires (utilisateur 2026-10-12) : fond **Craie** (`chalk` / `#fbfbf9`), accent **Ardoise** (`slate` / `#334155`) ; explorateurs **conservés**.
+- Statut : **implémenté** (accent / interactifs / fond) ; validation définitive encore ouverte (Q-18 / Q-19).
 
 ## D-030 — Navigation contextuelle & playground dense (Mission 12)
 
 - Contexte : double liste numérotée (rail projets + chapitres) rejetée ; contenu case study trop sparse.
 - Décision d’implémentation :
-  - Rail gauche **contextuel** ; switch projet depuis case study → **overview** (`chapterId` null).
+  - Rail gauche **contextuel** ; switch projet depuis case study → overview (`chapterId` null) — **remplacé par D-033** (pastilles → étude de cas du projet cible).
   - Catalogue dense démo (`demo-dense.ts`).
-- Statut : **implémenté** ; raffiné par D-031 (sidebar / saut projet).
+- Statut : **implémenté** ; raffiné par D-031 / D-033.
 
 ## D-031 — Sidebar titres, lightbox & scrollbars (Mission 13)
 
 - Sidebar overview : **n° + titre uniquement** (métadonnées dans le workspace).
 - Case study : bandeau de pastilles projet (un clic) — suppression du bouton « Changer de projet » + liste secondaire.
 - Lightbox image via `<dialog>` pour images inspectables ; vidéo/YouTube exclus.
+- Raffinement UX : parcours multi-images dans un groupe (flèches, clavier, swipe, compteur, transition directionnelle).
 - Scrollbars masquées (`scrollbar-width` / `::-webkit-scrollbar`) sans désactiver le scroll.
-- Statut : **implémenté**.
+- Statut : **implémenté** ; raffiné par D-033 (emplacement retour).
+
+## D-033 — Retour projets & saut pastilles (arbitrage UI)
+
+- Contexte : depuis l’étude de cas, les pastilles 1/2/3 doivent ouvrir l’autre projet sans détour ; le retour ne doit plus être en bas du rail.
+- Décision (instruction utilisateur, corrigée) :
+  - Pastilles `[data-project-switch]` → **étude de cas** du projet cible (premier chapitre), pas l’overview.
+  - Bouton « Tous les projets » / « All projects » dans la barre d’outils workspace, **haut droite**, même niveau que le bandeau « Mode démonstration » → overview.
+- Remplace partiellement D-030 pour le comportement du saut pastilles.
+- Statut : **validé par l’utilisateur**.
 
 ## D-032 — Déploiement GitHub Pages + Actions
 
@@ -280,5 +290,6 @@
 - Dépôt : `Nicolass67/portfolio` ; branche `main` ; Node 24 ; `npm ci`.
 - Astro : `site` + `base: "/portfolio/"` ; chemins via `withBase()`.
 - CI obligatoire : format, lint, typecheck, unit, build authentic ; e2e Playwright local.
-- Visibilité : dépôt créé **privé** par défaut ; passage en public uniquement avec accord explicite si Pages l’exige.
-- Statut : **implémenté** (vérification bout-en-bout selon accès Pages).
+- Visibilité : créé **privé**, puis passé **public** le 2026-10-12 sur accord explicite (Pages gratuit nécessite un dépôt public) ; pas de mots de passe / secrets — infos portfolio (nom, études, etc.) OK.
+- Statut : **validé / en production** — site live `https://nicolass67.github.io/portfolio/` (HTTP 200).
+- Temporary override (utilisateur 2026-10-12) : Pages construit en `PUBLIC_PORTFOLIO_MODE=demo` pour coller au localhost de revue ; `noindex` reste actif en démo. Revenir à `authentic` avant lancement portfolio réel.

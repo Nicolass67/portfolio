@@ -26,15 +26,26 @@ const jumpLabel = isFrench ? "Autres projets" : "Other projects";
   data-project-mode="overview"
   data-active-project={firstId}
 >
-  {demoNotice ? (
-    <p class="demo-chip" data-demo-banner role="status">
-      <span>{demoNotice.title}</span>
-      {" — "}
-      {isFrench
-        ? "projets fictifs pour tests d’interface"
-        : "fictional projects for interface testing"}
-    </p>
-  ) : null}
+  <div class="workspace-toolbar" data-workspace-toolbar>
+    {demoNotice ? (
+      <p class="demo-chip" data-demo-banner role="status">
+        <span>{demoNotice.title}</span>
+        {" — "}
+        {isFrench
+          ? "projets fictifs pour tests d’interface"
+          : "fictional projects for interface testing"}
+      </p>
+    ) : null}
+    <button
+      type="button"
+      class="text-action text-action--ghost workspace-toolbar__back"
+      data-close-case-study
+      hidden
+    >
+      <span aria-hidden="true">←</span>
+      <span>{explorer.backToProject}</span>
+    </button>
+  </div>
 
   <section
     class="view view--projects is-active"
@@ -138,15 +149,6 @@ const jumpLabel = isFrench ? "Autres projets" : "Other projects";
                   </button>
                 ))}
               </nav>
-
-              <button
-                type="button"
-                class="text-action text-action--ghost case-rail__back"
-                data-close-case-study
-              >
-                <span aria-hidden="true">←</span>
-                <span>{explorer.backToProject}</span>
-              </button>
             </div>
           ))}
         </div>

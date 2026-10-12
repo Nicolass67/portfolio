@@ -8,7 +8,7 @@ Chaque sujet important a **un document de référence**. Les autres fichiers peu
 | Présentation / navigation docs        | `README.md`                                              | État court, liens, archives                                 |
 | Objectifs produit                     | `docs/PRODUCT_BRIEF.md`                                  | Publics, non-objectifs, critères                            |
 | UX / parcours                         | `docs/UX_STRATEGY.md`                                    | Niveaux de lecture, interactions                            |
-| Direction artistique / système visuel | `docs/DESIGN_DIRECTION.md`                               | Light M10–11 ; accent public en attente (Q-18)              |
+| Direction artistique / système visuel | `docs/DESIGN_DIRECTION.md`                               | Light ; défauts provisoires Craie/Ardoise ; Q-18/Q-19 ouverts |
 | Proposition visuelle hi-fi            | `docs/wireframes/HI_FI_PROPOSAL.md` (+ `svg/hifi-*.svg`) | Référence de conception                                     |
 | Wireframes A+B basse fidélité         | `docs/wireframes/AB_HYBRID_REFINED.md`                   | Support                                                     |
 | Wireframes historiques A/B/C          | `docs/wireframes/FIRST_SCREEN_VARIANTS.md`               | Historique                                                  |

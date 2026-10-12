@@ -105,7 +105,7 @@ const inspectLabel = media?.alt || media?.caption ? undefined : "Enlarge image";
       <span class="media-frame__video-badge" aria-hidden="true" />
     </div>
   ) : hasGallery ? (
-    <div class="media-frame__gallery" role="list">
+    <div class="media-frame__gallery" role="list" data-lightbox-group>
       {gallerySources.map((source, index) => (
         <div class="media-frame__gallery-item" role="listitem">
           <button

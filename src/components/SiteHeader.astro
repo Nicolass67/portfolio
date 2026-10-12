@@ -2,6 +2,7 @@
 import type { SiteContent } from "../content/site";
 import { withBase } from "../lib/paths";
 import AccentExplorer from "./AccentExplorer.astro";
+import BackgroundExplorer from "./BackgroundExplorer.astro";
 
 interface Props {
   content: SiteContent;
@@ -43,7 +44,12 @@ const enHref = withBase("/en/");
     </nav>
 
     <div class="site-header__tools">
-      {demoMode ? <AccentExplorer locale={content.locale} /> : null}
+      {demoMode ? (
+        <>
+          <BackgroundExplorer locale={content.locale} />
+          <AccentExplorer locale={content.locale} />
+        </>
+      ) : null}
       <nav
         class="language-switcher"
         aria-label={isFrench ? "Langues" : "Languages"}

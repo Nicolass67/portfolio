@@ -3,7 +3,7 @@
 ## Statut
 
 - Direction light Mission 10 **conservée** comme fondation (typo Syne/Outfit/Fraunces selon variante, titres forts, média large).
-- Accent public : **non validé** — exploration Mission 11 (Q-18).
+- Accent / fond publics : **défauts provisoires** Craie + Ardoise (Q-18 / Q-19) ; explorateurs démo conservés.
 - Baseline sombre/verte/dashboard : **rejetée**.
 
 ## Candidats de composition (revue)
@@ -12,7 +12,7 @@
 | -------------- | ----- |
 | `precision` | Grille froide, cobalt |
 | `immersive` | Fraunces, teal, média dominant |
-| `studio` | Ivoire, outremer — **recommandé** |
+| `studio` | Baseline composition — **recommandé** ; couleurs provisoires Craie + Ardoise |
 
 ## Explorateur d’accent (temporaire)
 
@@ -20,9 +20,19 @@
 - ~30 swatches + input couleur libre.
 - Met à jour `--accent` / `--accent-soft` sans changer layout ni état.
 - Persistance revue : `sessionStorage` (`portfolio-accent-review`).
-- Absente du build public (`PUBLIC_PORTFOLIO_MODE=authentic` / prod par défaut).
+- Présente tant que le build Pages est en mode démo temporaire ; absente du build `authentic`.
 - Retrait prévu après validation Q-18.
 
-## Recommandation accent
+## Explorateur de fond (temporaire)
 
-**Ultramarine `#2146d6`** jusqu’à arbitrage utilisateur.
+- UI : bouton **Fond** dans le header — **mode démo uniquement** (même interaction que l’accent).
+- ~25 swatches light + input couleur libre.
+- Met à jour `--bg` / `--bg-deep` / `--shell-pattern` (et `theme-color`) sans changer layout ni état.
+- Persistance revue : `sessionStorage` (`portfolio-bg-review`).
+- Absente du build public ; retrait prévu après arbitrage de fond public.
+
+## Défauts couleurs (provisoires)
+
+- Fond : **Craie** (`chalk` / `#fbfbf9`) — `DEFAULT_BG_ID`.
+- Accent : **Ardoise** (`slate` / `#334155`) — `DEFAULT_ACCENT_ID`.
+- Sélecteurs Accent / Fond : **conservés** en mode démo jusqu’à validation définitive.

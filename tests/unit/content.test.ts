@@ -7,6 +7,7 @@ import {
   DEFAULT_ACCENT_ID,
   accentPalette,
 } from "../../src/content/accent-palette";
+import { DEFAULT_BG_ID } from "../../src/content/bg-palette";
 import {
   chapterBlocksFor,
   countDemoInteractiveInstances,
@@ -139,7 +140,8 @@ describe("bilingual project content model", () => {
   it("provides a substantial accent palette and rich demo interactives", () => {
     expect(accentPalette.length).toBeGreaterThanOrEqual(24);
     expect(accentPalette.length).toBeLessThanOrEqual(40);
-    expect(DEFAULT_ACCENT_ID).toBe("ultramarine");
+    expect(DEFAULT_ACCENT_ID).toBe("slate");
+    expect(DEFAULT_BG_ID).toBe("chalk");
     expect(countDemoInteractiveInstances("fr")).toBeGreaterThanOrEqual(
       DENSE_TARGET_BLOCKS,
     );

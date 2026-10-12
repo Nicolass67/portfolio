@@ -83,7 +83,7 @@ Applicable aux changements d’interface, navigation, médias ou hydratation.
 - Rail overview : **titres (+ n°) uniquement** — pas de description/tech dans le sidebar.
 - Case study : titre projet + saut projet 1 clic + chapitres ; pas de bouton « Changer de projet » ni seconde liste.
 - Switch projet depuis case study → overview ; chapitre effacé ; URL inchangée.
-- Lightbox image accessible (Escape, close, backdrop, focus) ; vidéo séparée.
+- Lightbox image accessible (Escape, close, backdrop, focus) ; navigation multi-images (flèches / clavier) si groupe ; vidéo séparée.
 - Scrollbars **visuellement masquées** partout ; défilement souris/clavier/touch conservé.
 - Densité démo : ≥36 chapitres, ≥180 blocs, ≥12 kinds.
 

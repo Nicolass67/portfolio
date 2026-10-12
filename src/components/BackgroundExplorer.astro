@@ -1,0 +1,90 @@
+---
+import { bgFamilies, bgPalette, DEFAULT_BG_ID } from "../content/bg-palette";
+import type { Locale } from "../content/site";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const isFrench = locale === "fr";
+const label = isFrench ? "Fond" : "Background";
+const panelLabel = isFrench
+  ? "Explorateur de fond (revue uniquement)"
+  : "Background explorer (review only)";
+const hint = isFrench
+  ? "Outil temporaire — n’apparaît pas en build public."
+  : "Temporary tool — not shown in the public build.";
+const customLabel = isFrench ? "Couleur libre" : "Custom color";
+---
+
+<div class="bg-explorer" data-bg-explorer>
+  <button
+    type="button"
+    class="bg-explorer__trigger"
+    data-bg-toggle
+    aria-expanded="false"
+    aria-controls="bg-explorer-panel"
+    title={panelLabel}
+  >
+    <span class="bg-explorer__swatch" data-bg-preview aria-hidden="true"></span>
+    <span>{label}</span>
+  </button>
+
+  <div
+    id="bg-explorer-panel"
+    class="bg-explorer__panel"
+    data-bg-panel
+    hidden
+    role="dialog"
+    aria-label={panelLabel}
+  >
+    <p class="bg-explorer__hint">{hint}</p>
+
+    {bgFamilies.map((family) => {
+      const swatches = bgPalette.filter((s) => s.family === family.id);
+      if (swatches.length === 0) return null;
+      return (
+        <div class="bg-explorer__family">
+          <p class="bg-explorer__family-label">
+            {isFrench ? family.fr : family.en}
+          </p>
+          <div class="bg-explorer__grid" role="list">
+            {swatches.map((swatch) => (
+              <button
+                type="button"
+                class="bg-explorer__option"
+                role="listitem"
+                data-bg-option
+                data-bg-id={swatch.id}
+                data-bg-value={swatch.value}
+                aria-pressed={swatch.id === DEFAULT_BG_ID ? "true" : "false"}
+                title={isFrench ? swatch.fr : swatch.en}
+              >
+                <span
+                  class="bg-explorer__dot"
+                  style={`background:${swatch.value}`}
+                  aria-hidden="true"
+                />
+                <span class="bg-explorer__name">
+                  {isFrench ? swatch.fr : swatch.en}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      );
+    })}
+
+    <label class="bg-explorer__custom">
+      <span>{customLabel}</span>
+      <input
+        type="color"
+        data-bg-custom
+        value={
+          bgPalette.find((s) => s.id === DEFAULT_BG_ID)?.value ?? "#fbfbf9"
+        }
+      />
+    </label>
+  </div>
+</div>

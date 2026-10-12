@@ -18,6 +18,7 @@ test.describe("reference screenshots", () => {
     await page.evaluate(() => {
       sessionStorage.removeItem("portfolio-workspace-state");
       sessionStorage.removeItem("portfolio-accent-review");
+      sessionStorage.removeItem("portfolio-bg-review");
     });
     await page.reload();
     await page.locator("[data-project-card].is-active").waitFor();
@@ -85,7 +86,7 @@ test.describe("reference screenshots", () => {
     }
 
     const closeCase = page.locator(
-      "[data-case-rail].is-active [data-close-case-study]",
+      "[data-workspace-toolbar] [data-close-case-study]",
     );
     if (await closeCase.isVisible()) {
       await closeCase.click();
@@ -111,6 +112,7 @@ test.describe("reference screenshots", () => {
       await page.evaluate(() => {
         sessionStorage.removeItem("portfolio-workspace-state");
         sessionStorage.removeItem("portfolio-accent-review");
+        sessionStorage.removeItem("portfolio-bg-review");
       });
       await page.goto(appPath("/"));
       await page.locator("[data-project-card].is-active").waitFor();
